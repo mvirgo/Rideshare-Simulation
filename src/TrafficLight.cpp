@@ -14,7 +14,7 @@ T MessageQueue<T>::receive()
     std::unique_lock<std::mutex> lck(_mutex); // lock down the queue
     _condition.wait(lck, [this] { return !_queue.empty(); }); // wait til queue is not empty
     T msg = std::move(_queue.front()); // Take from front of queue (FIFO)
-    _queue.pop_front();
+    _queue.clear(); // only every want newest light
 
     return msg;
 }
