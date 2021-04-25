@@ -3,7 +3,7 @@
 My Capstone project for the C++ Nanodegree at Udacity, a rideshare simulator. It extends the concurrency project based on a traffic simulation, as well as taking in parts of the earlier route planning project, in order to simulate ridesharing apps that are able to pick up passengers.
 
 ## Dependencies for Running Locally
-* cmake >= 2.8
+* cmake >= 3.11
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
 * make >= 4.1 (Linux, Mac), 3.81 (Windows)
   * Linux: make is installed by default on most Linux distros
