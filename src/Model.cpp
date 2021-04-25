@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string_view>
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 #include <algorithm>
 #include <assert.h>
 
@@ -34,12 +36,17 @@ Model::Model( const std::vector<std::byte> &xml )
     std::sort(m_Roads.begin(), m_Roads.end(), [](const auto &_1st, const auto &_2nd){
         return (int)_1st.type < (int)_2nd.type; 
     });
+
+    srand((unsigned) time(NULL)); // Seed random number generator
 }
 
 std::vector<double> Model::GetRandomMapPosition()
 {
-    // TODO: Implement
-    return { ((m_MaxLon - m_MinLon) / 2) + m_MinLon, ((m_MaxLat - m_MinLat) / 2) + m_MinLat };
+    // Get float values as percentages of map to use
+    float randPercentageLon = (float) rand() / RAND_MAX;
+    float randPercentageLat = (float) rand() / RAND_MAX;
+    return { ((m_MaxLon - m_MinLon) * randPercentageLon) + m_MinLon,
+             ((m_MaxLat - m_MinLat) * randPercentageLat) + m_MinLat };
 }
 
 void Model::LoadData(const std::vector<std::byte> &xml)
