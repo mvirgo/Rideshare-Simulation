@@ -8,7 +8,6 @@
 #include <string_view>
 #include <cmath>
 #include <cstdlib>
-#include <ctime>
 #include <algorithm>
 #include <assert.h>
 
@@ -36,8 +35,6 @@ Model::Model( const std::vector<std::byte> &xml )
     std::sort(m_Roads.begin(), m_Roads.end(), [](const auto &_1st, const auto &_2nd){
         return (int)_1st.type < (int)_2nd.type; 
     });
-
-    srand((unsigned) time(NULL)); // Seed random number generator
 }
 
 std::vector<double> Model::GetRandomMapPosition()

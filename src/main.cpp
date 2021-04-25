@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <ctime>
 #include <optional>
 #include <fstream>
 #include <iostream>
@@ -43,6 +45,8 @@ int main() {
     }
 
     RouteModel model{osm_data};
+
+    srand((unsigned) time(NULL)); // Seed random number generator
 
     // Printing out basic stats
     std::cout << "Model nodes: " << model.Nodes().size() << std::endl;
