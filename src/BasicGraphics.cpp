@@ -92,17 +92,17 @@ void BasicGraphics::drawPassengers() {
         std::vector<float> dest_position = {passenger.destX(), passenger.destY()};
 
         // Adjust the position based on lat & lon in image
-        // TODO: Change below to just need one position
+        // TODO: Change below to just need one position?
         start_position[0] = (start_position[0] - minLon) / (maxLon - minLon);
         start_position[1] = (maxLat - start_position[1]) / (maxLat - minLat);
         dest_position[0] = (dest_position[0] - minLon) / (maxLon - minLon);
         dest_position[1] = (maxLat - dest_position[1]) / (maxLat - minLat);
 
-        // TODO: Change to be just given position of passenger, with different colors for each passenger
-        // set blue for start and red for finish
+        // TODO: Only show the current position of passenger, perhaps with destination as different shape?
         //std::cout << "Position at: " << (int)(start_position[0] * imgCols) << "," << (int)(start_position[1] * imgRows) << std::endl;
-        cv::circle(_images.at(1), cv::Point2d((int)(start_position[0] * imgCols), (int)(start_position[1] * imgRows)), 25, cv::Scalar(255, 0, 0), -1);
-        cv::circle(_images.at(1), cv::Point2d((int)(dest_position[0] * imgCols), (int)(dest_position[1] * imgRows)), 25, cv::Scalar(0, 0, 255), -1);
+        cv::Scalar color = cv::Scalar(passenger.Blue(), passenger.Green(), passenger.Red());
+        cv::circle(_images.at(1), cv::Point2d((int)(start_position[0] * imgCols), (int)(start_position[1] * imgRows)), 25, color, -1);
+        cv::circle(_images.at(1), cv::Point2d((int)(dest_position[0] * imgCols), (int)(dest_position[1] * imgRows)), 25, color, -1);
     }
 
     float opacity = 0.85;
