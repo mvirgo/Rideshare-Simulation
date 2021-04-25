@@ -9,12 +9,12 @@ public:
     // constructor / destructor
 
     // getters / setters
-    void setPosition(float x, float y) { _x = x; _y = y;}
-    std::vector<float> getPosition() { return {_x, _y}; }
+    void setPosition(float x, float y) { x_ = x; y_ = y;}
+    std::vector<float> getPosition() { return {x_, y_}; }
 
 private:
     // member variables
-    float _x, _y;
+    float x_, y_;
 };
 
 #endif
