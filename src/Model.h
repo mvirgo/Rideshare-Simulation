@@ -40,6 +40,8 @@ public:
     auto &MaxLat() const noexcept { return m_MaxLat; }
     auto &MinLon() const noexcept { return m_MinLon; }
     auto &MaxLon() const noexcept { return m_MaxLon; }
+
+    std::vector<double> GetRandomMapPosition();
     
 private:
     void AdjustCoordinates();

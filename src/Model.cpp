@@ -36,6 +36,12 @@ Model::Model( const std::vector<std::byte> &xml )
     });
 }
 
+std::vector<double> Model::GetRandomMapPosition()
+{
+    // TODO: Implement
+    return { ((m_MaxLon - m_MinLon) / 2) + m_MinLon, ((m_MaxLat - m_MinLat) / 2) + m_MinLat };
+}
+
 void Model::LoadData(const std::vector<std::byte> &xml)
 {
     using namespace pugi;

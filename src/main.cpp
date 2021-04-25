@@ -7,6 +7,7 @@
 #include "RouteModel.h"
 #include "BasicGraphics.h"
 #include "BasicIntersection.h"
+#include "PassengerQueue.h"
 
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
 {   
@@ -223,11 +224,16 @@ int main() {
     //     intersections.push_back(currentIntersection);
     // }
 
-    // Draw the intersections
+    // Create basic passenger queue
+    // TODO: Remove when using full simulation
+    PassengerQueue passengers = PassengerQueue(&model);
+
+    // Draw the map
     BasicGraphics *graphics = new BasicGraphics(model.MinLat(), model.MinLon(), model.MaxLat(), model.MaxLon());
     std::string backgroundImg = "../data/" + location + ".png";
     graphics->setBgFilename(backgroundImg);
     graphics->setIntersections(intersections);
+    graphics->setPassengers(passengers);
     graphics->simulate();
 
     return 0;
