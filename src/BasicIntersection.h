@@ -3,16 +3,15 @@
 
 #include <vector>
 
-class BasicIntersection
-{
-public:
+class BasicIntersection {
+  public:
     // constructor / destructor
 
     // getters / setters
-    void setPosition(float x, float y) { x_ = x; y_ = y;}
-    std::vector<float> getPosition() { return {x_, y_}; }
+    void SetPosition(float x, float y) { x_ = x; y_ = y; }
+    std::vector<float> GetPosition() { return {x_, y_}; }
 
-private:
+  private:
     // member variables
     float x_, y_;
 };

@@ -1,17 +1,16 @@
 #ifndef PASSENGER_H
 #define PASSENGER_H
 
-class Passenger
-{
+class Passenger {
   public:
     // constructor / destructor
     Passenger(float start_x, float start_y, float dest_x, float dest_y);
 
     // getters
-    float startX() { return start_x_; }
-    float startY() { return start_y_; }
-    float destX() { return dest_x_; }
-    float destY() { return dest_y_; }
+    float StartX() { return start_x_; }
+    float StartY() { return start_y_; }
+    float DestX() { return dest_x_; }
+    float DestY() { return dest_y_; }
     int Blue() { return blue_; }
     int Green() { return green_; }
     int Red() { return red_; }

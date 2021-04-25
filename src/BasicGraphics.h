@@ -7,34 +7,33 @@
 #include "BasicIntersection.h"
 #include "PassengerQueue.h"
 
-class BasicGraphics
-{
-public:
+class BasicGraphics {
+  public:
     // constructor / destructor
-    BasicGraphics(float minLat, float minLon, float maxLat, float maxLon);
+    BasicGraphics(float min_lat, float min_lon, float max_lat, float max_lon);
 
     // getters / setters
-    void setBgFilename(std::string filename) { _bgFilename = filename; }
-    void setIntersections(std::vector<BasicIntersection> &intersections) { _intersections = intersections; }
-    void setPassengers(PassengerQueue &passenger_queue) { passenger_queue_ = passenger_queue; }
+    void SetBgFilename(std::string filename) { bgFilename_ = filename; }
+    void SetIntersections(std::vector<BasicIntersection> &intersections) { intersections_ = intersections; }
+    void SetPassengers(PassengerQueue &passenger_queue) { passenger_queue_ = passenger_queue; }
 
     // typical behaviour methods
-    void simulate();
+    void Simulate();
 
-private:
+  private:
     // typical behaviour methods
-    void loadBackgroundImg();
-    void drawSimulation();
-    void drawIntersections();
-    void drawPassengers();
+    void LoadBackgroundImg();
+    void DrawSimulation();
+    void DrawIntersections();
+    void DrawPassengers();
 
     // member variables
-    float minLat, minLon, maxLat, maxLon;
-    std::vector<BasicIntersection> _intersections;
+    float min_lat_, min_lon_, max_lat_, max_lon_;
+    std::vector<BasicIntersection> intersections_;
     PassengerQueue passenger_queue_;
-    std::string _bgFilename;
-    std::string _windowName;
-    std::vector<cv::Mat> _images;
+    std::string bgFilename_;
+    std::string windowName_;
+    std::vector<cv::Mat> images_;
 };
 
 #endif

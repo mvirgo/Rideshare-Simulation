@@ -11,10 +11,9 @@
 #include "BasicIntersection.h"
 #include "PassengerQueue.h"
 
-static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
-{   
+static std::optional<std::vector<std::byte>> ReadFile(const std::string &path) {   
     std::ifstream is{path, std::ios::binary | std::ios::ate};
-    if( !is )
+    if ( !is )
         return std::nullopt;
     
     auto size = is.tellg();
@@ -23,7 +22,7 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     is.seekg(0);
     is.read((char*)contents.data(), size);
 
-    if( contents.empty() )
+    if ( contents.empty() )
         return std::nullopt;
     return std::move(contents);
 }
@@ -34,7 +33,7 @@ int main() {
 
     std::vector<std::byte> osm_data;
  
-    if( osm_data.empty() && !osm_data_file.empty() ) {
+    if ( osm_data.empty() && !osm_data_file.empty() ) {
         std::cout << "Reading OpenStreetMap data from the following file: " <<  osm_data_file << std::endl;
         auto data = ReadFile(osm_data_file);
         if ( !data ) {
@@ -132,73 +131,73 @@ int main() {
     // std::cout << "Bottom right: " << br[0] << " " << br[1] << std::endl;
 
     // Find road with least and most nodes
-    int mostNodes = 0;
-    int mostCount = 0;
-    int leastNodes = 100;
-    int leastCount = 0;
-    int nodeCount = 0;
+    int most_nodes = 0;
+    int most_count = 0;
+    int least_nodes = 100;
+    int least_count = 0;
+    int node_count = 0;
     for (auto road : model.Roads()) {
         auto way = model.Ways()[road.way];
-        if (way.nodes.size() > mostNodes) {
-            mostNodes = way.nodes.size();
-            mostCount = 1;
-        } else if (way.nodes.size() == mostNodes) {
-            mostCount++;
+        if (way.nodes.size() > most_nodes) {
+            most_nodes = way.nodes.size();
+            most_count = 1;
+        } else if (way.nodes.size() == most_nodes) {
+            most_count++;
         }
-        if (way.nodes.size() < leastNodes) {
-            leastNodes = way.nodes.size();
-            mostCount = 1;
-        } else if (way.nodes.size() == leastNodes) {
-            leastCount++;
+        if (way.nodes.size() < least_nodes) {
+            least_nodes = way.nodes.size();
+            least_count = 1;
+        } else if (way.nodes.size() == least_nodes) {
+            least_count++;
         }
-        nodeCount += way.nodes.size();
+        node_count += way.nodes.size();
     }
 
-    std::cout << "Road with most nodes has: " << mostNodes << std::endl;
-    std::cout << mostCount << " roads had that many nodes." << std::endl;
-    std::cout << "Road with least nodes has: " << leastNodes << std::endl;
-    std::cout << leastCount << " roads had that many nodes." << std::endl;
-    std::cout << "There were this many nodes on roads: " << nodeCount << std::endl;
+    std::cout << "Road with most nodes has: " << most_nodes << std::endl;
+    std::cout << most_count << " roads had that many nodes." << std::endl;
+    std::cout << "Road with least nodes has: " << least_nodes << std::endl;
+    std::cout << least_count << " roads had that many nodes." << std::endl;
+    std::cout << "There were this many nodes on roads: " << node_count << std::endl;
 
     // Finding shared nodes between roads
-    std::set<int> allNodes;
-    std::vector<int> sharedNodes;
+    std::set<int> all_nodes;
+    std::vector<int> shared_nodes;
     for (auto road : model.Roads()) {
         auto way = model.Ways()[road.way];
         for (auto node : way.nodes) {
-            if (allNodes.count(node) != 1) {
+            if (all_nodes.count(node) != 1) {
                 // Not found
-                allNodes.insert(node);
+                all_nodes.insert(node);
             } else {
-                sharedNodes.push_back(node);
+                shared_nodes.push_back(node);
             }
         }
     }
 
-    std::cout << "Shared road nodes total: " << sharedNodes.size() << std::endl;
+    std::cout << "Shared road nodes total: " << shared_nodes.size() << std::endl;
 
     // List all neighbors of a node
-    int nodeNum = 0;
+    int node_num = 0;
     RouteModel::Node node;
     while (true) {
-        node = model.SNodes()[nodeNum];
+        node = model.SNodes()[node_num];
         node.FindNeighbors();
-        if (node.neighbors.size() > 2) {
+        if (node.neighbors_.size() > 2) {
             break;
         } else {
-            nodeNum++;
+            node_num++;
         }
     }
-    auto neighbors = node.neighbors;
+    auto neighbors = node.neighbors_;
     std::cout << "Original node at: " << node.x << " " << node.y << std::endl;
     for (auto neighbor : neighbors) {
         std::cout << "Neighbor at: " << neighbor->x << " " << neighbor->y << std::endl;
     }
 
     // Find & create all intersections
-    int numIntersections = 0;
+    int num_intersections = 0;
     std::vector<BasicIntersection> intersections;
-    BasicIntersection currentIntersection;
+    BasicIntersection current_intersection;
     // for (auto road : model.Roads()) {
     //     // Remove any "stub" roads
     //     if (model.Ways()[road.way].nodes.size() <= 2) {
@@ -214,13 +213,13 @@ int main() {
     //         }
     //     }
     // }
-    for (int id : sharedNodes) {
-        numIntersections++;
-        auto sharedNode = model.Nodes()[id];
-        currentIntersection.setPosition(sharedNode.x, sharedNode.y);
-        intersections.push_back(currentIntersection);
+    for (int id : shared_nodes) {
+        num_intersections++;
+        auto shared_node = model.Nodes()[id];
+        current_intersection.SetPosition(shared_node.x, shared_node.y);
+        intersections.push_back(current_intersection);
     }
-    std::cout << "Total intersections: " << numIntersections << std::endl;
+    std::cout << "Total intersections: " << num_intersections << std::endl;
     // std::vector<BasicIntersection> intersections;
     // BasicIntersection currentIntersection;
     // for (auto node : model.SNodes()) {
@@ -234,11 +233,11 @@ int main() {
 
     // Draw the map
     BasicGraphics *graphics = new BasicGraphics(model.MinLat(), model.MinLon(), model.MaxLat(), model.MaxLon());
-    std::string backgroundImg = "../data/" + location + ".png";
-    graphics->setBgFilename(backgroundImg);
-    graphics->setIntersections(intersections);
-    graphics->setPassengers(passengers);
-    graphics->simulate();
+    std::string background_img = "../data/" + location + ".png";
+    graphics->SetBgFilename(background_img);
+    graphics->SetIntersections(intersections);
+    graphics->SetPassengers(passengers);
+    graphics->Simulate();
 
     return 0;
 }

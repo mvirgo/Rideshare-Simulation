@@ -10,9 +10,8 @@
 #include <string>
 #include <cstddef>
 
-class Model
-{
-public:
+class Model {
+  public:
     struct Node {
         double x = 0.f;
         double y = 0.f;
@@ -31,31 +30,31 @@ public:
     
     Model( const std::vector<std::byte> &xml );
     
-    auto MetricScale() const noexcept { return m_MetricScale; }    
+    auto MetricScale() const noexcept { return metric_scale_; }    
     
-    auto &Nodes() const noexcept { return m_Nodes; }
-    auto &Ways() const noexcept { return m_Ways; }
-    auto &Roads() const noexcept { return m_Roads; }
-    auto &MinLat() const noexcept { return m_MinLat; }
-    auto &MaxLat() const noexcept { return m_MaxLat; }
-    auto &MinLon() const noexcept { return m_MinLon; }
-    auto &MaxLon() const noexcept { return m_MaxLon; }
+    auto &Nodes() const noexcept { return nodes_; }
+    auto &Ways() const noexcept { return ways_; }
+    auto &Roads() const noexcept { return roads_; }
+    auto &MinLat() const noexcept { return min_lat_; }
+    auto &MaxLat() const noexcept { return max_lat_; }
+    auto &MinLon() const noexcept { return min_lon_; }
+    auto &MaxLon() const noexcept { return max_lon_; }
 
     std::vector<double> GetRandomMapPosition();
     
-private:
+  private:
     void AdjustCoordinates();
     void LoadData(const std::vector<std::byte> &xml);
     
-    std::vector<Node> m_Nodes;
-    std::vector<Way> m_Ways;
-    std::vector<Road> m_Roads;
+    std::vector<Node> nodes_;
+    std::vector<Way> ways_;
+    std::vector<Road> roads_;
     
-    double m_MinLat = 0.;
-    double m_MaxLat = 0.;
-    double m_MinLon = 0.;
-    double m_MaxLon = 0.;
-    double m_MetricScale = 1.f;
+    double min_lat_ = 0.;
+    double max_lat_ = 0.;
+    double min_lon_ = 0.;
+    double max_lon_ = 0.;
+    double metric_scale_ = 1.f;
 };
 
 #endif

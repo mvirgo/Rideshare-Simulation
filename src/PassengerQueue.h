@@ -6,19 +6,18 @@
 #include "RouteModel.h"
 
 // TODO: Change this to run concurrently so can simulate adding more
-class PassengerQueue
-{
+class PassengerQueue {
   public:
     // constructor / destructor
     PassengerQueue();
     PassengerQueue(RouteModel *model);
     
     // getter
-    std::vector<Passenger> newPassengers() { return new_passengers_; }
+    std::vector<Passenger> NewPassengers() { return new_passengers_; }
 
   private:
-    void generatePassenger();
-    void simulate();
+    void GeneratePassenger();
+    void Simulate();
     int MAX_PASSENGERS = 10; // TODO: Change or remove limit?
     RouteModel *model_;
     std::vector<Passenger> new_passengers_;
