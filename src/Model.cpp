@@ -35,7 +35,7 @@ Model::Model(const std::vector<std::byte> &xml) {
     });
 }
 
-std::vector<double> Model::GetRandomMapPosition() {
+std::vector<double> Model::GetRandomMapPosition() const noexcept {
     // Get float values as percentages of map to use
     float randPercentageLon = (float) rand() / RAND_MAX;
     float randPercentageLat = (float) rand() / RAND_MAX;

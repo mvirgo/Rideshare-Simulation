@@ -19,7 +19,7 @@ class PassengerQueue {
     void GeneratePassenger();
     void Simulate();
     int MAX_PASSENGERS = 10; // TODO: Change or remove limit?
-    RouteModel *model_;
+    const RouteModel *model_;
     std::vector<Passenger> new_passengers_;
 };
 
