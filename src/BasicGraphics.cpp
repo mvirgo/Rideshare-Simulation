@@ -18,7 +18,7 @@ void BasicGraphics::Simulate() {
     while (true) {
         // sleep at every iteration to reduce CPU usage
         // TODO: Shorten below delay once ready for active updating
-        std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
         // update graphics
         this->DrawSimulation();
@@ -91,11 +91,11 @@ void BasicGraphics::DrawPassengers() {
         dest_position[0] = (dest_position[0] - min_lon_) / (max_lon_ - min_lon_);
         dest_position[1] = (max_lat_ - dest_position[1]) / (max_lat_ - min_lat_);
 
-        // TODO: Only show the current position of passenger, perhaps with destination as different shape?
+        // TODO: Only show the current position of passenger, while vehicle will later show both passenger & their destination
         //std::cout << "Position at: " << (int)(start_position[0] * imgCols) << "," << (int)(start_position[1] * imgRows) << std::endl;
         cv::Scalar color = cv::Scalar(passenger.Blue(), passenger.Green(), passenger.Red());
-        cv::circle(images_.at(1), cv::Point2d((int)(start_position[0] * img_cols), (int)(start_position[1] * img_rows)), 25, color, -1);
-        cv::circle(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), 25, color, -1);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(start_position[0] * img_cols), (int)(start_position[1] * img_rows)), color, 3, 25, 15);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, 1, 25, 5);
     }
 
     float opacity = 0.85;
