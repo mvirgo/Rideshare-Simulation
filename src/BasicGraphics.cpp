@@ -65,7 +65,8 @@ void BasicGraphics::DrawIntersections() {
 
         // set color according to traffic light and draw the intersection as a circle
         //std::cout << "Position at: " << (int)(position[0] * imgCols) << "," << (int)(position[1] * imgRows) << std::endl;
-        cv::circle(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), 25, cv::Scalar(0, 255, 0), -1);
+        cv::Scalar color = cv::Scalar(intersect.Blue(), intersect.Green(), intersect.Red());
+        cv::circle(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), 25, color, -1);
     }
 
     float opacity = 0.85;
@@ -80,8 +81,8 @@ void BasicGraphics::DrawPassengers() {
 
     // create overlay from passengers
     for (auto passenger : passenger_queue_.NewPassengers()) {
-        std::vector<float> start_position = {passenger.StartX(), passenger.StartY()};
-        std::vector<float> dest_position = {passenger.DestX(), passenger.DestY()};
+        std::vector<float> start_position = passenger.GetPosition();
+        std::vector<float> dest_position = passenger.GetDestination();
 
         // Adjust the position based on lat & lon in image
         // TODO: Change below to just need one position?

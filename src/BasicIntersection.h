@@ -1,19 +1,11 @@
 #ifndef BASICINTERSECTION_H
 #define BASICINTERSECTION_H
 
-#include <vector>
+#include "MapObject.h"
 
-class BasicIntersection {
+class BasicIntersection : public MapObject {
   public:
-    // constructor / destructor
-
-    // getters / setters
-    void SetPosition(float x, float y) { x_ = x; y_ = y; }
-    std::vector<float> GetPosition() { return {x_, y_}; }
-
-  private:
-    // member variables
-    float x_, y_;
+    BasicIntersection() { blue_ = 0; green_ = 255; red_ = 0; }
 };
 
 #endif
