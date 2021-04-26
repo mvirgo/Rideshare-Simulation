@@ -6,6 +6,7 @@
 #include <opencv2/core.hpp>
 #include "BasicIntersection.h"
 #include "PassengerQueue.h"
+#include "Vehicle.h"
 
 class BasicGraphics {
   public:
@@ -15,6 +16,7 @@ class BasicGraphics {
     // getters / setters
     void SetBgFilename(std::string filename) { bgFilename_ = filename; }
     void SetIntersections(std::vector<BasicIntersection> &intersections) { intersections_ = intersections; }
+    void SetVehicles(std::vector<Vehicle> &vehicles) { vehicles_ = vehicles; }
     void SetPassengers(PassengerQueue &passenger_queue) { passenger_queue_ = passenger_queue; }
 
     // typical behaviour methods
@@ -24,12 +26,14 @@ class BasicGraphics {
     // typical behaviour methods
     void LoadBackgroundImg();
     void DrawSimulation();
-    void DrawIntersections();
-    void DrawPassengers();
+    void DrawIntersections(float img_rows, float img_cols);
+    void DrawPassengers(float img_rows, float img_cols);
+    void DrawVehicles(float img_rows, float img_cols);
 
     // member variables
     float min_lat_, min_lon_, max_lat_, max_lon_;
     std::vector<BasicIntersection> intersections_;
+    std::vector<Vehicle> vehicles_;
     PassengerQueue passenger_queue_;
     std::string bgFilename_;
     std::string windowName_;

@@ -42,19 +42,20 @@ void BasicGraphics::DrawSimulation() {
     images_.at(1) = images_.at(0).clone();
     images_.at(2) = images_.at(0).clone();
 
-    DrawIntersections();
-    DrawPassengers();
+    // Get image rows and columns to help with coordinate adjustments for image
+    float img_rows = images_.at(0).rows;
+    float img_cols = images_.at(0).cols;
+
+    DrawIntersections(img_rows, img_cols);
+    DrawPassengers(img_rows, img_cols);
+    DrawVehicles(img_rows, img_cols);
 
     // display background and overlay image
     cv::imshow(windowName_, images_.at(2));
     cv::waitKey(33);
 }
 
-void BasicGraphics::DrawIntersections() {
-    // Get image rows and columns to help with coordinate adjustments for image
-    float img_rows = images_.at(0).rows;
-    float img_cols = images_.at(0).cols;
-
+void BasicGraphics::DrawIntersections(float img_rows, float img_cols) {
     // create overlay from intersections
     for (auto intersect : intersections_) {
         std::vector<float> position = intersect.GetPosition();
@@ -71,14 +72,9 @@ void BasicGraphics::DrawIntersections() {
 
     float opacity = 0.85;
     cv::addWeighted(images_.at(1), opacity, images_.at(0), 1.0 - opacity, 0, images_.at(2));
-    std::cout << "Image size is: " << img_rows << " rows, and " << img_cols << " columns." << std::endl;
 }
 
-void BasicGraphics::DrawPassengers() {
-    // Get image rows and columns to help with coordinate adjustments for image
-    float img_rows = images_.at(0).rows;
-    float img_cols = images_.at(0).cols;
-
+void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
     // create overlay from passengers
     for (auto passenger : passenger_queue_.NewPassengers()) {
         std::vector<float> start_position = passenger.GetPosition();
@@ -96,6 +92,26 @@ void BasicGraphics::DrawPassengers() {
         cv::Scalar color = cv::Scalar(passenger.Blue(), passenger.Green(), passenger.Red());
         cv::drawMarker(images_.at(1), cv::Point2d((int)(start_position[0] * img_cols), (int)(start_position[1] * img_rows)), color, 3, 25, 15);
         cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, 1, 25, 5);
+    }
+
+    float opacity = 0.85;
+    cv::addWeighted(images_.at(1), opacity, images_.at(0), 1.0 - opacity, 0, images_.at(2));
+}
+
+void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
+    // create overlay from vehicles
+    for (auto vehicle : vehicles_) {
+        std::vector<float> position = vehicle.GetPosition();
+
+        // Adjust the position based on lat & lon in image
+        position[0] = (position[0] - min_lon_) / (max_lon_ - min_lon_);
+        position[1] = (max_lat_ - position[1]) / (max_lat_ - min_lat_);
+
+        // set color according to vehicle and draw a square marker there
+        //std::cout << "Position at: " << (int)(position[0] * imgCols) << "," << (int)(position[1] * imgRows) << std::endl;
+        cv::Scalar color = cv::Scalar(vehicle.Blue(), vehicle.Green(), vehicle.Red());
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), color, 4, 25, 15);
+        // TODO: Also draw any related information for given passenger?
     }
 
     float opacity = 0.85;

@@ -10,6 +10,7 @@
 #include "BasicGraphics.h"
 #include "BasicIntersection.h"
 #include "PassengerQueue.h"
+#include "Vehicle.h"
 
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path) {   
     std::ifstream is{path, std::ios::binary | std::ios::ate};
@@ -227,6 +228,18 @@ int main() {
     //     intersections.push_back(currentIntersection);
     // }
 
+    // Create initial vehicles
+    // TODO: Change/remove when using full simulation
+    std::vector<Vehicle> vehicles;
+    int max_vehicles = 10;
+    for (int i = 0; i < max_vehicles; ++i) {
+        auto start = model.GetRandomMapPosition();
+        auto nearest = model.FindClosestNode(start[0], start[1]); // Set on road
+        Vehicle vehicle = Vehicle(); // TODO: May need change for memory changes later
+        vehicle.SetPosition(nearest.x, nearest.y);
+        vehicles.emplace_back(vehicle);
+    }
+
     // Create basic passenger queue
     // TODO: Remove when using full simulation
     PassengerQueue passengers = PassengerQueue(&model);
@@ -237,6 +250,7 @@ int main() {
     graphics->SetBgFilename(background_img);
     graphics->SetIntersections(intersections);
     graphics->SetPassengers(passengers);
+    graphics->SetVehicles(vehicles);
     graphics->Simulate();
 
     return 0;
