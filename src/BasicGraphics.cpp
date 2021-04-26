@@ -100,7 +100,7 @@ void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
 
 void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
     // create overlay from vehicles
-    for (auto vehicle : vehicles_) {
+    for (auto vehicle : vehicle_manager_.Vehicles()) {
         std::vector<float> position = vehicle.GetPosition();
 
         // Adjust the position based on lat & lon in image
