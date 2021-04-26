@@ -10,10 +10,18 @@ class MapObject {
     // getters / setters
     void SetPosition(float x, float y) { x_ = x; y_ = y; }
     std::vector<float> GetPosition() { return {x_, y_}; }
-    void setColors(int blue, int green, int red) { blue_ = blue, green_ = green, red_ = red; }
+    void SetColors(int blue, int green, int red) { blue_ = blue; green_ = green; red_ = red; }
     int Blue() { return blue_; }
     int Green() { return green_; }
     int Red() { return red_; }
+
+    // Other functions
+    void SetRandomColors() {
+        // Set visualization colors out of 255
+        blue_ = (int)(((float) rand() / RAND_MAX) * 255);
+        green_ = (int)(((float) rand() / RAND_MAX) * 255);
+        red_ = (int)(((float) rand() / RAND_MAX) * 255);
+    }
 
   protected:
     // member variables
