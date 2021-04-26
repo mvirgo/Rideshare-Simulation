@@ -15,7 +15,9 @@ void PassengerQueue::GeneratePassenger() {
     // TODO: Maybe add an id for passenger so can grab desired one?
     auto start = model_->GetRandomMapPosition();
     auto dest = model_->GetRandomMapPosition();
-    Passenger passenger = Passenger(start[0], start[1], dest[0], dest[1]);
+    Passenger passenger = Passenger();
+    passenger.SetPosition(start[0], start[1]);
+    passenger.SetDestination(dest[0], dest[1]);
     new_passengers_.emplace_back(passenger);
 }
 
