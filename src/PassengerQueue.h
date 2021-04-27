@@ -21,7 +21,10 @@ class PassengerQueue : public ConcurrentObject, std::enable_shared_from_this<Pas
     std::shared_ptr<PassengerQueue> GetSharedThis() { return shared_from_this(); }
 
   private:
+    void WaitForRide();
     void GenerateNew();
+    int MIN_WAIT_TIME_ = 3; // seconds to wait between generation attempts
+    int RANGE_WAIT_TIME_ = 2; // range in seconds to wait between generation attempts
     std::vector<Passenger> new_passengers_;
 };
 
