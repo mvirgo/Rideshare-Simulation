@@ -20,7 +20,7 @@ class ConcurrentObject {
     virtual void GenerateNew() {};
     int MAX_OBJECTS = 10; // TODO: Change or remove limit?
     RouteModel *model_;
-    //std::vector<std::thread> threads; // holds all threads that have been launched within this object
+    std::vector<std::thread> threads; // holds all threads that have been launched within this object
     static std::mutex _mtx;           // mutex shared by all traffic objects for protecting cout
   
   private:

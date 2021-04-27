@@ -8,7 +8,7 @@ std::mutex ConcurrentObject::_mtx;
 
 ConcurrentObject::~ConcurrentObject() {
     // set up thread barrier before this object is destroyed
-    // std::for_each(threads.begin(), threads.end(), [](std::thread &t) {
-    //     t.join();
-    // });
+    std::for_each(threads.begin(), threads.end(), [](std::thread &t) {
+        t.join();
+    });
 }

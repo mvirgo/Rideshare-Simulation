@@ -78,11 +78,15 @@ int main() {
 
     // Create initial vehicles
     // TODO: Change/remove when using full simulation
-    VehicleManager vehicles = VehicleManager(&model);
+    std::shared_ptr<VehicleManager> vehicles = std::make_shared<VehicleManager>(&model);
 
     // Create basic passenger queue
     // TODO: Remove when using full simulation
-    PassengerQueue passengers = PassengerQueue(&model);
+    std::shared_ptr<PassengerQueue> passengers = std::make_shared<PassengerQueue>(&model);
+
+    // Start the simulations
+    vehicles->Simulate();
+    passengers->Simulate();
 
     // Draw the map
     BasicGraphics *graphics = new BasicGraphics(model.MinLat(), model.MinLon(), model.MaxLat(), model.MaxLon());
