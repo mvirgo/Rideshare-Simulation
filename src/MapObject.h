@@ -1,6 +1,7 @@
 #ifndef MAPOBJECT_H
 #define MAPOBJECT_H
 
+#include <cstdlib>
 #include <vector>
 
 class MapObject {
