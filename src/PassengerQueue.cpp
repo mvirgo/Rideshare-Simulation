@@ -1,16 +1,13 @@
 #include "PassengerQueue.h"
 
-PassengerQueue::PassengerQueue() {};
-
-PassengerQueue::PassengerQueue(RouteModel *model) {
-    model_ = model;
+PassengerQueue::PassengerQueue(RouteModel *model) : ConcurrentObject(model) {
     // TODO: Add simulation instead of creating passengers at start
-    for (int i = 0; i < MAX_PASSENGERS; ++i) {
-        GeneratePassenger();
+    for (int i = 0; i < MAX_OBJECTS; ++i) {
+        GenerateNew();
     }
 }
 
-void PassengerQueue::GeneratePassenger() {
+void PassengerQueue::GenerateNew() {
     // TODO: Add appropriate handling of Passenger to avoid memory leaks once made a pointer
     // TODO: Maybe add an id for passenger so can grab desired one?
     auto start = model_->GetRandomMapPosition();

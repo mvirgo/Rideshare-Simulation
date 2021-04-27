@@ -2,24 +2,23 @@
 #define VEHICLEMANAGER_H
 
 #include <vector>
+#include "ConcurrentObject.h"
 #include "Vehicle.h"
-#include "RouteModel.h"
 
 // TODO: Change this to run concurrently so can simulate adding more
-class VehicleManager {
+class VehicleManager : public ConcurrentObject {
   public:
     // constructor / destructor
-    VehicleManager();
+    VehicleManager() {};
     VehicleManager(RouteModel *model);
     
     // getter
     std::vector<Vehicle> Vehicles() { return vehicles_; }
 
-  private:
-    void GenerateVehicle();
     void Simulate();
-    int MAX_VEHICLES = 10; // TODO: Change or remove limit?
-    RouteModel *model_;
+
+  private:
+    void GenerateNew();
     std::vector<Vehicle> vehicles_;
 };
 

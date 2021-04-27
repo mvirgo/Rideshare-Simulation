@@ -2,24 +2,23 @@
 #define PASSENGERQUEUE_H
 
 #include <vector>
+#include "ConcurrentObject.h"
 #include "Passenger.h"
-#include "RouteModel.h"
 
 // TODO: Change this to run concurrently so can simulate adding more
-class PassengerQueue {
+class PassengerQueue : public ConcurrentObject {
   public:
     // constructor / destructor
-    PassengerQueue();
+    PassengerQueue() {};
     PassengerQueue(RouteModel *model);
     
     // getter
     std::vector<Passenger> NewPassengers() { return new_passengers_; }
 
-  private:
-    void GeneratePassenger();
     void Simulate();
-    int MAX_PASSENGERS = 10; // TODO: Change or remove limit?
-    const RouteModel *model_;
+
+  private:
+    void GenerateNew();
     std::vector<Passenger> new_passengers_;
 };
 

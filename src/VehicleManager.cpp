@@ -1,16 +1,13 @@
 #include "VehicleManager.h"
 
-VehicleManager::VehicleManager() {};
-
-VehicleManager::VehicleManager(RouteModel *model) {
-    model_ = model;
+VehicleManager::VehicleManager(RouteModel *model) : ConcurrentObject(model) {
     // TODO: Add simulation instead of creating vehicles at start?
-    for (int i = 0; i < MAX_VEHICLES; ++i) {
-        GenerateVehicle();
+    for (int i = 0; i < MAX_OBJECTS; ++i) {
+        GenerateNew();
     }
 }
 
-void VehicleManager::GenerateVehicle() {
+void VehicleManager::GenerateNew() {
     // TODO: Add appropriate handling of Vehicle to avoid memory leaks if made a pointer
     // TODO: Maybe add an id for vehicle so can grab desired one?
     auto start = model_->GetRandomMapPosition();
