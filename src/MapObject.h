@@ -4,6 +4,17 @@
 #include <cstdlib>
 #include <vector>
 
+enum DrawMarker {
+    // Values for shapes for cv::drawMarker
+    cross,
+    tilted_cross,
+    star,
+    diamond,
+    square,
+    triangle_up,
+    triangle_down,
+};
+
 class MapObject {
   public:
     // constructor / destructor

@@ -11,9 +11,11 @@ class Vehicle: public MapObject {
     // constructor / destructor
 
     // getters / setters
+    int Shape() { return shape_; }
 
   private:
-    std::shared_ptr<Passenger> passenger;
+    std::shared_ptr<Passenger> passenger_;
+    int shape_ = DrawMarker::square;
     // TODO: Functions for sim/driving and handling passenger requests
 };
 

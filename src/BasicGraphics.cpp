@@ -70,8 +70,8 @@ void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
         // TODO: Only show the current position of passenger, while vehicle will later show both passenger & their destination
         //std::cout << "Position at: " << (int)(start_position[0] * imgCols) << "," << (int)(start_position[1] * imgRows) << std::endl;
         cv::Scalar color = cv::Scalar(passenger.Blue(), passenger.Green(), passenger.Red());
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(start_position[0] * img_cols), (int)(start_position[1] * img_rows)), color, 3, 25, 15);
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, 1, 25, 5);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(start_position[0] * img_cols), (int)(start_position[1] * img_rows)), color, passenger.PassShape(), 25, 15);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, passenger.DestShape(), 25, 5);
     }
 
     float opacity = 0.85;
@@ -87,10 +87,10 @@ void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
         position[0] = (position[0] - min_lon_) / (max_lon_ - min_lon_);
         position[1] = (max_lat_ - position[1]) / (max_lat_ - min_lat_);
 
-        // set color according to vehicle and draw a square marker there
+        // Set color according to vehicle and draw a square marker there
         //std::cout << "Position at: " << (int)(position[0] * imgCols) << "," << (int)(position[1] * imgRows) << std::endl;
         cv::Scalar color = cv::Scalar(vehicle.Blue(), vehicle.Green(), vehicle.Red());
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), color, 4, 25, 15);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), color, vehicle.Shape(), 25, 15);
         // TODO: Also draw any related information for given passenger?
     }
 
