@@ -13,10 +13,10 @@ void PassengerQueue::GenerateNew() {
     // TODO: Maybe add an id for passenger so can grab desired one?
     auto start = model_->GetRandomMapPosition();
     auto dest = model_->GetRandomMapPosition();
-    Passenger passenger = Passenger();
-    passenger.SetPosition(start[0], start[1]);
-    passenger.SetDestination(dest[0], dest[1]);
-    new_passengers_.emplace_back(passenger);
+    std::unique_ptr<Passenger> passenger = std::make_unique<Passenger>();
+    passenger->SetPosition(start[0], start[1]);
+    passenger->SetDestination(dest[0], dest[1]);
+    new_passengers_.emplace_back(std::move(passenger));
     // TODO: Output id of passenger requesting ride
 }
 

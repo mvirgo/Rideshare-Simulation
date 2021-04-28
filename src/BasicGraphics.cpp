@@ -56,9 +56,9 @@ void BasicGraphics::DrawSimulation() {
 
 void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
     // create overlay from passengers
-    for (auto passenger : passenger_queue_->NewPassengers()) {
-        std::vector<float> start_position = passenger.GetPosition();
-        std::vector<float> dest_position = passenger.GetDestination();
+    for (auto const& passenger : passenger_queue_->NewPassengers()) {
+        std::vector<float> start_position = passenger->GetPosition();
+        std::vector<float> dest_position = passenger->GetDestination();
 
         // Adjust the position based on lat & lon in image
         // TODO: Change below to just need one position?
@@ -69,9 +69,9 @@ void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
 
         // TODO: Only show the current position of passenger, while vehicle will later show both passenger & their destination
         //std::cout << "Position at: " << (int)(start_position[0] * imgCols) << "," << (int)(start_position[1] * imgRows) << std::endl;
-        cv::Scalar color = cv::Scalar(passenger.Blue(), passenger.Green(), passenger.Red());
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(start_position[0] * img_cols), (int)(start_position[1] * img_rows)), color, passenger.PassShape(), 25, 15);
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, passenger.DestShape(), 25, 5);
+        cv::Scalar color = cv::Scalar(passenger->Blue(), passenger->Green(), passenger->Red());
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(start_position[0] * img_cols), (int)(start_position[1] * img_rows)), color, passenger->PassShape(), 25, 15);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, passenger->DestShape(), 25, 5);
     }
 
     float opacity = 0.85;
