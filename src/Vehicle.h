@@ -8,18 +8,27 @@
 
 class Passenger;
 
+enum VehicleState {
+    no_passenger_queued,
+    passenger_queued,
+    driving_passenger,
+};
+
 class Vehicle: public MapObject {
   public:
     // constructor / destructor
 
     // getters / setters
     int Shape() { return shape_; }
+    int State() { return state_; }
+    void SetState(VehicleState state) { state_ = state; }
     std::vector<RouteModel::Node> Path() { return path_; }
     void SetPath(std::vector<RouteModel::Node> path) { path_ = path; }
 
   private:
     std::shared_ptr<Passenger> passenger_;
     int shape_ = DrawMarker::square;
+    int state_ = VehicleState::no_passenger_queued;
     std::vector<RouteModel::Node> path_;
     // TODO: Functions for sim/driving and handling passenger requests
 };
