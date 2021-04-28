@@ -1,5 +1,6 @@
 #include "PassengerQueue.h"
 #include <chrono>
+#include <mutex>
 
 PassengerQueue::PassengerQueue(RouteModel *model) : ConcurrentObject(model) {
     // Start by creating half the max number of passengers
@@ -18,6 +19,9 @@ void PassengerQueue::GenerateNew() {
     passenger->SetDestination(dest[0], dest[1]);
     new_passengers_.emplace_back(std::move(passenger));
     // TODO: Output id of passenger requesting ride
+    // Output location of passenger requesting ride
+    std::lock_guard<std::mutex> lck(_mtx);
+    std::cout << "Passenger requesting ride from: " << start[1] << ", " << start[0] << "." << std::endl;
 }
 
 void PassengerQueue::Simulate() {
@@ -43,6 +47,13 @@ void PassengerQueue::WaitForRide() {
             // Get a new random time to wait before checking to add a new passenger
             cycleDuration = ((((float) rand() / RAND_MAX) * RANGE_WAIT_TIME_) + MIN_WAIT_TIME_) * 1000;
             // Reset stop watch
+            lastUpdate = std::chrono::system_clock::now();
+        } else if ((timeSinceLastUpdate >= cycleDuration) && (new_passengers_.size() >= MAX_OBJECTS)) {
+            // Note queue is full
+            std::unique_lock<std::mutex> lck(_mtx);
+            std::cout << "Queue full, no new passenger generated." << std::endl;
+            lck.unlock();
+            // Reset stop watch so wait a bit to see if queue frees up
             lastUpdate = std::chrono::system_clock::now();
         }
     }
