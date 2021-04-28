@@ -35,7 +35,6 @@ class RouteModel : public Model {
     RouteModel(const std::vector<std::byte> &xml);
     Node &FindClosestNode(float x, float y);
     auto &SNodes() { return nodes_; }
-    std::vector<Node> path;
     
   private:
     void CreateNodeToRoadHashmap();
