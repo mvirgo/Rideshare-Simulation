@@ -9,7 +9,6 @@ class Passenger;
 class Vehicle: public MapObject {
   public:
     // constructor / destructor
-    Vehicle();
 
     // getters / setters
 
