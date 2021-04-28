@@ -8,16 +8,6 @@
 #include "RouteModel.h"
 #include "Vehicle.h"
 
-RoutePlanner::RoutePlanner(RouteModel &model, Vehicle &vehicle): model_(model), vehicle_(vehicle) {
-    auto start_pos = vehicle_.GetPosition();
-    auto dest_pos = vehicle_.GetDestination();
-
-    // Use FindClosestNode to find the closest nodes to the starting and ending coordinates.
-    //  and store the nodes found
-    this->start_node_ = &model_.FindClosestNode(start_pos[0], start_pos[1]);
-    this->end_node_ = &model_.FindClosestNode(dest_pos[0], dest_pos[1]);
-}
-
 // Calculate H Value (in this case, distance) for A* Search
 float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
     return node->Distance(*end_node_);
@@ -80,8 +70,17 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 
 // A* Search Algorithm
 // TODO: Handle if route not found?
-void RoutePlanner::AStarSearch() {
+void RoutePlanner::AStarSearch(Vehicle &vehicle) {
     RouteModel::Node *current_node = nullptr;
+
+    // Get vehicle starting and destination positions
+    auto start_pos = vehicle.GetPosition();
+    auto dest_pos = vehicle.GetDestination();
+
+    // Use FindClosestNode to find the closest nodes to the starting and ending coordinates.
+    //  and store the nodes found
+    this->start_node_ = &model_.FindClosestNode(start_pos[0], start_pos[1]);
+    this->end_node_ = &model_.FindClosestNode(dest_pos[0], dest_pos[1]);
 
     // Add start node to open list
     start_node_->visited_ = true;
@@ -93,7 +92,7 @@ void RoutePlanner::AStarSearch() {
         current_node = NextNode();
         // Check if at the goal state, and if so, construct the final path
         if (current_node->x == end_node_->x && current_node->y == end_node_->y) {
-            vehicle_.SetPath(ConstructFinalPath(current_node));
+            vehicle.SetPath(ConstructFinalPath(current_node));
             break; // Can stop searching
         }
         // Add all neighbors for current node

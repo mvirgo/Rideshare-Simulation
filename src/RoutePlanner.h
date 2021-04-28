@@ -11,12 +11,12 @@
 class RoutePlanner {
   public:
     // Constructors / Destructors
-    RoutePlanner(RouteModel &model, Vehicle &vehicle);
+    RoutePlanner(RouteModel &model) : model_(model) {};
 
     // Getters / Setters
 
     // Primary functionality
-    void AStarSearch();
+    void AStarSearch(Vehicle &vehicle);
 
   private:
     // Route model-related variables
@@ -26,7 +26,6 @@ class RoutePlanner {
 
     // Other variables
     RouteModel &model_;
-    Vehicle &vehicle_;
 
     // Functions
     static bool Compare(RouteModel::Node* node1, RouteModel::Node* node2);
