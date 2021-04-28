@@ -46,32 +46,12 @@ void BasicGraphics::DrawSimulation() {
     float img_rows = images_.at(0).rows;
     float img_cols = images_.at(0).cols;
 
-    DrawIntersections(img_rows, img_cols);
     DrawPassengers(img_rows, img_cols);
     DrawVehicles(img_rows, img_cols);
 
     // display background and overlay image
     cv::imshow(windowName_, images_.at(2));
     cv::waitKey(33);
-}
-
-void BasicGraphics::DrawIntersections(float img_rows, float img_cols) {
-    // create overlay from intersections
-    for (auto intersect : intersections_) {
-        std::vector<float> position = intersect.GetPosition();
-
-        // Adjust the position based on lat & lon in image
-        position[0] = (position[0] - min_lon_) / (max_lon_ - min_lon_);
-        position[1] = (max_lat_ - position[1]) / (max_lat_ - min_lat_);
-
-        // set color according to traffic light and draw the intersection as a circle
-        //std::cout << "Position at: " << (int)(position[0] * imgCols) << "," << (int)(position[1] * imgRows) << std::endl;
-        cv::Scalar color = cv::Scalar(intersect.Blue(), intersect.Green(), intersect.Red());
-        cv::circle(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), 10, color, -1);
-    }
-
-    float opacity = 0.85;
-    cv::addWeighted(images_.at(1), opacity, images_.at(0), 1.0 - opacity, 0, images_.at(2));
 }
 
 void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {

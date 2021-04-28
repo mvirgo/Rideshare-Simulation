@@ -8,7 +8,6 @@
 #include <vector>
 #include "RouteModel.h"
 #include "BasicGraphics.h"
-#include "BasicIntersection.h"
 #include "PassengerQueue.h"
 #include "VehicleManager.h"
 
@@ -64,18 +63,6 @@ int main() {
     }
     std::cout << "Shared road nodes total: " << shared_nodes.size() << std::endl;
 
-    // Find & create all intersections
-    int num_intersections = 0;
-    std::vector<BasicIntersection> intersections;
-    BasicIntersection current_intersection;
-    for (int id : shared_nodes) {
-        num_intersections++;
-        auto shared_node = model.Nodes()[id];
-        current_intersection.SetPosition(shared_node.x, shared_node.y);
-        intersections.push_back(current_intersection);
-    }
-    std::cout << "Total intersections: " << num_intersections << std::endl;
-
     // Create initial vehicles
     // TODO: Change/remove when using full simulation
     std::shared_ptr<VehicleManager> vehicles = std::make_shared<VehicleManager>(&model);
@@ -92,7 +79,6 @@ int main() {
     BasicGraphics *graphics = new BasicGraphics(model.MinLat(), model.MinLon(), model.MaxLat(), model.MaxLon());
     std::string background_img = "../data/" + location + ".png";
     graphics->SetBgFilename(background_img);
-    graphics->SetIntersections(intersections);
     graphics->SetPassengers(passengers);
     graphics->SetVehicles(vehicles);
     graphics->Simulate();
