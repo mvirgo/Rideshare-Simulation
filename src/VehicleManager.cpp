@@ -9,12 +9,18 @@ VehicleManager::VehicleManager(RouteModel *model) : ConcurrentObject(model) {
 
 void VehicleManager::GenerateNew() {
     // TODO: Add appropriate handling of Vehicle to avoid memory leaks if made a pointer
-    // TODO: Maybe add an id for vehicle so can grab desired one?
+    // Get random start position
     auto start = model_->GetRandomMapPosition();
-    auto nearest = model_->FindClosestNode(start[0], start[1]); // Set on road
+    // Find the nearest road node to start position
+    auto nearest = model_->FindClosestNode(start[0], start[1]);
+    // Set road position and id of vehicle
     Vehicle vehicle = Vehicle(); // TODO: May need change for memory changes later
     vehicle.SetPosition(nearest.x, nearest.y);
+    vehicle.SetId(idCnt_++);
     vehicles_.emplace_back(vehicle);
+    // Output id and location of vehicle looking to give rides
+    std::lock_guard<std::mutex> lck(mtx_);
+    std::cout << "Vehicle ID#" << idCnt_ - 1 << " now driving from: " << nearest.y << ", " << nearest.x << "." << std::endl;
 }
 
 void VehicleManager::Simulate() {
