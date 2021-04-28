@@ -2,9 +2,7 @@
 #include <algorithm>
 
 // init static variable
-int ConcurrentObject::_idCnt = 0;
-
-std::mutex ConcurrentObject::_mtx;
+std::mutex ConcurrentObject::mtx_;
 
 ConcurrentObject::~ConcurrentObject() {
     // set up thread barrier before this object is destroyed

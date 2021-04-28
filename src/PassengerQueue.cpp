@@ -11,17 +11,18 @@ PassengerQueue::PassengerQueue(RouteModel *model) : ConcurrentObject(model) {
 
 void PassengerQueue::GenerateNew() {
     // TODO: Add appropriate handling of Passenger to avoid memory leaks once made a pointer
-    // TODO: Maybe add an id for passenger so can grab desired one?
+    // Get random start and destination locations
     auto start = model_->GetRandomMapPosition();
     auto dest = model_->GetRandomMapPosition();
+    // Set those and an id to passenger
     std::unique_ptr<Passenger> passenger = std::make_unique<Passenger>();
     passenger->SetPosition(start[0], start[1]);
     passenger->SetDestination(dest[0], dest[1]);
+    passenger->SetId(idCnt_++);
     new_passengers_.emplace_back(std::move(passenger));
-    // TODO: Output id of passenger requesting ride
-    // Output location of passenger requesting ride
-    std::lock_guard<std::mutex> lck(_mtx);
-    std::cout << "Passenger requesting ride from: " << start[1] << ", " << start[0] << "." << std::endl;
+    // Output id and location of passenger requesting ride
+    std::lock_guard<std::mutex> lck(mtx_);
+    std::cout << "Passenger ID#" << idCnt_ - 1 << " requesting ride from: " << start[1] << ", " << start[0] << "." << std::endl;
 }
 
 void PassengerQueue::Simulate() {
@@ -50,7 +51,7 @@ void PassengerQueue::WaitForRide() {
             lastUpdate = std::chrono::system_clock::now();
         } else if ((timeSinceLastUpdate >= cycleDuration) && (new_passengers_.size() >= MAX_OBJECTS)) {
             // Note queue is full
-            std::unique_lock<std::mutex> lck(_mtx);
+            std::unique_lock<std::mutex> lck(mtx_);
             std::cout << "Queue full, no new passenger generated." << std::endl;
             lck.unlock();
             // Reset stop watch so wait a bit to see if queue frees up
