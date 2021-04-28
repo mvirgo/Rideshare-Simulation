@@ -25,6 +25,7 @@ class BasicGraphics {
     void LoadBackgroundImg();
     void DrawSimulation();
     void DrawPassengers(float img_rows, float img_cols);
+    void DrawPassenger(float img_rows, float img_cols, int marker_size, const std::unique_ptr<Passenger> &passenger);
     void DrawVehicles(float img_rows, float img_cols);
 
     // member variables

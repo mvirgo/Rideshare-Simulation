@@ -57,25 +57,27 @@ void BasicGraphics::DrawSimulation() {
 void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
     // create overlay from passengers
     for (auto const& passenger : passenger_queue_->NewPassengers()) {
-        std::vector<float> start_position = passenger->GetPosition();
-        std::vector<float> dest_position = passenger->GetDestination();
-
-        // Adjust the position based on lat & lon in image
-        // TODO: Change below to just need one position?
-        start_position[0] = (start_position[0] - min_lon_) / (max_lon_ - min_lon_);
-        start_position[1] = (max_lat_ - start_position[1]) / (max_lat_ - min_lat_);
-        dest_position[0] = (dest_position[0] - min_lon_) / (max_lon_ - min_lon_);
-        dest_position[1] = (max_lat_ - dest_position[1]) / (max_lat_ - min_lat_);
-
-        // TODO: Only show the current position of passenger, while vehicle will later show both passenger & their destination
-        //std::cout << "Position at: " << (int)(start_position[0] * imgCols) << "," << (int)(start_position[1] * imgRows) << std::endl;
-        cv::Scalar color = cv::Scalar(passenger->Blue(), passenger->Green(), passenger->Red());
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(start_position[0] * img_cols), (int)(start_position[1] * img_rows)), color, passenger->PassShape(), 25, 15);
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, passenger->DestShape(), 25, 5);
+        DrawPassenger(img_rows, img_cols, 25, passenger); // Full size marker
     }
 
     float opacity = 0.85;
     cv::addWeighted(images_.at(1), opacity, images_.at(0), 1.0 - opacity, 0, images_.at(2));
+}
+
+void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_size, const std::unique_ptr<Passenger> &passenger) {
+        std::vector<float> curr_position = passenger->GetPosition();
+        std::vector<float> dest_position = passenger->GetDestination();
+
+        // Adjust the position based on lat & lon in image
+        curr_position[0] = (curr_position[0] - min_lon_) / (max_lon_ - min_lon_);
+        curr_position[1] = (max_lat_ - curr_position[1]) / (max_lat_ - min_lat_);
+        dest_position[0] = (dest_position[0] - min_lon_) / (max_lon_ - min_lon_);
+        dest_position[1] = (max_lat_ - dest_position[1]) / (max_lat_ - min_lat_);
+
+        // Draw both current position and destination
+        cv::Scalar color = cv::Scalar(passenger->Blue(), passenger->Green(), passenger->Red());
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(curr_position[0] * img_cols), (int)(curr_position[1] * img_rows)), color, passenger->PassShape(), 25, 15);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, passenger->DestShape(), 25, 5);
 }
 
 void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
@@ -87,8 +89,7 @@ void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
         position[0] = (position[0] - min_lon_) / (max_lon_ - min_lon_);
         position[1] = (max_lat_ - position[1]) / (max_lat_ - min_lat_);
 
-        // Set color according to vehicle and draw a square marker there
-        //std::cout << "Position at: " << (int)(position[0] * imgCols) << "," << (int)(position[1] * imgRows) << std::endl;
+        // Set color according to vehicle and draw a marker there
         cv::Scalar color = cv::Scalar(vehicle.Blue(), vehicle.Green(), vehicle.Red());
         cv::drawMarker(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), color, vehicle.Shape(), 25, 15);
         // TODO: Also draw any related information for given passenger?
