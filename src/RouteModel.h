@@ -33,13 +33,15 @@ class RouteModel : public Model {
     };
 
     RouteModel(const std::vector<std::byte> &xml);
-    Node &FindClosestNode(float x, float y);
+    Node &FindClosestNode(double x, double y);
     auto &SNodes() { return nodes_; }
+    void ResetNodes() { nodes_ = clean_nodes_; }
     
   private:
     void CreateNodeToRoadHashmap();
     std::unordered_map<int, std::vector<const Model::Road *>> node_to_road_;
     std::vector<Node> nodes_;
+    std::vector<Node> clean_nodes_;
 
 };
 

@@ -65,7 +65,6 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     std::reverse(path_found.begin(), path_found.end());
 
     return path_found;
-
 }
 
 // A* Search Algorithm
@@ -98,4 +97,8 @@ void RoutePlanner::AStarSearch(Vehicle &vehicle) {
         // Add all neighbors for current node
         AddNeighbors(current_node);
     }
+
+    // Reset the open list and model nodes
+    open_list_.clear();
+    model_.ResetNodes();
 }
