@@ -21,12 +21,12 @@ class MapObject {
     MapObject() { SetRandomColors(); }
 
     // getters / setters
-    void SetPosition(float x, float y) { x_ = x; y_ = y; }
-    void SetDestination(float dest_x, float dest_y) { dest_x_ = dest_x; dest_y_ = dest_y; }
+    void SetPosition(double x, double y) { x_ = x; y_ = y; }
+    void SetDestination(double dest_x, double dest_y) { dest_x_ = dest_x; dest_y_ = dest_y; }
     void SetColors(int blue, int green, int red) { blue_ = blue; green_ = green; red_ = red; }
     void SetId(int id) { id_ = id; }
-    std::vector<float> GetPosition() { return {x_, y_}; }
-    std::vector<float> GetDestination() { return {dest_x_, dest_y_}; }
+    std::vector<double> GetPosition() { return {x_, y_}; }
+    std::vector<double> GetDestination() { return {dest_x_, dest_y_}; }
     int Blue() { return blue_; }
     int Green() { return green_; }
     int Red() { return red_; }
@@ -35,8 +35,8 @@ class MapObject {
   protected:
     // member variables
     int id_;
-    float x_, y_;
-    float dest_x_, dest_y_;
+    double x_, y_;
+    double dest_x_, dest_y_;
     int blue_, green_, red_; // visualization colors
   
   private:

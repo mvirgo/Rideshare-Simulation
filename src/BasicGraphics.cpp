@@ -17,8 +17,7 @@ void BasicGraphics::Simulate() {
     this->LoadBackgroundImg();
     while (true) {
         // sleep at every iteration to reduce CPU usage
-        // TODO: Shorten below delay once ready for active updating
-        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
         // update graphics
         this->DrawSimulation();
@@ -65,8 +64,8 @@ void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
 }
 
 void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_size, const std::unique_ptr<Passenger> &passenger) {
-        std::vector<float> curr_position = passenger->GetPosition();
-        std::vector<float> dest_position = passenger->GetDestination();
+        std::vector<double> curr_position = passenger->GetPosition();
+        std::vector<double> dest_position = passenger->GetDestination();
 
         // Adjust the position based on lat & lon in image
         curr_position[0] = (curr_position[0] - min_lon_) / (max_lon_ - min_lon_);
@@ -83,7 +82,7 @@ void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_siz
 void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
     // create overlay from vehicles
     for (auto vehicle : vehicle_manager_->Vehicles()) {
-        std::vector<float> position = vehicle.GetPosition();
+        std::vector<double> position = vehicle.GetPosition();
 
         // Adjust the position based on lat & lon in image
         position[0] = (position[0] - min_lon_) / (max_lon_ - min_lon_);
