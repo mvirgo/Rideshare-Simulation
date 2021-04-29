@@ -21,7 +21,9 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
     std::shared_ptr<VehicleManager> GetSharedThis() { return shared_from_this(); }
 
   private:
+    void Drive();
     void GenerateNew();
+    void ResetVehicleDestination(Vehicle &vehicle);
     std::vector<Vehicle> vehicles_;
 };
 
