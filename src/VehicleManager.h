@@ -22,9 +22,11 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
 
   private:
     void Drive();
+    void IncrementalMove(Vehicle &vehicle);
     void GenerateNew();
     void ResetVehicleDestination(Vehicle &vehicle);
     std::vector<Vehicle> vehicles_;
+    double distance_per_cycle_;
 };
 
 #endif

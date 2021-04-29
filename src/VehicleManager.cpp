@@ -1,4 +1,5 @@
 #include "VehicleManager.h"
+#include <cmath>
 #include "RoutePlanner.h"
 
 VehicleManager::VehicleManager(RouteModel *model) : ConcurrentObject(model) {
@@ -6,6 +7,8 @@ VehicleManager::VehicleManager(RouteModel *model) : ConcurrentObject(model) {
     for (int i = 0; i < MAX_OBJECTS; ++i) {
         GenerateNew();
     }
+    // Set distance per cycle based on model's latitudes
+    distance_per_cycle_ = std::abs(model_->MaxLat() - model->MinLat()) / 10000.0;
 }
 
 void VehicleManager::GenerateNew() {
@@ -29,11 +32,31 @@ void VehicleManager::GenerateNew() {
 }
 
 void VehicleManager::ResetVehicleDestination(Vehicle &vehicle) {
-    // TODO: Refactor below when above TODO also implemented
+    // TODO: Refactor below if needed to handle state transitions too
     auto destination = model_->GetRandomMapPosition();
     auto nearest_dest = model_->FindClosestNode(destination[0], destination[1]);
     vehicle.SetDestination(nearest_dest.x, nearest_dest.y);
     vehicle.ResetPathAndIndex();
+}
+
+// Make for smooth, incremental driving between path nodes
+void VehicleManager::IncrementalMove(Vehicle &vehicle) {
+    // Check distance to next position vs. distance can go b/w timesteps
+    auto pos = vehicle.GetPosition();
+    auto next_pos = vehicle.Path().at(vehicle.PathIndex());
+    auto distance = std::sqrt(std::pow(next_pos.x - pos[0], 2) + std::pow(next_pos.y - pos[1], 2));
+
+    if (distance <= distance_per_cycle_) {
+        // Don't need to calculate intermediate point, just set position as next_pos
+        vehicle.SetPosition(next_pos.x, next_pos.y);
+        vehicle.IncrementPathIndex();
+    } else {
+        // Calculate an intermediate position
+        double angle = std::atan2(next_pos.y - pos[1], next_pos.x - pos[0]); // angle from x-axis
+        double new_pos_x = pos[0] + (distance_per_cycle_ * std::cos(angle));
+        double new_pos_y = pos[1] + (distance_per_cycle_ * std::sin(angle));
+        vehicle.SetPosition(new_pos_x, new_pos_y);
+    }
 }
 
 void VehicleManager::Simulate() {
@@ -44,12 +67,10 @@ void VehicleManager::Simulate() {
 void VehicleManager::Drive() {
     // Create the route planner to use throughout the sim
     RoutePlanner route_planner = RoutePlanner(*model_);
-    int fault_counter = 0; // TODO: Remove; used for testing stuck vehicles
-    int cycle = 0; // TODO: Remove; used for testing stuck vehicles
 
     while (true) {
         // Sleep at every iteration to reduce CPU usage
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // TODO: Change back to 1 when figure out driving
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
         for (auto &vehicle : vehicles_) {
             // Get a route if none yet given
@@ -58,7 +79,6 @@ void VehicleManager::Drive() {
                 // TODO: Replace/remove below when handling impossible routes (i.e. stuck)
                 if (vehicle.Path().empty()) {
                     ResetVehicleDestination(vehicle);
-                    fault_counter++; // TODO: Remove
                     continue;
                 }
             }
@@ -67,10 +87,7 @@ void VehicleManager::Drive() {
             if (vehicle.State() == VehicleState::no_passenger_queued) {
                 // TODO: Try to request a passenger
                 // Drive to current destination (effectively random driving)
-                // TODO: Implement incremental driving instead of below quick hack
-                auto next_pos = vehicle.Path().at(vehicle.PathIndex());
-                vehicle.SetPosition(next_pos.x, next_pos.y);
-                vehicle.IncrementPathIndex();
+                IncrementalMove(vehicle);
             } else if (vehicle.State() == VehicleState::passenger_queued) {
                 // TODO: Drive to passenger position
             } else { // Have passenger in vehicle
@@ -87,10 +104,5 @@ void VehicleManager::Drive() {
                 ResetVehicleDestination(vehicle);
             }
         }
-
-        // TODO: Remove below when done testing stuck vehicles
-        std::cout << "Faults so far: " << fault_counter << std::endl;
-        cycle++;
-        std::cout << "After cycle: " << cycle << std::endl;
     }
 }
