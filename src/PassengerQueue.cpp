@@ -15,7 +15,7 @@ void PassengerQueue::GenerateNew() {
     auto start = model_->GetRandomMapPosition();
     auto dest = model_->GetRandomMapPosition();
     // Set those and an id to passenger
-    std::unique_ptr<Passenger> passenger = std::make_unique<Passenger>();
+    std::shared_ptr<Passenger> passenger = std::make_shared<Passenger>();
     passenger->SetPosition(start[0], start[1]);
     passenger->SetDestination(dest[0], dest[1]);
     passenger->SetId(idCnt_++);

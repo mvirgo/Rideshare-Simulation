@@ -63,7 +63,7 @@ void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
     cv::addWeighted(images_.at(1), opacity, images_.at(0), 1.0 - opacity, 0, images_.at(2));
 }
 
-void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_size, const std::unique_ptr<Passenger> &passenger) {
+void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_size, const std::shared_ptr<Passenger> &passenger) {
         std::vector<double> curr_position = passenger->GetPosition();
         std::vector<double> dest_position = passenger->GetDestination();
 

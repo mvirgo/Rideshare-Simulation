@@ -13,7 +13,7 @@ class PassengerQueue : public ConcurrentObject, std::enable_shared_from_this<Pas
     PassengerQueue(RouteModel *model);
     
     // getter
-    const std::vector<std::unique_ptr<Passenger>>& NewPassengers() { return new_passengers_; }
+    const std::vector<std::shared_ptr<Passenger>>& NewPassengers() { return new_passengers_; }
 
     void Simulate();
 
@@ -25,7 +25,7 @@ class PassengerQueue : public ConcurrentObject, std::enable_shared_from_this<Pas
     void GenerateNew();
     int MIN_WAIT_TIME_ = 3; // seconds to wait between generation attempts
     int RANGE_WAIT_TIME_ = 2; // range in seconds to wait between generation attempts
-    std::vector<std::unique_ptr<Passenger>> new_passengers_;
+    std::vector<std::shared_ptr<Passenger>> new_passengers_;
 };
 
 #endif
