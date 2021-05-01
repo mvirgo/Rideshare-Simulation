@@ -5,7 +5,6 @@
 #include "ConcurrentObject.h"
 #include "Passenger.h"
 
-// TODO: Change this to run concurrently so can simulate adding more
 class PassengerQueue : public ConcurrentObject, std::enable_shared_from_this<PassengerQueue> {
   public:
     // constructor / destructor

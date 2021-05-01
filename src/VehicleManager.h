@@ -5,7 +5,6 @@
 #include "ConcurrentObject.h"
 #include "Vehicle.h"
 
-// TODO: Change this to run concurrently so can simulate adding more
 class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<VehicleManager> {
   public:
     // constructor / destructor
