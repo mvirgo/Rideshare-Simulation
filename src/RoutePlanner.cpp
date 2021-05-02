@@ -78,8 +78,8 @@ void RoutePlanner::AStarSearch(std::shared_ptr<Vehicle> vehicle) {
 
     // Use FindClosestNode to find the closest nodes to the starting and ending coordinates.
     //  and store the nodes found
-    this->start_node_ = &model_.FindClosestNode(start_pos[0], start_pos[1]);
-    this->end_node_ = &model_.FindClosestNode(dest_pos[0], dest_pos[1]);
+    this->start_node_ = &model_.FindClosestNode(start_pos);
+    this->end_node_ = &model_.FindClosestNode(dest_pos);
 
     // Add start node to open list
     start_node_->visited_ = true;

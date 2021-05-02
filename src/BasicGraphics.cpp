@@ -6,6 +6,8 @@
 #include <opencv2/highgui.hpp>
 #include "BasicGraphics.h"
 
+#include "Coordinate.h"
+
 BasicGraphics::BasicGraphics(float min_lat, float min_lon, float max_lat, float max_lon) {
     min_lat_ = min_lat;
     min_lon_ = min_lon;
@@ -64,33 +66,33 @@ void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
 }
 
 void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_size, const std::shared_ptr<Passenger> &passenger) {
-        std::vector<double> curr_position = passenger->GetPosition();
-        std::vector<double> dest_position = passenger->GetDestination();
+        Coordinate curr_position = passenger->GetPosition();
+        Coordinate dest_position = passenger->GetDestination();
 
         // Adjust the position based on lat & lon in image
-        curr_position[0] = (curr_position[0] - min_lon_) / (max_lon_ - min_lon_);
-        curr_position[1] = (max_lat_ - curr_position[1]) / (max_lat_ - min_lat_);
-        dest_position[0] = (dest_position[0] - min_lon_) / (max_lon_ - min_lon_);
-        dest_position[1] = (max_lat_ - dest_position[1]) / (max_lat_ - min_lat_);
+        curr_position.x = (curr_position.x - min_lon_) / (max_lon_ - min_lon_);
+        curr_position.y = (max_lat_ - curr_position.y) / (max_lat_ - min_lat_);
+        dest_position.x = (dest_position.x - min_lon_) / (max_lon_ - min_lon_);
+        dest_position.y = (max_lat_ - dest_position.y) / (max_lat_ - min_lat_);
 
         // Draw both current position (size based on if in vehicle or not) and destination (always full-size)
         cv::Scalar color = cv::Scalar(passenger->Blue(), passenger->Green(), passenger->Red());
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(curr_position[0] * img_cols), (int)(curr_position[1] * img_rows)), color, passenger->PassShape(), marker_size, 15);
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, passenger->DestShape(), 25, 5);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(curr_position.x * img_cols), (int)(curr_position.y * img_rows)), color, passenger->PassShape(), marker_size, 15);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position.x * img_cols), (int)(dest_position.y * img_rows)), color, passenger->DestShape(), 25, 5);
 }
 
 void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
     // create overlay from vehicles
     for (auto vehicle : vehicle_manager_->Vehicles()) {
-        std::vector<double> position = vehicle->GetPosition();
+        Coordinate position = vehicle->GetPosition();
 
         // Adjust the position based on lat & lon in image
-        position[0] = (position[0] - min_lon_) / (max_lon_ - min_lon_);
-        position[1] = (max_lat_ - position[1]) / (max_lat_ - min_lat_);
+        position.x = (position.x - min_lon_) / (max_lon_ - min_lon_);
+        position.y = (max_lat_ - position.y) / (max_lat_ - min_lat_);
 
         // Set color according to vehicle and draw a marker there
         cv::Scalar color = cv::Scalar(vehicle->Blue(), vehicle->Green(), vehicle->Red());
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), color, vehicle->Shape(), 25, 15);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(position.x * img_cols), (int)(position.y * img_rows)), color, vehicle->Shape(), 25, 15);
         // Draw any related information for possible passenger
         auto passenger = vehicle->GetPassenger(); // ensures shared pointer will stay alive while drawing, if it exits
         if (passenger != nullptr) {

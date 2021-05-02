@@ -2,7 +2,9 @@
 #define VEHICLEMANAGER_H
 
 #include <vector>
+
 #include "ConcurrentObject.h"
+#include "Coordinate.h"
 #include "Vehicle.h"
 
 // Avoid include cycle
@@ -22,7 +24,7 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
     void Simulate();
 
     // Passenger-related handling
-    void AssignPassenger(int id, std::vector<double> position);
+    void AssignPassenger(int id, Coordinate position);
     void PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger);
 
     // Miscellaneous

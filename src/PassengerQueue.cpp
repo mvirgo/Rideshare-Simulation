@@ -18,13 +18,13 @@ void PassengerQueue::GenerateNew() {
     auto dest = model_->GetRandomMapPosition();
     // Set those and an id to passenger
     std::shared_ptr<Passenger> passenger = std::make_shared<Passenger>();
-    passenger->SetPosition(start[0], start[1]);
-    passenger->SetDestination(dest[0], dest[1]);
+    passenger->SetPosition(start);
+    passenger->SetDestination(dest);
     passenger->SetId(idCnt_++);
     new_passengers_.emplace(passenger->Id(), passenger);
     // Output id and location of passenger requesting ride
     std::lock_guard<std::mutex> lck(mtx_);
-    std::cout << "Passenger ID#" << idCnt_ - 1 << " requesting ride from: " << start[1] << ", " << start[0] << "." << std::endl;
+    std::cout << "Passenger ID#" << idCnt_ - 1 << " requesting ride from: " << start.y << ", " << start.x << "." << std::endl;
 }
 
 void PassengerQueue::Simulate() {

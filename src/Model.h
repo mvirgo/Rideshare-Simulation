@@ -10,6 +10,8 @@
 #include <string>
 #include <cstddef>
 
+#include "Coordinate.h"
+
 class Model {
   public:
     struct Node {
@@ -40,7 +42,7 @@ class Model {
     auto &MinLon() const noexcept { return min_lon_; }
     auto &MaxLon() const noexcept { return max_lon_; }
 
-    std::vector<double> GetRandomMapPosition() const noexcept;
+    Coordinate GetRandomMapPosition() const noexcept;
     
   private:
     void LoadData(const std::vector<std::byte> &xml);

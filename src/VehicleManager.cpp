@@ -1,5 +1,7 @@
 #include "VehicleManager.h"
 #include <cmath>
+
+#include "Coordinate.h"
 #include "Passenger.h"
 #include "RoutePlanner.h"
 #include "RideMatcher.h"
@@ -20,12 +22,12 @@ void VehicleManager::GenerateNew() {
     // Set a random destination until they have a passenger to go pick up
     auto destination = model_->GetRandomMapPosition();
     // Find the nearest road node to start and destination positions
-    auto nearest_start = model_->FindClosestNode(start[0], start[1]);
-    auto nearest_dest = model_->FindClosestNode(destination[0], destination[1]);
+    auto nearest_start = model_->FindClosestNode(start);
+    auto nearest_dest = model_->FindClosestNode(destination);
     // Set road position, destination and id of vehicle
     std::shared_ptr<Vehicle> vehicle = std::make_shared<Vehicle>();
-    vehicle->SetPosition(nearest_start.x, nearest_start.y);
-    vehicle->SetDestination(nearest_dest.x, nearest_dest.y);
+    vehicle->SetPosition((Coordinate){.x = nearest_start.x, .y = nearest_start.y});
+    vehicle->SetDestination((Coordinate){.x = nearest_dest.x, .y = nearest_dest.y});
     vehicle->SetId(idCnt_++);
     vehicles_.emplace_back(vehicle);
     // Output id and location of vehicle looking to give rides
@@ -34,15 +36,15 @@ void VehicleManager::GenerateNew() {
 }
 
 void VehicleManager::ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, bool random) {
-    std::vector<double> destination;
+    Coordinate destination;
     // Depending on `random`, either get a new random position or set current destination onto nearest node
     if (random) {
         destination = model_->GetRandomMapPosition();
     } else {
         destination = vehicle->GetDestination();
     }
-    auto nearest_dest = model_->FindClosestNode(destination[0], destination[1]);
-    vehicle->SetDestination(nearest_dest.x, nearest_dest.y);
+    auto nearest_dest = model_->FindClosestNode(destination);
+    vehicle->SetDestination((Coordinate){.x = nearest_dest.x, .y = nearest_dest.y});
     // Reset the path and index so will properly route on a new path
     vehicle->ResetPathAndIndex();
 }
@@ -52,18 +54,18 @@ void VehicleManager::IncrementalMove(std::shared_ptr<Vehicle> vehicle) {
     // Check distance to next position vs. distance can go b/w timesteps
     auto pos = vehicle->GetPosition();
     auto next_pos = vehicle->Path().at(vehicle->PathIndex());
-    auto distance = std::sqrt(std::pow(next_pos.x - pos[0], 2) + std::pow(next_pos.y - pos[1], 2));
+    auto distance = std::sqrt(std::pow(next_pos.x - pos.x, 2) + std::pow(next_pos.y - pos.y, 2));
 
     if (distance <= distance_per_cycle_) {
         // Don't need to calculate intermediate point, just set position as next_pos
-        vehicle->SetPosition(next_pos.x, next_pos.y);
+        vehicle->SetPosition((Coordinate){.x = next_pos.x, .y = next_pos.y});
         vehicle->IncrementPathIndex();
     } else {
         // Calculate an intermediate position
-        double angle = std::atan2(next_pos.y - pos[1], next_pos.x - pos[0]); // angle from x-axis
-        double new_pos_x = pos[0] + (distance_per_cycle_ * std::cos(angle));
-        double new_pos_y = pos[1] + (distance_per_cycle_ * std::sin(angle));
-        vehicle->SetPosition(new_pos_x, new_pos_y);
+        double angle = std::atan2(next_pos.y - pos.y, next_pos.x - pos.x); // angle from x-axis
+        double new_pos_x = pos.x + (distance_per_cycle_ * std::cos(angle));
+        double new_pos_y = pos.y + (distance_per_cycle_ * std::sin(angle));
+        vehicle->SetPosition((Coordinate){.x = new_pos_x, .y = new_pos_y});
     }
 }
 
@@ -135,10 +137,10 @@ void VehicleManager::RequestPassenger(std::shared_ptr<Vehicle> vehicle) {
     std::cout << "Vehicle ID#" << vehicle->Id() << " has requested to be matched with a passenger." << std::endl;
 }
 
-void VehicleManager::AssignPassenger(int id, std::vector<double> position) {
+void VehicleManager::AssignPassenger(int id, Coordinate position) {
     auto vehicle = vehicles_.at(id);
     // Set new vehicle destination and update its state
-    vehicle->SetDestination(position[0], position[1]);
+    vehicle->SetDestination(position);
     ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
     // Update state when done processing
     vehicle->SetState(VehicleState::passenger_queued);

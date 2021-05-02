@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <assert.h>
 
+#include "Coordinate.h"
+
 // Only need road types (and no footways)
 static Model::Road::Type String2RoadType(std::string_view type) {
     if( type == "motorway" )        return Model::Road::Motorway;
@@ -32,12 +34,12 @@ Model::Model(const std::vector<std::byte> &xml) {
     });
 }
 
-std::vector<double> Model::GetRandomMapPosition() const noexcept {
+Coordinate Model::GetRandomMapPosition() const noexcept {
     // Get float values as percentages of map to use
     float randPercentageLon = (float) rand() / RAND_MAX;
     float randPercentageLat = (float) rand() / RAND_MAX;
-    return { ((max_lon_ - min_lon_) * randPercentageLon) + min_lon_,
-             ((max_lat_ - min_lat_) * randPercentageLat) + min_lat_ };
+    return (Coordinate){ .x = ((max_lon_ - min_lon_) * randPercentageLon) + min_lon_,
+                         .y = ((max_lat_ - min_lat_) * randPercentageLat) + min_lat_ };
 }
 
 void Model::LoadData(const std::vector<std::byte> &xml) {

@@ -55,10 +55,10 @@ void RouteModel::Node::FindNeighbors() {
 }
 
 
-RouteModel::Node &RouteModel::FindClosestNode(double x, double y) {
+RouteModel::Node &RouteModel::FindClosestNode(const Coordinate &coordinate) {
     Node input;
-    input.x = x;
-    input.y = y;
+    input.x = coordinate.x;
+    input.y = coordinate.y;
 
     float min_dist = std::numeric_limits<float>::max();
     float dist;

@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <vector>
 
+#include "Coordinate.h"
+
 enum DrawMarker {
     // Values for shapes for cv::drawMarker
     cross,
@@ -21,12 +23,12 @@ class MapObject {
     MapObject() { SetRandomColors(); }
 
     // getters / setters
-    void SetPosition(double x, double y) { x_ = x; y_ = y; }
-    void SetDestination(double dest_x, double dest_y) { dest_x_ = dest_x; dest_y_ = dest_y; }
+    void SetPosition(const Coordinate &position) { position_ = position; }
+    void SetDestination(const Coordinate &destination) { destination_ = destination; }
     void SetColors(int blue, int green, int red) { blue_ = blue; green_ = green; red_ = red; }
     void SetId(int id) { id_ = id; }
-    std::vector<double> GetPosition() { return {x_, y_}; }
-    std::vector<double> GetDestination() { return {dest_x_, dest_y_}; }
+    Coordinate GetPosition() { return position_; }
+    Coordinate GetDestination() { return destination_; }
     int Blue() { return blue_; }
     int Green() { return green_; }
     int Red() { return red_; }
@@ -35,8 +37,8 @@ class MapObject {
   protected:
     // member variables
     int id_;
-    double x_, y_;
-    double dest_x_, dest_y_;
+    Coordinate position_;
+    Coordinate destination_;
     int blue_, green_, red_; // visualization colors
   
   private:

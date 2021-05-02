@@ -5,6 +5,8 @@
 #include <limits>
 #include <iostream>
 #include <unordered_map>
+
+#include "Coordinate.h"
 #include "Model.h"
 
 class RouteModel : public Model {
@@ -33,7 +35,7 @@ class RouteModel : public Model {
     };
 
     RouteModel(const std::vector<std::byte> &xml);
-    Node &FindClosestNode(double x, double y);
+    Node &FindClosestNode(const Coordinate &coordinate);
     auto &SNodes() { return nodes_; }
     void ResetNodes() { nodes_ = clean_nodes_; }
     

@@ -3,6 +3,8 @@
 
 #include <memory>
 #include <vector>
+
+#include "Coordinate.h"
 #include "MapObject.h"
 #include "RouteModel.h"
 
@@ -29,7 +31,7 @@ class Vehicle: public MapObject {
     void SetState(VehicleState state) { state_ = state; }
     void SetPath(std::vector<RouteModel::Node> path) { path_ = path; }
     void SetPassenger(std::shared_ptr<Passenger> passenger);
-    void SetPosition(double x, double y); // Override base class
+    void SetPosition(const Coordinate &position); // Override base class
 
     // Other functionality
     void DropOffPassenger() { passenger_.reset(); } // TODO: May want more post-dropoff later
