@@ -19,7 +19,7 @@ void BasicGraphics::Simulate() {
     this->LoadBackgroundImg();
     while (true) {
         // sleep at every iteration to reduce CPU usage
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         // update graphics
         this->DrawSimulation();

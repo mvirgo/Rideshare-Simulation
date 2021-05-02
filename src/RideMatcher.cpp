@@ -24,6 +24,7 @@ void RideMatcher::VehicleHasArrived(int id) {
     // Tell PassengerQueue to send passenger to vehicle
     int p_id = vehicle_to_passenger_match_.at(id);
     passenger_queue_->RideArrived(p_id);
+    // TODO: Output the arrival to console?
 }
 
 void RideMatcher::PassengerToVehicle(std::shared_ptr<Passenger> passenger) {
@@ -43,7 +44,7 @@ void RideMatcher::Simulate() {
 void RideMatcher::MatchRides() {
     while (true) {
         // Sleep at every iteration to reduce CPU usage
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         // Match rides if more than one in each related queue
         if (passenger_ids_.size() > 0 && vehicle_ids_.size() > 0) {

@@ -13,7 +13,7 @@ VehicleManager::VehicleManager(RouteModel *model) : ConcurrentObject(model) {
         GenerateNew();
     }
     // Set distance per cycle based on model's latitudes
-    distance_per_cycle_ = std::abs(model_->MaxLat() - model->MinLat()) / 10000.0;
+    distance_per_cycle_ = std::abs(model_->MaxLat() - model->MinLat()) / 1000.0;
 }
 
 void VehicleManager::GenerateNew() {
@@ -80,7 +80,7 @@ void VehicleManager::Drive() {
 
     while (true) {
         // Sleep at every iteration to reduce CPU usage
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         for (auto &vehicle : vehicles_) {
             // Get a route if none yet given
