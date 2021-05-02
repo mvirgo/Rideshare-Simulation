@@ -28,7 +28,7 @@ class Vehicle: public MapObject {
     std::vector<RouteModel::Node> Path() { return path_; }
     void SetState(VehicleState state) { state_ = state; }
     void SetPath(std::vector<RouteModel::Node> path) { path_ = path; }
-    void SetPassenger(std::shared_ptr<Passenger> passenger) { passenger_ = passenger; }
+    void SetPassenger(std::shared_ptr<Passenger> passenger);
     void SetPosition(double x, double y); // Override base class
 
     // Other functionality
