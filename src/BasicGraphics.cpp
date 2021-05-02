@@ -55,8 +55,8 @@ void BasicGraphics::DrawSimulation() {
 
 void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
     // create overlay from passengers
-    for (auto const& passenger : passenger_queue_->NewPassengers()) {
-        DrawPassenger(img_rows, img_cols, 25, passenger); // Full size marker
+    for (auto const& passenger_map : passenger_queue_->NewPassengers()) {
+        DrawPassenger(img_rows, img_cols, 25, passenger_map.second); // Full size marker
     }
 
     float opacity = 0.85;

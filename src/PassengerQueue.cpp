@@ -10,7 +10,6 @@ PassengerQueue::PassengerQueue(RouteModel *model) : ConcurrentObject(model) {
 }
 
 void PassengerQueue::GenerateNew() {
-    // TODO: Add appropriate handling of Passenger to avoid memory leaks once made a pointer
     // Get random start and destination locations
     auto start = model_->GetRandomMapPosition();
     auto dest = model_->GetRandomMapPosition();
@@ -19,7 +18,7 @@ void PassengerQueue::GenerateNew() {
     passenger->SetPosition(start[0], start[1]);
     passenger->SetDestination(dest[0], dest[1]);
     passenger->SetId(idCnt_++);
-    new_passengers_.emplace_back(std::move(passenger));
+    new_passengers_.emplace(passenger->Id(), passenger);
     // Output id and location of passenger requesting ride
     std::lock_guard<std::mutex> lck(mtx_);
     std::cout << "Passenger ID#" << idCnt_ - 1 << " requesting ride from: " << start[1] << ", " << start[0] << "." << std::endl;
