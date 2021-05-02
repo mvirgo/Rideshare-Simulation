@@ -16,7 +16,7 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
     VehicleManager(RouteModel *model);
     
     // Getters / Setters
-    std::vector<Vehicle> Vehicles() { return vehicles_; }
+    std::vector<std::shared_ptr<Vehicle>> Vehicles() { return vehicles_; }
     void SetRideMatcher(std::shared_ptr<RideMatcher> ride_matcher) { ride_matcher_ = ride_matcher; }
 
     void Simulate();
@@ -34,16 +34,16 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
 
     // Movement
     void Drive();
-    void IncrementalMove(Vehicle &vehicle);
-    void ResetVehicleDestination(Vehicle &vehicle, bool random);
+    void IncrementalMove(std::shared_ptr<Vehicle> vehicle);
+    void ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, bool random);
 
     // Passenger-related handling
-    void RequestPassenger(Vehicle &vehicle);
-    void ArrivedAtPassenger(Vehicle &vehicle);
-    void DropOffPassenger(Vehicle &vehicle);
+    void RequestPassenger(std::shared_ptr<Vehicle> vehicle);
+    void ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle);
+    void DropOffPassenger(std::shared_ptr<Vehicle> vehicle);
 
     // Variables
-    std::vector<Vehicle> vehicles_;
+    std::vector<std::shared_ptr<Vehicle>> vehicles_;
     double distance_per_cycle_;
     std::shared_ptr<RideMatcher> ride_matcher_;
 };

@@ -82,17 +82,17 @@ void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_siz
 void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
     // create overlay from vehicles
     for (auto vehicle : vehicle_manager_->Vehicles()) {
-        std::vector<double> position = vehicle.GetPosition();
+        std::vector<double> position = vehicle->GetPosition();
 
         // Adjust the position based on lat & lon in image
         position[0] = (position[0] - min_lon_) / (max_lon_ - min_lon_);
         position[1] = (max_lat_ - position[1]) / (max_lat_ - min_lat_);
 
         // Set color according to vehicle and draw a marker there
-        cv::Scalar color = cv::Scalar(vehicle.Blue(), vehicle.Green(), vehicle.Red());
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), color, vehicle.Shape(), 25, 15);
+        cv::Scalar color = cv::Scalar(vehicle->Blue(), vehicle->Green(), vehicle->Red());
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(position[0] * img_cols), (int)(position[1] * img_rows)), color, vehicle->Shape(), 25, 15);
         // Draw any related information for possible passenger
-        auto passenger = vehicle.GetPassenger(); // ensures shared pointer will stay alive while drawing, if it exits
+        auto passenger = vehicle->GetPassenger(); // ensures shared pointer will stay alive while drawing, if it exits
         if (passenger != nullptr) {
             // Note that this state is guaranteed to have a passenger
             DrawPassenger(img_rows, img_cols, 15, passenger); // Smaller marker

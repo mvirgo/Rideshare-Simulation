@@ -1,7 +1,9 @@
 #include "VehicleManager.h"
 #include <cmath>
+#include "Passenger.h"
 #include "RoutePlanner.h"
 #include "RideMatcher.h"
+#include "Vehicle.h"
 
 VehicleManager::VehicleManager(RouteModel *model) : ConcurrentObject(model) {
     // TODO: Add simulation instead of creating vehicles at start?
@@ -13,7 +15,6 @@ VehicleManager::VehicleManager(RouteModel *model) : ConcurrentObject(model) {
 }
 
 void VehicleManager::GenerateNew() {
-    // TODO: Add appropriate handling of Vehicle to avoid memory leaks if made a pointer
     // Get random start position
     auto start = model_->GetRandomMapPosition();
     // Set a random destination until they have a passenger to go pick up
@@ -22,47 +23,47 @@ void VehicleManager::GenerateNew() {
     auto nearest_start = model_->FindClosestNode(start[0], start[1]);
     auto nearest_dest = model_->FindClosestNode(destination[0], destination[1]);
     // Set road position, destination and id of vehicle
-    Vehicle vehicle = Vehicle(); // TODO: May need change for memory changes later
-    vehicle.SetPosition(nearest_start.x, nearest_start.y);
-    vehicle.SetDestination(nearest_dest.x, nearest_dest.y);
-    vehicle.SetId(idCnt_++);
+    std::shared_ptr<Vehicle> vehicle = std::make_shared<Vehicle>();
+    vehicle->SetPosition(nearest_start.x, nearest_start.y);
+    vehicle->SetDestination(nearest_dest.x, nearest_dest.y);
+    vehicle->SetId(idCnt_++);
     vehicles_.emplace_back(vehicle);
     // Output id and location of vehicle looking to give rides
     std::lock_guard<std::mutex> lck(mtx_);
     std::cout << "Vehicle ID#" << idCnt_ - 1 << " now driving from: " << nearest_start.y << ", " << nearest_start.x << "." << std::endl;
 }
 
-void VehicleManager::ResetVehicleDestination(Vehicle &vehicle, bool random) {
+void VehicleManager::ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, bool random) {
     std::vector<double> destination;
     // Depending on `random`, either get a new random position or set current destination onto nearest node
     if (random) {
         destination = model_->GetRandomMapPosition();
     } else {
-        destination = vehicle.GetDestination();
+        destination = vehicle->GetDestination();
     }
     auto nearest_dest = model_->FindClosestNode(destination[0], destination[1]);
-    vehicle.SetDestination(nearest_dest.x, nearest_dest.y);
+    vehicle->SetDestination(nearest_dest.x, nearest_dest.y);
     // Reset the path and index so will properly route on a new path
-    vehicle.ResetPathAndIndex();
+    vehicle->ResetPathAndIndex();
 }
 
 // Make for smooth, incremental driving between path nodes
-void VehicleManager::IncrementalMove(Vehicle &vehicle) {
+void VehicleManager::IncrementalMove(std::shared_ptr<Vehicle> vehicle) {
     // Check distance to next position vs. distance can go b/w timesteps
-    auto pos = vehicle.GetPosition();
-    auto next_pos = vehicle.Path().at(vehicle.PathIndex());
+    auto pos = vehicle->GetPosition();
+    auto next_pos = vehicle->Path().at(vehicle->PathIndex());
     auto distance = std::sqrt(std::pow(next_pos.x - pos[0], 2) + std::pow(next_pos.y - pos[1], 2));
 
     if (distance <= distance_per_cycle_) {
         // Don't need to calculate intermediate point, just set position as next_pos
-        vehicle.SetPosition(next_pos.x, next_pos.y);
-        vehicle.IncrementPathIndex();
+        vehicle->SetPosition(next_pos.x, next_pos.y);
+        vehicle->IncrementPathIndex();
     } else {
         // Calculate an intermediate position
         double angle = std::atan2(next_pos.y - pos[1], next_pos.x - pos[0]); // angle from x-axis
         double new_pos_x = pos[0] + (distance_per_cycle_ * std::cos(angle));
         double new_pos_y = pos[1] + (distance_per_cycle_ * std::sin(angle));
-        vehicle.SetPosition(new_pos_x, new_pos_y);
+        vehicle->SetPosition(new_pos_x, new_pos_y);
     }
 }
 
@@ -81,39 +82,39 @@ void VehicleManager::Drive() {
 
         for (auto &vehicle : vehicles_) {
             // Get a route if none yet given
-            if (vehicle.Path().empty()) {
+            if (vehicle->Path().empty()) {
                 route_planner.AStarSearch(vehicle);
                 // TODO: Replace/remove below when handling impossible routes (i.e. stuck)
                 // TODO: Handle below if holding a passenger
-                if (vehicle.Path().empty()) {
+                if (vehicle->Path().empty()) {
                     ResetVehicleDestination(vehicle, true);
                     continue;
                 }
             }
 
             // Request a passenger if don't have one yet
-            if (vehicle.State() == VehicleState::no_passenger_requested) {
+            if (vehicle->State() == VehicleState::no_passenger_requested) {
                 RequestPassenger(vehicle);
             }
 
             // Drive to destination or wait, depending on state
-            if (vehicle.State() == VehicleState::waiting) {
+            if (vehicle->State() == VehicleState::waiting) {
                 continue;
             } else {
-                // Drive to current destination (effectively random driving)
+                // Drive to current destination
                 IncrementalMove(vehicle);
             }
 
             // Check if at destination
             // TODO: Ensure position and destination ensured to actually match?
-            if (vehicle.GetPosition() == vehicle.GetDestination()) {
-                if (vehicle.State() == VehicleState::no_passenger_queued) {
+            if (vehicle->GetPosition() == vehicle->GetDestination()) {
+                if (vehicle->State() == VehicleState::no_passenger_queued) {
                     // Find a new random destination
                     ResetVehicleDestination(vehicle, true);
-                } else if (vehicle.State() == VehicleState::passenger_queued) {
+                } else if (vehicle->State() == VehicleState::passenger_queued) {
                     // Notify of arrival
                     ArrivedAtPassenger(vehicle);
-                } else if (vehicle.State() == VehicleState::driving_passenger) {
+                } else if (vehicle->State() == VehicleState::driving_passenger) {
                     // Drop-off passenger
                     DropOffPassenger(vehicle);
                 }
@@ -122,48 +123,52 @@ void VehicleManager::Drive() {
     }
 }
 
-void VehicleManager::RequestPassenger(Vehicle &vehicle) {
+void VehicleManager::RequestPassenger(std::shared_ptr<Vehicle> vehicle) {
     // Update state first (make sure no async issues)
-    vehicle.SetState(VehicleState::no_passenger_queued);
+    vehicle->SetState(VehicleState::no_passenger_queued);
     // Request the passenger from the ride matcher
     if (ride_matcher_ != nullptr) {
-        ride_matcher_->VehicleRequestsPassenger(vehicle.Id());
+        ride_matcher_->VehicleRequestsPassenger(vehicle->Id());
     }
-    // TODO: Output notice to console?
+    // Output notice to console
+    std::lock_guard<std::mutex> lck(mtx_);
+    std::cout << "Vehicle ID#" << vehicle->Id() << " has requested to be matched with a passenger." << std::endl;
 }
 
 void VehicleManager::AssignPassenger(int id, std::vector<double> position) {
-    Vehicle vehicle = vehicles_.at(id);
+    auto vehicle = vehicles_.at(id);
     // Set new vehicle destination and update its state
-    vehicle.SetDestination(position[0], position[1]);
+    vehicle->SetDestination(position[0], position[1]);
     ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
     // Update state when done processing
-    vehicle.SetState(VehicleState::passenger_queued);
+    vehicle->SetState(VehicleState::passenger_queued);
 }
 
-void VehicleManager::ArrivedAtPassenger(Vehicle &vehicle) {
+void VehicleManager::ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle) {
     // Transition to waiting
-    vehicle.SetState(VehicleState::waiting);
+    vehicle->SetState(VehicleState::waiting);
     // Notify ride matcher
-    ride_matcher_->VehicleHasArrived(vehicle.Id());
-    // TODO: Output notice to console?
+    ride_matcher_->VehicleHasArrived(vehicle->Id());
 }
 
 void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger) {
-    Vehicle vehicle = vehicles_.at(id);
+    auto vehicle = vehicles_.at(id);
     // Set passenger into vehicle and updates its state
-    vehicle.SetPassenger(passenger); // Vehicle handles setting new destination with passenger
+    vehicle->SetPassenger(passenger); // Vehicle handles setting new destination with passenger
     ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
     // Update state when done processing
-    vehicle.SetState(VehicleState::driving_passenger);
+    vehicle->SetState(VehicleState::driving_passenger);
 }
 
-void VehicleManager::DropOffPassenger(Vehicle &vehicle) {
+void VehicleManager::DropOffPassenger(std::shared_ptr<Vehicle> vehicle) {
+    // Output notice to console
+    std::unique_lock<std::mutex> lck(mtx_);
+    std::cout << "Vehicle ID#" << vehicle->Id() << " has dropped off Passenger ID#" << vehicle->GetPassenger()->Id() << "." << std::endl;
+    lck.unlock();
     // Drop off the passenger
-    vehicle.DropOffPassenger();
+    vehicle->DropOffPassenger();
     // Find a new random destination
     ResetVehicleDestination(vehicle, true);
     // Transition back to no passenger requested state
-    vehicle.SetState(VehicleState::no_passenger_requested);
-    // TODO: Output notice to console?
+    vehicle->SetState(VehicleState::no_passenger_requested);
 }

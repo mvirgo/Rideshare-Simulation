@@ -16,7 +16,7 @@ class RoutePlanner {
     // Getters / Setters
 
     // Primary functionality
-    void AStarSearch(Vehicle &vehicle);
+    void AStarSearch(std::shared_ptr<Vehicle> vehicle);
 
   private:
     // Route model-related variables

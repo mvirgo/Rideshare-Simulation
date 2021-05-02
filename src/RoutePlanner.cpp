@@ -69,12 +69,12 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 
 // A* Search Algorithm
 // TODO: Handle if route not found?
-void RoutePlanner::AStarSearch(Vehicle &vehicle) {
+void RoutePlanner::AStarSearch(std::shared_ptr<Vehicle> vehicle) {
     RouteModel::Node *current_node = nullptr;
 
     // Get vehicle starting and destination positions
-    auto start_pos = vehicle.GetPosition();
-    auto dest_pos = vehicle.GetDestination();
+    auto start_pos = vehicle->GetPosition();
+    auto dest_pos = vehicle->GetDestination();
 
     // Use FindClosestNode to find the closest nodes to the starting and ending coordinates.
     //  and store the nodes found
@@ -91,7 +91,7 @@ void RoutePlanner::AStarSearch(Vehicle &vehicle) {
         current_node = NextNode();
         // Check if at the goal state, and if so, construct the final path
         if (current_node->x == end_node_->x && current_node->y == end_node_->y) {
-            vehicle.SetPath(ConstructFinalPath(current_node));
+            vehicle->SetPath(ConstructFinalPath(current_node));
             break; // Can stop searching
         }
         // Add all neighbors for current node
