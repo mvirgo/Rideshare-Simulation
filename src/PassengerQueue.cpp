@@ -2,6 +2,7 @@
 #include <chrono>
 #include <mutex>
 
+#include "Passenger.h"
 #include "RideMatcher.h"
 
 PassengerQueue::PassengerQueue(RouteModel *model) : ConcurrentObject(model) {
@@ -21,8 +22,6 @@ void PassengerQueue::GenerateNew() {
     passenger->SetDestination(dest[0], dest[1]);
     passenger->SetId(idCnt_++);
     new_passengers_.emplace(passenger->Id(), passenger);
-    // Request a ride
-    RequestRide(passenger); // ID is one less than new count
     // Output id and location of passenger requesting ride
     std::lock_guard<std::mutex> lck(mtx_);
     std::cout << "Passenger ID#" << idCnt_ - 1 << " requesting ride from: " << start[1] << ", " << start[0] << "." << std::endl;
@@ -60,10 +59,18 @@ void PassengerQueue::WaitForRide() {
             // Reset stop watch so wait a bit to see if queue frees up
             lastUpdate = std::chrono::system_clock::now();
         }
+
+        // Request rides for passengers in queue, if not yet requested
+        for (auto passenger_pair : new_passengers_) {
+            if (!(passenger_pair.second->RideRequested())) {
+                RequestRide(passenger_pair.second);
+            }
+        }
     }
 }
 
 void PassengerQueue::RequestRide(std::shared_ptr<Passenger> passenger) {
+    passenger->SetRideAsRequested();
     if (ride_matcher_ != nullptr) {
         ride_matcher_->PassengerRequestsRide(passenger);
     }
