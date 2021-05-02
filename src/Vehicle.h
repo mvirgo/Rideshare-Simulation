@@ -18,23 +18,23 @@ enum VehicleState {
 
 class Vehicle: public MapObject {
   public:
-    // constructor / destructor
+    // Constructor / Destructor
 
-    // getters / setters
+    // Getters / Setters
     int Shape() { return shape_; }
     int State() { return state_; }
     int PathIndex() { return path_index_; }
     std::shared_ptr<Passenger> GetPassenger() { return passenger_; }
-    void SetState(VehicleState state) { state_ = state; }
     std::vector<RouteModel::Node> Path() { return path_; }
+    void SetState(VehicleState state) { state_ = state; }
     void SetPath(std::vector<RouteModel::Node> path) { path_ = path; }
     void SetPassenger(std::shared_ptr<Passenger> passenger) { passenger_ = passenger; }
+    void SetPosition(double x, double y); // Override base class
+
+    // Other functionality
     void DropOffPassenger() { passenger_.reset(); } // TODO: May want more post-dropoff later
     void IncrementPathIndex() { ++path_index_; }
-    void ResetPathAndIndex() {
-        path_.clear();
-        path_index_ = 0;
-    }
+    void ResetPathAndIndex();
 
   private:
     std::shared_ptr<Passenger> passenger_;

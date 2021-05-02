@@ -1,6 +1,5 @@
 #include "VehicleManager.h"
 #include <cmath>
-#include "Passenger.h"
 #include "RoutePlanner.h"
 #include "RideMatcher.h"
 
@@ -58,13 +57,6 @@ void VehicleManager::IncrementalMove(Vehicle &vehicle) {
         double new_pos_x = pos[0] + (distance_per_cycle_ * std::cos(angle));
         double new_pos_y = pos[1] + (distance_per_cycle_ * std::sin(angle));
         vehicle.SetPosition(new_pos_x, new_pos_y);
-    }
-
-    // If there is a passenger, match to the vehicle's position
-    if (vehicle.State() == VehicleState::driving_passenger) {
-        auto passenger = vehicle.GetPassenger();
-        auto new_pos = vehicle.GetPosition();
-        passenger->SetPosition(new_pos[0], new_pos[1]);
     }
 }
 
