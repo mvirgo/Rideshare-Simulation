@@ -2,6 +2,8 @@
 #include <chrono>
 #include <mutex>
 
+#include "RideMatcher.h"
+
 PassengerQueue::PassengerQueue(RouteModel *model) : ConcurrentObject(model) {
     // Start by creating half the max number of passengers
     for (int i = 0; i < MAX_OBJECTS / 2; ++i) {
@@ -19,6 +21,8 @@ void PassengerQueue::GenerateNew() {
     passenger->SetDestination(dest[0], dest[1]);
     passenger->SetId(idCnt_++);
     new_passengers_.emplace(passenger->Id(), passenger);
+    // Request a ride
+    RequestRide(passenger); // ID is one less than new count
     // Output id and location of passenger requesting ride
     std::lock_guard<std::mutex> lck(mtx_);
     std::cout << "Passenger ID#" << idCnt_ - 1 << " requesting ride from: " << start[1] << ", " << start[0] << "." << std::endl;
@@ -57,4 +61,21 @@ void PassengerQueue::WaitForRide() {
             lastUpdate = std::chrono::system_clock::now();
         }
     }
+}
+
+void PassengerQueue::RequestRide(std::shared_ptr<Passenger> passenger) {
+    if (ride_matcher_ != nullptr) {
+        ride_matcher_->PassengerRequestsRide(passenger);
+    }
+}
+
+void PassengerQueue::RideOnWay(int id) {
+    // Nothing to do here...yet
+}
+
+void PassengerQueue::RideArrived(int id) {
+    // Send the passenger to the vehicle
+    ride_matcher_->PassengerToVehicle(new_passengers_.at(id));
+    // Erase the passenger from the queue
+    new_passengers_.erase(id);
 }

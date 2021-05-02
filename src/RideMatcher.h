@@ -22,7 +22,7 @@ class RideMatcher : std::enable_shared_from_this<RideMatcher> {
     void Simulate();
 
     // Pre-Matching
-    void PassengerRequestsRide(int id);
+    void PassengerRequestsRide(std::shared_ptr<Passenger> passenger);
     void VehicleRequestsPassenger(int id);
 
     // Post-matching
@@ -32,7 +32,7 @@ class RideMatcher : std::enable_shared_from_this<RideMatcher> {
   private:
     std::shared_ptr<PassengerQueue> passenger_queue_;
     std::shared_ptr<VehicleManager> vehicle_manager_;
-    std::set<int> passenger_ids_;
+    std::unordered_map<int, std::shared_ptr<Passenger>> passenger_ids_;
     std::set<int> vehicle_ids_;
     std::unordered_map<int, int> vehicle_to_passenger_match_;
     std::unordered_map<int, int> passenger_to_vehicle_match_;

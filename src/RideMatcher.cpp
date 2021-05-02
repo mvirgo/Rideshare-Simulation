@@ -12,8 +12,8 @@ RideMatcher::~RideMatcher() {
     });
 }
 
-void RideMatcher::PassengerRequestsRide(int id) {
-    passenger_ids_.emplace(id);
+void RideMatcher::PassengerRequestsRide(std::shared_ptr<Passenger> passenger) {
+    passenger_ids_.emplace(passenger->Id(), passenger);
 }
 
 void RideMatcher::VehicleRequestsPassenger(int id) {
@@ -21,12 +21,18 @@ void RideMatcher::VehicleRequestsPassenger(int id) {
 }
 
 void RideMatcher::VehicleHasArrived(int id) {
-    // TODO: Tell PassengerQueue to send passenger to vehicle
+    // Tell PassengerQueue to send passenger to vehicle
+    int p_id = vehicle_to_passenger_match_.at(id);
+    passenger_queue_->RideArrived(p_id);
 }
 
 void RideMatcher::PassengerToVehicle(std::shared_ptr<Passenger> passenger) {
-    // TODO: Add passenger to related vehicle
+    // Add passenger to related vehicle
     int v_id = passenger_to_vehicle_match_.at(passenger->Id());
+    vehicle_manager_->PassengerIntoVehicle(v_id, passenger);
+    // Remove both from match maps
+    passenger_to_vehicle_match_.erase(passenger->Id());
+    vehicle_to_passenger_match_.erase(v_id);
 }
 
 void RideMatcher::Simulate() {
@@ -43,12 +49,15 @@ void RideMatcher::MatchRides() {
         if (passenger_ids_.size() > 0 && vehicle_ids_.size() > 0) {
             // TODO: Improve ride matching beyond just grabbing "first" of each
             // Match rides
-            int p_id = *passenger_ids_.begin();
+            auto passenger_info = *passenger_ids_.begin();
+            int p_id = passenger_info.first;
             int v_id = *vehicle_ids_.begin();
             vehicle_to_passenger_match_.insert({v_id, p_id});
             passenger_to_vehicle_match_.insert({p_id, v_id});
-            // TODO: Notify PassengerQueue and VehicleManager
-            // TODO: Remove the ids from the vectors
+            // Notify PassengerQueue and VehicleManager
+            vehicle_manager_->AssignPassenger(v_id, passenger_info.second->GetPosition());
+            passenger_queue_->RideOnWay(p_id);
+            // Remove the ids from the vectors
             passenger_ids_.erase(p_id);
             vehicle_ids_.erase(v_id);
             // TODO: Output the match to console?

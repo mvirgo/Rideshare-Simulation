@@ -6,26 +6,41 @@
 #include "ConcurrentObject.h"
 #include "Passenger.h"
 
+class RideMatcher;
+
 class PassengerQueue : public ConcurrentObject, std::enable_shared_from_this<PassengerQueue> {
   public:
-    // constructor / destructor
+    // Constructor / Destructor
     PassengerQueue() {};
     PassengerQueue(RouteModel *model);
     
-    // getter
+    // Getters / Setters
     const std::unordered_map<int, std::shared_ptr<Passenger>>& NewPassengers() { return new_passengers_; }
+    void SetRideMatcher(std::shared_ptr<RideMatcher> ride_matcher) { ride_matcher_ = ride_matcher; }
 
+    // Concurrency
     void Simulate();
 
-    // miscellaneous
+    // Ride match handling
+    void RideOnWay(int id);
+    void RideArrived(int id);
+
+    // Miscellaneous
     std::shared_ptr<PassengerQueue> GetSharedThis() { return shared_from_this(); }
 
   private:
-    void WaitForRide();
+    // Creation
     void GenerateNew();
+    void WaitForRide();
+
+    // Ride match handling
+    void RequestRide(std::shared_ptr<Passenger> passenger);
+
+    // Variables
     int MIN_WAIT_TIME_ = 3; // seconds to wait between generation attempts
     int RANGE_WAIT_TIME_ = 2; // range in seconds to wait between generation attempts
     std::unordered_map<int, std::shared_ptr<Passenger>> new_passengers_;
+    std::shared_ptr<RideMatcher> ride_matcher_;
 };
 
 #endif
