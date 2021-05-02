@@ -48,22 +48,6 @@ int main() {
 
     srand((unsigned) time(NULL)); // Seed random number generator
 
-    // Finding shared nodes between roads
-    std::set<int> all_nodes;
-    std::vector<int> shared_nodes;
-    for (auto road : model.Roads()) {
-        auto way = model.Ways()[road.way];
-        for (auto node : way.nodes) {
-            if (all_nodes.count(node) != 1) {
-                // Not found
-                all_nodes.insert(node);
-            } else {
-                shared_nodes.push_back(node);
-            }
-        }
-    }
-    std::cout << "Shared road nodes total: " << shared_nodes.size() << std::endl;
-
     // Create vehicles
     std::shared_ptr<VehicleManager> vehicles = std::make_shared<VehicleManager>(&model);
 
