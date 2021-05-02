@@ -9,6 +9,7 @@
 #include "RouteModel.h"
 #include "BasicGraphics.h"
 #include "PassengerQueue.h"
+#include "RideMatcher.h"
 #include "VehicleManager.h"
 
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path) {   
@@ -63,15 +64,21 @@ int main() {
     }
     std::cout << "Shared road nodes total: " << shared_nodes.size() << std::endl;
 
-    // Create initial vehicles
-    // TODO: Change/remove when using full simulation
+    // Create vehicles
     std::shared_ptr<VehicleManager> vehicles = std::make_shared<VehicleManager>(&model);
 
-    // Create basic passenger queue
-    // TODO: Remove when using full simulation
+    // Create passenger queue
     std::shared_ptr<PassengerQueue> passengers = std::make_shared<PassengerQueue>(&model);
 
+    // Create the ride matcher
+    std::shared_ptr<RideMatcher> ride_matcher = std::make_shared<RideMatcher>(passengers, vehicles);
+
+    // Attach ride matcher to the other two
+    vehicles->SetRideMatcher(ride_matcher);
+    passengers->SetRideMatcher(ride_matcher);
+
     // Start the simulations
+    ride_matcher->Simulate();
     vehicles->Simulate();
     passengers->Simulate();
 
