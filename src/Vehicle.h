@@ -11,6 +11,7 @@ class Passenger;
 enum VehicleState {
     no_passenger_queued,
     passenger_queued,
+    waiting,
     driving_passenger,
 };
 
@@ -25,6 +26,8 @@ class Vehicle: public MapObject {
     void SetState(VehicleState state) { state_ = state; }
     std::vector<RouteModel::Node> Path() { return path_; }
     void SetPath(std::vector<RouteModel::Node> path) { path_ = path; }
+    void SetPassenger(std::shared_ptr<Passenger> passenger) { passenger_ = passenger; }
+    void DropOffPassenger() { passenger_.reset(); } // TODO: May want more post-dropoff later
     void IncrementPathIndex() { ++path_index_; }
     void ResetPathAndIndex() {
         path_.clear();
@@ -37,7 +40,6 @@ class Vehicle: public MapObject {
     int state_ = VehicleState::no_passenger_queued;
     int path_index_ = 0;
     std::vector<RouteModel::Node> path_;
-    // TODO: Functions for sim/driving and handling passenger requests
 };
 
 #endif
