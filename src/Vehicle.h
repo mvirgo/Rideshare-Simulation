@@ -24,6 +24,7 @@ class Vehicle: public MapObject {
     int Shape() { return shape_; }
     int State() { return state_; }
     int PathIndex() { return path_index_; }
+    std::shared_ptr<Passenger> GetPassenger() { return passenger_; }
     void SetState(VehicleState state) { state_ = state; }
     std::vector<RouteModel::Node> Path() { return path_; }
     void SetPath(std::vector<RouteModel::Node> path) { path_ = path; }
