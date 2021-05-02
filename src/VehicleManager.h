@@ -35,7 +35,7 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
     // Movement
     void Drive();
     void IncrementalMove(Vehicle &vehicle);
-    void ResetVehicleDestination(Vehicle &vehicle);
+    void ResetVehicleDestination(Vehicle &vehicle, bool random);
 
     // Passenger-related handling
     void RequestPassenger(int id);

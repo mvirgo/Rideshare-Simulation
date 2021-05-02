@@ -32,11 +32,17 @@ void VehicleManager::GenerateNew() {
     std::cout << "Vehicle ID#" << idCnt_ - 1 << " now driving from: " << nearest_start.y << ", " << nearest_start.x << "." << std::endl;
 }
 
-void VehicleManager::ResetVehicleDestination(Vehicle &vehicle) {
-    // TODO: Refactor below if needed to handle state transitions too
-    auto destination = model_->GetRandomMapPosition();
+void VehicleManager::ResetVehicleDestination(Vehicle &vehicle, bool random) {
+    std::vector<double> destination;
+    // Depending on `random`, either get a new random position or set current destination onto nearest node
+    if (random) {
+        destination = model_->GetRandomMapPosition();
+    } else {
+        destination = vehicle.GetDestination();
+    }
     auto nearest_dest = model_->FindClosestNode(destination[0], destination[1]);
     vehicle.SetDestination(nearest_dest.x, nearest_dest.y);
+    // Reset the path and index so will properly route on a new path
     vehicle.ResetPathAndIndex();
 }
 
@@ -80,7 +86,7 @@ void VehicleManager::Drive() {
                 // TODO: Replace/remove below when handling impossible routes (i.e. stuck)
                 // TODO: Handle below if holding a passenger
                 if (vehicle.Path().empty()) {
-                    ResetVehicleDestination(vehicle);
+                    ResetVehicleDestination(vehicle, true);
                     continue;
                 }
             }
@@ -105,7 +111,7 @@ void VehicleManager::Drive() {
             if (vehicle.GetPosition() == vehicle.GetDestination()) {
                 if (vehicle.State() == VehicleState::no_passenger_queued) {
                     // Find a new random destination
-                    ResetVehicleDestination(vehicle);
+                    ResetVehicleDestination(vehicle, true);
                 } else if (vehicle.State() == VehicleState::passenger_queued) {
                     // Notify of arrival
                     ArrivedAtPassenger(vehicle.Id());
@@ -118,7 +124,7 @@ void VehicleManager::Drive() {
                     // Transition back to no passenger requested state
                     vehicle.SetState(VehicleState::no_passenger_requested);
                     // Find a new random destination
-                    ResetVehicleDestination(vehicle);
+                    ResetVehicleDestination(vehicle, true);
                     // TODO: Output notice to console?
                 }
             }
@@ -136,6 +142,7 @@ void VehicleManager::AssignPassenger(int id, std::vector<double> position) {
     Vehicle vehicle = vehicles_.at(id);
     // Set new vehicle destination and update its state
     vehicle.SetDestination(position[0], position[1]);
+    ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
     vehicle.SetState(VehicleState::passenger_queued);
 }
 
@@ -146,6 +153,7 @@ void VehicleManager::ArrivedAtPassenger(int id) {
 void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger) {
     Vehicle vehicle = vehicles_.at(id);
     // Set passenger into vehicle and updates its state
-    vehicle.SetPassenger(passenger);
+    vehicle.SetPassenger(passenger); // Vehicle handles setting new destination with passenger
+    ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
     vehicle.SetState(VehicleState::driving_passenger);
 }
