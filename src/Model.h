@@ -43,7 +43,6 @@ class Model {
     std::vector<double> GetRandomMapPosition() const noexcept;
     
   private:
-    void AdjustCoordinates();
     void LoadData(const std::vector<std::byte> &xml);
     
     std::vector<Node> nodes_;

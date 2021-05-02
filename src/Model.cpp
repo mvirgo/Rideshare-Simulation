@@ -27,9 +27,6 @@ Model::Model(const std::vector<std::byte> &xml) {
     
     LoadData(xml);
 
-    // TODO: Decide if we want this
-    //AdjustCoordinates();
-
     std::sort(roads_.begin(), roads_.end(), [](const auto &_1st, const auto &_2nd) {
         return (int)_1st.type < (int)_2nd.type; 
     });
@@ -95,22 +92,5 @@ void Model::LoadData(const std::vector<std::byte> &xml) {
                 }
             }
         }
-    }
-}
-
-void Model::AdjustCoordinates() {    
-    const auto pi = 3.14159265358979323846264338327950288;
-    const auto deg_to_rad = 2. * pi / 360.;
-    const auto earth_radius = 6378137.;
-    const auto lat2ym = [&](double lat) { return log(tan(lat * deg_to_rad / 2 +  pi/4)) / 2 * earth_radius; };
-    const auto lon2xm = [&](double lon) { return lon * deg_to_rad / 2 * earth_radius; };     
-    const auto dx = lon2xm(max_lon_) - lon2xm(min_lon_);
-    const auto dy = lat2ym(max_lat_) - lat2ym(min_lat_);
-    const auto min_y = lat2ym(min_lat_);
-    const auto min_x = lon2xm(min_lon_);
-    metric_scale_ = std::min(dx, dy);
-    for ( auto &node: nodes_ ) {
-        node.x = (lon2xm(node.x) - min_x) / metric_scale_;
-        node.y = (lat2ym(node.y) - min_y) / metric_scale_;        
     }
 }
