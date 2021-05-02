@@ -38,8 +38,9 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
     void ResetVehicleDestination(Vehicle &vehicle, bool random);
 
     // Passenger-related handling
-    void RequestPassenger(int id);
-    void ArrivedAtPassenger(int id);
+    void RequestPassenger(Vehicle &vehicle);
+    void ArrivedAtPassenger(Vehicle &vehicle);
+    void DropOffPassenger(Vehicle &vehicle);
 
     // Variables
     std::vector<Vehicle> vehicles_;

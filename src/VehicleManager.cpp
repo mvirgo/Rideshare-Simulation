@@ -93,9 +93,7 @@ void VehicleManager::Drive() {
 
             // Request a passenger if don't have one yet
             if (vehicle.State() == VehicleState::no_passenger_requested) {
-                vehicle.SetState(VehicleState::no_passenger_queued);
-                // Request a passenger
-                RequestPassenger(vehicle.Id());
+                RequestPassenger(vehicle);
             }
 
             // Drive to destination or wait, depending on state
@@ -114,28 +112,24 @@ void VehicleManager::Drive() {
                     ResetVehicleDestination(vehicle, true);
                 } else if (vehicle.State() == VehicleState::passenger_queued) {
                     // Notify of arrival
-                    ArrivedAtPassenger(vehicle.Id());
-                    // Transition to waiting
-                    vehicle.SetState(VehicleState::waiting);
-                    // TODO: Output notice to console?
+                    ArrivedAtPassenger(vehicle);
                 } else if (vehicle.State() == VehicleState::driving_passenger) {
                     // Drop-off passenger
-                    vehicle.DropOffPassenger();
-                    // Transition back to no passenger requested state
-                    vehicle.SetState(VehicleState::no_passenger_requested);
-                    // Find a new random destination
-                    ResetVehicleDestination(vehicle, true);
-                    // TODO: Output notice to console?
+                    DropOffPassenger(vehicle);
                 }
             }
         }
     }
 }
 
-void VehicleManager::RequestPassenger(int id) {
+void VehicleManager::RequestPassenger(Vehicle &vehicle) {
+    // Update state first (make sure no async issues)
+    vehicle.SetState(VehicleState::no_passenger_queued);
+    // Request the passenger from the ride matcher
     if (ride_matcher_ != nullptr) {
-        ride_matcher_->VehicleRequestsPassenger(id);
+        ride_matcher_->VehicleRequestsPassenger(vehicle.Id());
     }
+    // TODO: Output notice to console?
 }
 
 void VehicleManager::AssignPassenger(int id, std::vector<double> position) {
@@ -143,11 +137,16 @@ void VehicleManager::AssignPassenger(int id, std::vector<double> position) {
     // Set new vehicle destination and update its state
     vehicle.SetDestination(position[0], position[1]);
     ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
+    // Update state when done processing
     vehicle.SetState(VehicleState::passenger_queued);
 }
 
-void VehicleManager::ArrivedAtPassenger(int id) {
-    ride_matcher_->VehicleHasArrived(id);
+void VehicleManager::ArrivedAtPassenger(Vehicle &vehicle) {
+    // Transition to waiting
+    vehicle.SetState(VehicleState::waiting);
+    // Notify ride matcher
+    ride_matcher_->VehicleHasArrived(vehicle.Id());
+    // TODO: Output notice to console?
 }
 
 void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger) {
@@ -155,5 +154,16 @@ void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> pas
     // Set passenger into vehicle and updates its state
     vehicle.SetPassenger(passenger); // Vehicle handles setting new destination with passenger
     ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
+    // Update state when done processing
     vehicle.SetState(VehicleState::driving_passenger);
+}
+
+void VehicleManager::DropOffPassenger(Vehicle &vehicle) {
+    // Drop off the passenger
+    vehicle.DropOffPassenger();
+    // Find a new random destination
+    ResetVehicleDestination(vehicle, true);
+    // Transition back to no passenger requested state
+    vehicle.SetState(VehicleState::no_passenger_requested);
+    // TODO: Output notice to console?
 }
