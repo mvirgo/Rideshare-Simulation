@@ -1,6 +1,7 @@
 #include "VehicleManager.h"
 #include <cmath>
 #include "RoutePlanner.h"
+#include "RideMatcher.h"
 
 VehicleManager::VehicleManager(RouteModel *model) : ConcurrentObject(model) {
     // TODO: Add simulation instead of creating vehicles at start?
@@ -77,32 +78,74 @@ void VehicleManager::Drive() {
             if (vehicle.Path().empty()) {
                 route_planner.AStarSearch(vehicle);
                 // TODO: Replace/remove below when handling impossible routes (i.e. stuck)
+                // TODO: Handle below if holding a passenger
                 if (vehicle.Path().empty()) {
                     ResetVehicleDestination(vehicle);
                     continue;
                 }
             }
 
-            // Process action based on state
+            // Request a passenger if don't have one yet
             if (vehicle.State() == VehicleState::no_passenger_queued) {
-                // TODO: Try to request a passenger
+                // TODO: Consider adding a var to track this has been done
+                // Request a passenger
+                RequestPassenger(vehicle.Id());
+            }
+
+            // Drive to destination or wait, depending on state
+            if (vehicle.State() == VehicleState::waiting) {
+                continue;
+            } else {
                 // Drive to current destination (effectively random driving)
                 IncrementalMove(vehicle);
-            } else if (vehicle.State() == VehicleState::passenger_queued) {
-                // TODO: Drive to passenger position
-            } else { // Have passenger in vehicle
-                // TODO: Drive to passenger destination
             }
 
             // Check if at destination
             // TODO: Ensure position and destination ensured to actually match?
             if (vehicle.GetPosition() == vehicle.GetDestination()) {
-                // TODO: Add handling of passenger (pick-up and drop-off)
-                // TODO: Handle state transitions?
-                // Reset vehicle with new random dest and no passenger queued
-                // TODO: Refactor below when above TODO also implemented
-                ResetVehicleDestination(vehicle);
+                if (vehicle.State() == VehicleState::no_passenger_queued) {
+                    // Find a new random destination
+                    ResetVehicleDestination(vehicle);
+                } else if (vehicle.State() == VehicleState::passenger_queued) {
+                    // Notify of arrival
+                    ArrivedAtPassenger(vehicle.Id());
+                    // Transition to waiting
+                    vehicle.SetState(VehicleState::waiting);
+                    // TODO: Output notice to console?
+                } else if (vehicle.State() == VehicleState::driving_passenger) {
+                    // Drop-off passenger
+                    vehicle.DropOffPassenger();
+                    // Transition back to no passenger queued state
+                    vehicle.SetState(VehicleState::no_passenger_queued);
+                    // Find a new random destination
+                    ResetVehicleDestination(vehicle);
+                    // TODO: Output notice to console?
+                }
             }
         }
     }
+}
+
+void VehicleManager::RequestPassenger(int id) {
+    if (ride_matcher_ != nullptr) {
+        ride_matcher_->VehicleRequestsPassenger(id);
+    }
+}
+
+void VehicleManager::AssignPassenger(int id, std::vector<double> position) {
+    Vehicle vehicle = vehicles_.at(id);
+    // Set new vehicle destination and update its state
+    vehicle.SetDestination(position[0], position[1]);
+    vehicle.SetState(VehicleState::passenger_queued);
+}
+
+void VehicleManager::ArrivedAtPassenger(int id) {
+    ride_matcher_->VehicleHasArrived(id);
+}
+
+void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger) {
+    Vehicle vehicle = vehicles_.at(id);
+    // Set passenger into vehicle and updates its state
+    vehicle.SetPassenger(passenger);
+    vehicle.SetState(VehicleState::driving_passenger);
 }
