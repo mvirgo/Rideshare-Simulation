@@ -9,6 +9,7 @@
 class Passenger;
 
 enum VehicleState {
+    no_passenger_requested,
     no_passenger_queued,
     passenger_queued,
     waiting,
@@ -37,7 +38,7 @@ class Vehicle: public MapObject {
   private:
     std::shared_ptr<Passenger> passenger_;
     int shape_ = DrawMarker::square;
-    int state_ = VehicleState::no_passenger_queued;
+    int state_ = VehicleState::no_passenger_requested;
     int path_index_ = 0;
     std::vector<RouteModel::Node> path_;
 };

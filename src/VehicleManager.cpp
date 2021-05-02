@@ -86,8 +86,8 @@ void VehicleManager::Drive() {
             }
 
             // Request a passenger if don't have one yet
-            if (vehicle.State() == VehicleState::no_passenger_queued) {
-                // TODO: Consider adding a var to track this has been done
+            if (vehicle.State() == VehicleState::no_passenger_requested) {
+                vehicle.SetState(VehicleState::no_passenger_queued);
                 // Request a passenger
                 RequestPassenger(vehicle.Id());
             }
@@ -115,8 +115,8 @@ void VehicleManager::Drive() {
                 } else if (vehicle.State() == VehicleState::driving_passenger) {
                     // Drop-off passenger
                     vehicle.DropOffPassenger();
-                    // Transition back to no passenger queued state
-                    vehicle.SetState(VehicleState::no_passenger_queued);
+                    // Transition back to no passenger requested state
+                    vehicle.SetState(VehicleState::no_passenger_requested);
                     // Find a new random destination
                     ResetVehicleDestination(vehicle);
                     // TODO: Output notice to console?
