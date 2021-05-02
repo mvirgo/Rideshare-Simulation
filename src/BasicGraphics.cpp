@@ -73,9 +73,9 @@ void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_siz
         dest_position[0] = (dest_position[0] - min_lon_) / (max_lon_ - min_lon_);
         dest_position[1] = (max_lat_ - dest_position[1]) / (max_lat_ - min_lat_);
 
-        // Draw both current position and destination
+        // Draw both current position (size based on if in vehicle or not) and destination (always full-size)
         cv::Scalar color = cv::Scalar(passenger->Blue(), passenger->Green(), passenger->Red());
-        cv::drawMarker(images_.at(1), cv::Point2d((int)(curr_position[0] * img_cols), (int)(curr_position[1] * img_rows)), color, passenger->PassShape(), 25, 15);
+        cv::drawMarker(images_.at(1), cv::Point2d((int)(curr_position[0] * img_cols), (int)(curr_position[1] * img_rows)), color, passenger->PassShape(), marker_size, 15);
         cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position[0] * img_cols), (int)(dest_position[1] * img_rows)), color, passenger->DestShape(), 25, 5);
 }
 
