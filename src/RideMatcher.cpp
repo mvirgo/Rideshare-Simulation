@@ -20,6 +20,19 @@ void RideMatcher::VehicleRequestsPassenger(int v_id) {
     vehicle_ids_.emplace(v_id);
 }
 
+void RideMatcher::VehicleCannotReachPassenger(int v_id) {
+    // Remove the match
+    int p_id = vehicle_to_passenger_match_.at(v_id);
+    vehicle_to_passenger_match_.erase(v_id);
+    passenger_to_vehicle_match_.erase(p_id);
+    // Put back into queues
+    vehicle_ids_.emplace(v_id);
+    passenger_ids_.emplace(p_id, passenger_queue_->NewPassengers().at(p_id));
+    // TODO: Somehow track to make sure don't re-assign this pair
+    // TODO: Notify passenger of failure
+    // TODO: Output the un-match to console??
+}
+
 void RideMatcher::VehicleHasArrived(int v_id) {
     // Tell PassengerQueue to send passenger to vehicle
     int p_id = vehicle_to_passenger_match_.at(v_id);

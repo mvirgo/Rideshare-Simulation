@@ -26,6 +26,7 @@ class RideMatcher : std::enable_shared_from_this<RideMatcher> {
     void VehicleRequestsPassenger(int v_id);
 
     // Post-matching
+    void VehicleCannotReachPassenger(int v_id);
     void VehicleHasArrived(int v_id);
     void PassengerToVehicle(std::shared_ptr<Passenger> passenger);
 
