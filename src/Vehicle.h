@@ -34,7 +34,7 @@ class Vehicle: public MapObject {
     void SetPosition(const Coordinate &position); // Override base class
 
     // Other functionality
-    void DropOffPassenger() { passenger_.reset(); } // TODO: May want more post-dropoff later
+    void DropOffPassenger();
     void IncrementPathIndex() { ++path_index_; }
     void ResetPathAndIndex();
 

@@ -18,6 +18,14 @@ void Vehicle::SetPosition(const Coordinate &position) {
     }
 }
 
+void Vehicle::DropOffPassenger() {
+    // Clear out the passenger
+    passenger_.reset();
+    // Clear out failures as well, since had a successful ride
+    failures_ = 0;
+    // TODO: May want more post-dropoff later
+}
+
 void Vehicle::ResetPathAndIndex() {
     path_.clear();
     path_index_ = 0;
