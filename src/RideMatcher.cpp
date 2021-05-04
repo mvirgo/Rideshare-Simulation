@@ -16,13 +16,13 @@ void RideMatcher::PassengerRequestsRide(std::shared_ptr<Passenger> passenger) {
     passenger_ids_.emplace(passenger->Id(), passenger);
 }
 
-void RideMatcher::VehicleRequestsPassenger(int id) {
-    vehicle_ids_.emplace(id);
+void RideMatcher::VehicleRequestsPassenger(int v_id) {
+    vehicle_ids_.emplace(v_id);
 }
 
-void RideMatcher::VehicleHasArrived(int id) {
+void RideMatcher::VehicleHasArrived(int v_id) {
     // Tell PassengerQueue to send passenger to vehicle
-    int p_id = vehicle_to_passenger_match_.at(id);
+    int p_id = vehicle_to_passenger_match_.at(v_id);
     passenger_queue_->RideArrived(p_id);
     // TODO: Output the arrival to console?
 }

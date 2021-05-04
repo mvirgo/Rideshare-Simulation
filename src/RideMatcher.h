@@ -23,10 +23,10 @@ class RideMatcher : std::enable_shared_from_this<RideMatcher> {
 
     // Pre-Matching
     void PassengerRequestsRide(std::shared_ptr<Passenger> passenger);
-    void VehicleRequestsPassenger(int id);
+    void VehicleRequestsPassenger(int v_id);
 
     // Post-matching
-    void VehicleHasArrived(int id);
+    void VehicleHasArrived(int v_id);
     void PassengerToVehicle(std::shared_ptr<Passenger> passenger);
 
   private:
