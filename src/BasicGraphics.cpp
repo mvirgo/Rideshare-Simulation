@@ -83,7 +83,7 @@ void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_siz
 
 void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
     // create overlay from vehicles
-    for (auto vehicle : vehicle_manager_->Vehicles()) {
+    for (auto const & [id, vehicle] : vehicle_manager_->Vehicles()) {
         Coordinate position = vehicle->GetPosition();
 
         // Adjust the position based on lat & lon in image

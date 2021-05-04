@@ -1,6 +1,7 @@
 #ifndef VEHICLEMANAGER_H
 #define VEHICLEMANAGER_H
 
+#include <unordered_map>
 #include <vector>
 
 #include "ConcurrentObject.h"
@@ -18,7 +19,7 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
     VehicleManager(RouteModel *model);
     
     // Getters / Setters
-    std::vector<std::shared_ptr<Vehicle>> Vehicles() { return vehicles_; }
+    const std::unordered_map<int, std::shared_ptr<Vehicle>>& Vehicles() { return vehicles_; }
     void SetRideMatcher(std::shared_ptr<RideMatcher> ride_matcher) { ride_matcher_ = ride_matcher; }
 
     void Simulate();
@@ -45,7 +46,7 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
     void DropOffPassenger(std::shared_ptr<Vehicle> vehicle);
 
     // Variables
-    std::vector<std::shared_ptr<Vehicle>> vehicles_;
+    std::unordered_map<int, std::shared_ptr<Vehicle>> vehicles_;
     double distance_per_cycle_;
     std::shared_ptr<RideMatcher> ride_matcher_;
 };

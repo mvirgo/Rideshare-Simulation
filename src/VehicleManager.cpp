@@ -29,7 +29,7 @@ void VehicleManager::GenerateNew() {
     vehicle->SetPosition((Coordinate){.x = nearest_start.x, .y = nearest_start.y});
     vehicle->SetDestination((Coordinate){.x = nearest_dest.x, .y = nearest_dest.y});
     vehicle->SetId(idCnt_++);
-    vehicles_.emplace_back(vehicle);
+    vehicles_.emplace(vehicle->Id(), vehicle);
     // Output id and location of vehicle looking to give rides
     std::lock_guard<std::mutex> lck(mtx_);
     std::cout << "Vehicle ID#" << idCnt_ - 1 << " now driving from: " << nearest_start.y << ", " << nearest_start.x << "." << std::endl;
@@ -82,7 +82,7 @@ void VehicleManager::Drive() {
         // Sleep at every iteration to reduce CPU usage
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        for (auto &vehicle : vehicles_) {
+        for (auto & [id, vehicle] : vehicles_) {
             // Get a route if none yet given
             if (vehicle->Path().empty()) {
                 route_planner.AStarSearch(vehicle);
