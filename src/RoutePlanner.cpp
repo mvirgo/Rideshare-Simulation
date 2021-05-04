@@ -5,6 +5,8 @@
 
 #include "RoutePlanner.h"
 #include <algorithm>
+#include <mutex>
+
 #include "RouteModel.h"
 #include "Vehicle.h"
 
@@ -75,6 +77,9 @@ void RoutePlanner::AStarSearch(std::shared_ptr<Vehicle> vehicle) {
     // Get vehicle starting and destination positions
     auto start_pos = vehicle->GetPosition();
     auto dest_pos = vehicle->GetDestination();
+
+    // Lock down the route planner until this returns
+    std::lock_guard<std::mutex> lck(mtx_);
 
     // Use FindClosestNode to find the closest nodes to the starting and ending coordinates.
     //  and store the nodes found

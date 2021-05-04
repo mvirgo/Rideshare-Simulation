@@ -82,9 +82,7 @@ void VehicleManager::Drive() {
         for (auto & [id, vehicle] : vehicles_) {
             // Get a route if none yet given
             if (vehicle->Path().empty()) {
-                std::unique_lock<std::mutex> route_lck(route_planner_->mtx_);
                 route_planner_->AStarSearch(vehicle);
-                route_lck.unlock();
                 // TODO: Replace/remove below when handling impossible routes (i.e. stuck)
                 // TODO: Handle below if holding a passenger
                 if (vehicle->Path().empty()) {
@@ -187,9 +185,7 @@ void VehicleManager::AssignPassenger(int id, Coordinate position) {
     vehicle->SetDestination(position);
     ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
     // Get the path to the passenger
-    std::unique_lock<std::mutex> route_lck(route_planner_->mtx_);
     route_planner_->AStarSearch(vehicle);
-    route_lck.unlock();
     // Make sure path is not empty (unreachable), then update the state
     if (vehicle->Path().empty()) {
         // Notify ride matcher of failure

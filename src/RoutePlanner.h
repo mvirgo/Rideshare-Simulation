@@ -19,14 +19,14 @@ class RoutePlanner {
     // Primary functionality
     void AStarSearch(std::shared_ptr<Vehicle> vehicle);
 
-    // Mutex to ensure single access
-    std::mutex mtx_;
-
   private:
     // Route model-related variables
     std::vector<RouteModel::Node*> open_list_;
     RouteModel::Node *start_node_;
     RouteModel::Node *end_node_;
+
+    // Mutex to ensure single access to certain pointers (model, nodes) during A* Search
+    std::mutex mtx_;
 
     // Other variables
     RouteModel &model_;
