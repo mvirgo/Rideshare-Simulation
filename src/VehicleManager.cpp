@@ -75,9 +75,6 @@ void VehicleManager::Simulate() {
 }
 
 void VehicleManager::Drive() {
-    // Create the route planner to use throughout the sim
-    RoutePlanner route_planner = RoutePlanner(*model_);
-
     while (true) {
         // Sleep at every iteration to reduce CPU usage
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -85,7 +82,7 @@ void VehicleManager::Drive() {
         for (auto & [id, vehicle] : vehicles_) {
             // Get a route if none yet given
             if (vehicle->Path().empty()) {
-                route_planner.AStarSearch(vehicle);
+                route_planner_->AStarSearch(vehicle);
                 // TODO: Replace/remove below when handling impossible routes (i.e. stuck)
                 // TODO: Handle below if holding a passenger
                 if (vehicle->Path().empty()) {
