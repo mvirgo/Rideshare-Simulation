@@ -8,7 +8,7 @@
 #include "Vehicle.h"
 
 VehicleManager::VehicleManager(RouteModel *model) : ConcurrentObject(model) {
-    // TODO: Add simulation instead of creating vehicles at start?
+    // Generate max number of vehicles at the start
     for (int i = 0; i < MAX_OBJECTS; ++i) {
         GenerateNew();
     }
@@ -89,8 +89,22 @@ void VehicleManager::Drive() {
                 // TODO: Replace/remove below when handling impossible routes (i.e. stuck)
                 // TODO: Handle below if holding a passenger
                 if (vehicle->Path().empty()) {
-                    ResetVehicleDestination(vehicle, true);
-                    continue;
+                    if (vehicle->State() == VehicleState::no_passenger_requested) {
+                        SimpleVehicleFailure(vehicle);
+                        continue;
+                    } else if (vehicle->State() == VehicleState::no_passenger_queued) {
+                        std::unique_lock<std::mutex> lck(mtx_);
+                        std::cout << "Vehicle #" << vehicle->Id() <<" could not find path, but should be okay." << std::endl;
+                        std::cout << "Vehicle state is: " << vehicle->State() << std::endl;
+                        lck.unlock();
+                        ResetVehicleDestination(vehicle, true);
+                        continue;
+                    } else {
+                        std::unique_lock<std::mutex> lck(mtx_);
+                        std::cout << "Vehicle #" << vehicle->Id() <<" could not find path, crash may be imminent." << std::endl;
+                        std::cout << "Vehicle state is: " << vehicle->State() << std::endl;
+                        lck.unlock();
+                    }
                 }
             }
 
@@ -122,6 +136,37 @@ void VehicleManager::Drive() {
                 }
             }
         }
+
+        // Remove any vehicles that had issues on the map
+        if (to_remove_.size() > 0) {
+            for (int id : to_remove_) {
+                // Erase the vehicle
+                vehicles_.erase(id);
+            }
+            // Clear the to_remove_ vector for next time
+            to_remove_.clear();
+        }
+
+        // Make sure to keep max vehicles on the road
+        if (vehicles_.size() < MAX_OBJECTS) {
+            GenerateNew();
+        }
+    }
+}
+
+void VehicleManager::SimpleVehicleFailure(std::shared_ptr<Vehicle> vehicle) {
+    // Note: This should only be called when vehicle has not yet requested a passenger
+    // Check if enough failures to delete
+    bool remove = vehicle->MovementFailure();
+    if (remove) {
+        // Plan to erase the vehicle
+        to_remove_.emplace_back(vehicle->Id());
+        // Note to console
+        std::lock_guard<std::mutex> lck(mtx_);
+        std::cout << "Vehicle #" << vehicle->Id() <<" was stuck, leaving map." << std::endl;
+    } else {
+        // Try a new route
+        ResetVehicleDestination(vehicle, true);
     }
 }
 

@@ -39,6 +39,7 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
     void Drive();
     void IncrementalMove(std::shared_ptr<Vehicle> vehicle);
     void ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, bool random);
+    void SimpleVehicleFailure(std::shared_ptr<Vehicle> vehicle);
 
     // Passenger-related handling
     void RequestPassenger(std::shared_ptr<Vehicle> vehicle);
@@ -47,6 +48,7 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
 
     // Variables
     std::unordered_map<int, std::shared_ptr<Vehicle>> vehicles_;
+    std::vector<int> to_remove_;
     double distance_per_cycle_;
     std::shared_ptr<RideMatcher> ride_matcher_;
 };
