@@ -27,9 +27,9 @@ class Vehicle: public MapObject {
     int State() { return state_; }
     int PathIndex() { return path_index_; }
     std::shared_ptr<Passenger> GetPassenger() { return passenger_; }
-    std::vector<RouteModel::Node> Path() { return path_; }
+    std::vector<Model::Node> Path() { return path_; }
     void SetState(VehicleState state) { state_ = state; }
-    void SetPath(std::vector<RouteModel::Node> path) { path_ = path; }
+    void SetPath(std::vector<Model::Node> path) { path_ = path; }
     void SetPassenger(std::shared_ptr<Passenger> passenger);
     void SetPosition(const Coordinate &position); // Override base class
 
@@ -43,7 +43,7 @@ class Vehicle: public MapObject {
     int shape_ = DrawMarker::square;
     int state_ = VehicleState::no_passenger_requested;
     int path_index_ = 0;
-    std::vector<RouteModel::Node> path_;
+    std::vector<Model::Node> path_;
 };
 
 #endif

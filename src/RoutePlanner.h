@@ -31,7 +31,7 @@ class RoutePlanner {
     static bool Compare(RouteModel::Node* node1, RouteModel::Node* node2);
     void AddNeighbors(RouteModel::Node *current_node);
     float CalculateHValue(RouteModel::Node const *node);
-    std::vector<RouteModel::Node> ConstructFinalPath(RouteModel::Node *);
+    std::vector<Model::Node> ConstructFinalPath(RouteModel::Node *);
     RouteModel::Node *NextNode();
 };
 

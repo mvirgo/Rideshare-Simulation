@@ -47,9 +47,9 @@ RouteModel::Node *RoutePlanner::NextNode() {
 }
 
 // Construct a final path based on result of A* Search
-std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node) {
+std::vector<Model::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node) {
     // Create path_found vector
-    std::vector<RouteModel::Node> path_found;
+    std::vector<Model::Node> path_found;
     
     // Iterate until a node has no parent
     RouteModel::Node follow_node = *current_node;
