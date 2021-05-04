@@ -19,10 +19,10 @@ enum DrawMarker {
 
 class MapObject {
   public:
-    // constructor / destructor
+    // Constructor / Destructor
     MapObject() { SetRandomColors(); }
 
-    // getters / setters
+    // Getters / Setters
     void SetPosition(const Coordinate &position) { position_ = position; }
     void SetDestination(const Coordinate &destination) { destination_ = destination; }
     void SetColors(int blue, int green, int red) { blue_ = blue; green_ = green; red_ = red; }
@@ -34,12 +34,20 @@ class MapObject {
     int Red() { return red_; }
     int Id() { return id_; }
 
+    // Handling of failures (such as destination can't be reached from position)
+    bool MovementFailure() {
+        ++failures_;
+        return failures_ >= MAX_FAILURES_;
+    }
+
   protected:
-    // member variables
+    // Member variables
     int id_;
+    int failures_ = 0;
+    int MAX_FAILURES_ = 10;
     Coordinate position_;
     Coordinate destination_;
-    int blue_, green_, red_; // visualization colors
+    int blue_, green_, red_; // Visualization colors
   
   private:
     void SetRandomColors() {
