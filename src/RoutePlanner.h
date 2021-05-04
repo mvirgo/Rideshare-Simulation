@@ -2,6 +2,7 @@
 #define ROUTE_PLANNER_H
 
 #include <iostream>
+#include <mutex>
 #include <vector>
 #include <string>
 #include "RouteModel.h"
@@ -17,6 +18,9 @@ class RoutePlanner {
 
     // Primary functionality
     void AStarSearch(std::shared_ptr<Vehicle> vehicle);
+
+    // Mutex to ensure single access
+    std::mutex mtx_;
 
   private:
     // Route model-related variables
