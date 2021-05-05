@@ -28,6 +28,9 @@ class PassengerQueue : public ConcurrentObject, std::enable_shared_from_this<Pas
     void RideOnWay(int id);
     void RideArrived(int id);
 
+    // Failure handling
+    void PassengerFailure(int id);
+
     // Miscellaneous
     std::shared_ptr<PassengerQueue> GetSharedThis() { return shared_from_this(); }
 

@@ -11,7 +11,7 @@ class Passenger: public MapObject {
     int PassShape() { return pass_shape_; }
     int DestShape() { return dest_shape_; }
     bool RideRequested() { return ride_requested_; }
-    void SetRideAsRequested() { ride_requested_ = true; }
+    void SetRideRequest(bool requested) { ride_requested_ = requested; }
   
   private:
     int pass_shape_ = DrawMarker::diamond;

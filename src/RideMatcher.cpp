@@ -25,11 +25,9 @@ void RideMatcher::VehicleCannotReachPassenger(int v_id) {
     int p_id = vehicle_to_passenger_match_.at(v_id);
     vehicle_to_passenger_match_.erase(v_id);
     passenger_to_vehicle_match_.erase(p_id);
-    // Put back into queues
-    vehicle_ids_.emplace(v_id);
-    passenger_ids_.emplace(p_id, passenger_queue_->NewPassengers().at(p_id));
     // TODO: Somehow track to make sure don't re-assign this pair
-    // TODO: Notify passenger of failure
+    // Notify passenger of failure
+    passenger_queue_->PassengerFailure(p_id);
     // TODO: Output the un-match to console??
 }
 
@@ -49,6 +47,20 @@ void RideMatcher::PassengerToVehicle(std::shared_ptr<Passenger> passenger) {
     vehicle_to_passenger_match_.erase(v_id);
 }
 
+void RideMatcher::PassengerIsIneligible(int p_id) {
+    // TODO: Figure out bug with putting back in queue
+    // Remove passenger
+    passenger_ids_.erase(p_id);
+    // Check for any associated match
+    if (passenger_to_vehicle_match_.count(p_id) == 1) {
+        // Found a match, remove both sides
+        int v_id = passenger_to_vehicle_match_.at(p_id);
+        vehicle_to_passenger_match_.erase(v_id);
+        passenger_to_vehicle_match_.erase(p_id);
+        // TODO: Notify vehicle of failure
+    }
+}
+
 void RideMatcher::VehicleIsIneligible(int v_id) {
     // Remove vehicle
     vehicle_ids_.erase(v_id);
@@ -58,10 +70,8 @@ void RideMatcher::VehicleIsIneligible(int v_id) {
         int p_id = vehicle_to_passenger_match_.at(v_id);
         vehicle_to_passenger_match_.erase(v_id);
         passenger_to_vehicle_match_.erase(p_id);
-        // Add p_id back to queue for future matching
-        passenger_ids_.emplace(p_id, passenger_queue_->NewPassengers().at(p_id));
-        // TODO: Notify passenger of failure
-        // TODO: Output to console? Or just do on vehicle manager side?
+        // Notify passenger of failure
+        passenger_queue_->PassengerFailure(p_id);
     }
 }
 

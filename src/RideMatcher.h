@@ -31,6 +31,7 @@ class RideMatcher : std::enable_shared_from_this<RideMatcher> {
     void PassengerToVehicle(std::shared_ptr<Passenger> passenger);
 
     // Removal
+    void PassengerIsIneligible(int p_id);
     void VehicleIsIneligible(int v_id);
 
   private:

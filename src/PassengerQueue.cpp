@@ -83,7 +83,7 @@ void PassengerQueue::WaitForRide() {
 }
 
 void PassengerQueue::RequestRide(std::shared_ptr<Passenger> passenger) {
-    passenger->SetRideAsRequested();
+    passenger->SetRideRequest(true);
     if (ride_matcher_ != nullptr) {
         ride_matcher_->PassengerRequestsRide(passenger);
     }
@@ -98,4 +98,22 @@ void PassengerQueue::RideArrived(int id) {
     ride_matcher_->PassengerToVehicle(new_passengers_.at(id));
     // Erase the passenger from the queue
     new_passengers_.erase(id);
+}
+
+void PassengerQueue::PassengerFailure(int id) {
+    // Check if enough failures to delete
+    auto passenger = new_passengers_.at(id);
+    bool remove = passenger->MovementFailure();
+    if (remove) {
+        // Notify the ride matcher
+        ride_matcher_->PassengerIsIneligible(id);
+        // Erase the passenger
+        new_passengers_.erase(id);
+        // Note to console
+        std::lock_guard<std::mutex> lck(mtx_);
+        std::cout << "Passenger #" << passenger->Id() <<" unreachable multiple times, leaving map." << std::endl;
+    } else {
+        // Make a new request by setting ride requested to false
+        passenger->SetRideRequest(false);
+    }
 }
