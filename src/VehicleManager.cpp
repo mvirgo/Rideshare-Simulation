@@ -174,7 +174,7 @@ void VehicleManager::AssignPassenger(int id, Coordinate position) {
     auto vehicle = vehicles_.at(id);
     // Set new vehicle destination and update its state
     vehicle->SetDestination(position);
-    ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
+    ResetVehicleDestination(vehicle, false); // Aligns to route node
     // Get the path to the passenger
     route_planner_->AStarSearch(vehicle);
     // Make sure path is not empty (unreachable), then update the state
@@ -199,9 +199,12 @@ void VehicleManager::ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle) {
 
 void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger) {
     auto vehicle = vehicles_.at(id);
-    // Set passenger into vehicle and updates its state
+    // Output notice to console
+    std::lock_guard<std::mutex> lck(mtx_);
+    std::cout << "Vehicle ID#" << vehicle->Id() << " has picked up Passenger ID#" << passenger->Id() << "." << std::endl;
+    // Set passenger into vehicle
     vehicle->SetPassenger(passenger); // Vehicle handles setting new destination with passenger
-    ResetVehicleDestination(vehicle, false); // Aligns to route node and resets path and index
+    ResetVehicleDestination(vehicle, false); // Aligns to route node
     // Update state when done processing
     vehicle->SetState(VehicleState::driving_passenger);
 }
