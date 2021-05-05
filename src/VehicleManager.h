@@ -16,7 +16,7 @@ class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<Veh
   public:
     // Constructor / Destructor
     VehicleManager() {};
-    VehicleManager(RouteModel *model);
+    VehicleManager(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner);
     
     // Getters / Setters
     const std::unordered_map<int, std::shared_ptr<Vehicle>>& Vehicles() { return vehicles_; }

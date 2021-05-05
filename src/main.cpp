@@ -10,6 +10,7 @@
 #include "BasicGraphics.h"
 #include "PassengerQueue.h"
 #include "RideMatcher.h"
+#include "RoutePlanner.h"
 #include "VehicleManager.h"
 
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path) {   
@@ -48,11 +49,14 @@ int main() {
 
     srand((unsigned) time(NULL)); // Seed random number generator
 
+    // Create a shared route planner
+    std::shared_ptr<RoutePlanner> route_planner = std::make_shared<RoutePlanner>(model);
+
     // Create vehicles
-    std::shared_ptr<VehicleManager> vehicles = std::make_shared<VehicleManager>(&model);
+    std::shared_ptr<VehicleManager> vehicles = std::make_shared<VehicleManager>(&model, route_planner);
 
     // Create passenger queue
-    std::shared_ptr<PassengerQueue> passengers = std::make_shared<PassengerQueue>(&model);
+    std::shared_ptr<PassengerQueue> passengers = std::make_shared<PassengerQueue>(&model, route_planner);
 
     // Create the ride matcher
     std::shared_ptr<RideMatcher> ride_matcher = std::make_shared<RideMatcher>(passengers, vehicles);

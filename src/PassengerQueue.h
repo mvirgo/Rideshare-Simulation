@@ -4,7 +4,10 @@
 #include <unordered_map>
 #include <vector>
 #include "ConcurrentObject.h"
+
 #include "Passenger.h"
+#include "RouteModel.h"
+#include "RoutePlanner.h"
 
 class RideMatcher;
 
@@ -12,7 +15,7 @@ class PassengerQueue : public ConcurrentObject, std::enable_shared_from_this<Pas
   public:
     // Constructor / Destructor
     PassengerQueue() {};
-    PassengerQueue(RouteModel *model);
+    PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner);
     
     // Getters / Setters
     const std::unordered_map<int, std::shared_ptr<Passenger>>& NewPassengers() { return new_passengers_; }

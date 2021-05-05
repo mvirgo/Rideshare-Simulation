@@ -4,8 +4,10 @@
 
 #include "Passenger.h"
 #include "RideMatcher.h"
+#include "RouteModel.h"
+#include "RoutePlanner.h"
 
-PassengerQueue::PassengerQueue(RouteModel *model) : ConcurrentObject(model) {
+PassengerQueue::PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ConcurrentObject(model, route_planner) {
     // Start by creating half the max number of passengers
     for (int i = 0; i < MAX_OBJECTS / 2; ++i) {
         GenerateNew();
