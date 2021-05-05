@@ -9,7 +9,8 @@
 
 PassengerQueue::PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ConcurrentObject(model, route_planner) {
     // Start by creating half the max number of passengers
-    for (int i = 0; i < MAX_OBJECTS / 2; ++i) {
+    // Note that the while loop avoids generating less if any invalid placements occur
+    while (new_passengers_.size() < MAX_OBJECTS / 2) {
         GenerateNew();
     }
 }
@@ -18,10 +19,20 @@ void PassengerQueue::GenerateNew() {
     // Get random start and destination locations
     auto start = model_->GetRandomMapPosition();
     auto dest = model_->GetRandomMapPosition();
-    // Set those and an id to passenger
+    // Set those to passenger
     std::shared_ptr<Passenger> passenger = std::make_shared<Passenger>();
     passenger->SetPosition(start);
     passenger->SetDestination(dest);
+    // Set path with route planner, and verify the path between them is valid/reachable
+    route_planner_->AStarSearch(passenger);
+    if (passenger->Path().empty()) {
+        // No valid path, reset and return
+        passenger.reset();
+        std::lock_guard<std::mutex> lck(mtx_);
+        std::cout << "A new passenger with an unreachable destination from their position left." << std::endl;
+        return;
+    }
+    // Set id to the passenger
     passenger->SetId(idCnt_++);
     new_passengers_.emplace(passenger->Id(), passenger);
     // Output id and location of passenger requesting ride
