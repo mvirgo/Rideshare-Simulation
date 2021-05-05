@@ -32,13 +32,15 @@ class Vehicle: public MapObject {
     void SetPath(std::vector<Model::Node> path) { path_ = path; }
     void SetPassenger(std::shared_ptr<Passenger> passenger);
     void SetPosition(const Coordinate &position); // Override base class
+    void SetDestination(const Coordinate &destination); // Override base class
 
     // Other functionality
     void DropOffPassenger();
     void IncrementPathIndex() { ++path_index_; }
-    void ResetPathAndIndex();
 
   private:
+    void ResetPathAndIndex();
+
     std::shared_ptr<Passenger> passenger_;
     int shape_ = DrawMarker::square;
     int state_ = VehicleState::no_passenger_requested;

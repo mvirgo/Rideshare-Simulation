@@ -6,8 +6,7 @@
 void Vehicle::SetPassenger(std::shared_ptr<Passenger> passenger) {
     passenger_ = passenger;
     // Set passenger's destination as the vehicle's destination
-    auto new_dest = passenger->GetDestination();
-    destination_ = new_dest;
+    SetDestination(passenger->GetDestination());
 }
 
 void Vehicle::SetPosition(const Coordinate &position) {
@@ -16,6 +15,12 @@ void Vehicle::SetPosition(const Coordinate &position) {
     if (passenger_ != nullptr) {
         passenger_->SetPosition(position);
     }
+}
+
+void Vehicle::SetDestination(const Coordinate &destination) {
+    destination_ = destination;
+    // Reset the path and index so will properly route on a new path
+    ResetPathAndIndex();
 }
 
 void Vehicle::DropOffPassenger() {

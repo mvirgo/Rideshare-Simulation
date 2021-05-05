@@ -45,8 +45,6 @@ void VehicleManager::ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, b
     }
     auto nearest_dest = model_->FindClosestNode(destination);
     vehicle->SetDestination((Coordinate){.x = nearest_dest.x, .y = nearest_dest.y});
-    // Reset the path and index so will properly route on a new path
-    vehicle->ResetPathAndIndex();
 }
 
 // Make for smooth, incremental driving between path nodes
