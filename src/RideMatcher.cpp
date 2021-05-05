@@ -55,7 +55,7 @@ void RideMatcher::VehicleIsIneligible(int v_id) {
     // Check for any associated match
     if (vehicle_to_passenger_match_.count(v_id) == 1) {
         // Found a match, remove both sides
-        int p_id = vehicle_to_passenger_match_.at(p_id);
+        int p_id = vehicle_to_passenger_match_.at(v_id);
         vehicle_to_passenger_match_.erase(v_id);
         passenger_to_vehicle_match_.erase(p_id);
         // Add p_id back to queue for future matching
