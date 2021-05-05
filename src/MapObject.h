@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Coordinate.h"
+#include "Model.h"
 
 enum DrawMarker {
     // Values for shapes for cv::drawMarker
@@ -27,12 +28,14 @@ class MapObject {
     void SetDestination(const Coordinate &destination) { destination_ = destination; }
     void SetColors(int blue, int green, int red) { blue_ = blue; green_ = green; red_ = red; }
     void SetId(int id) { id_ = id; }
+    void SetPath(std::vector<Model::Node> path) { path_ = path; }
     Coordinate GetPosition() { return position_; }
     Coordinate GetDestination() { return destination_; }
     int Blue() { return blue_; }
     int Green() { return green_; }
     int Red() { return red_; }
     int Id() { return id_; }
+    std::vector<Model::Node> Path() { return path_; }
 
     // Handling of failures (such as destination can't be reached from position)
     bool MovementFailure() {
@@ -48,6 +51,7 @@ class MapObject {
     Coordinate position_;
     Coordinate destination_;
     int blue_, green_, red_; // Visualization colors
+    std::vector<Model::Node> path_;
   
   private:
     void SetRandomColors() {
