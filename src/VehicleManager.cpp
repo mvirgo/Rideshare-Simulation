@@ -86,15 +86,8 @@ void VehicleManager::Drive() {
                 // TODO: Replace/remove below when handling impossible routes (i.e. stuck)
                 // TODO: Handle below if holding a passenger
                 if (vehicle->Path().empty()) {
-                    if (vehicle->State() == VehicleState::no_passenger_requested) {
+                    if (vehicle->State() == VehicleState::no_passenger_requested || vehicle->State() == VehicleState::no_passenger_queued) {
                         SimpleVehicleFailure(vehicle);
-                        continue;
-                    } else if (vehicle->State() == VehicleState::no_passenger_queued) {
-                        std::unique_lock<std::mutex> lck(mtx_);
-                        std::cout << "Vehicle #" << vehicle->Id() <<" could not find path, but should be okay." << std::endl;
-                        std::cout << "Vehicle state is: " << vehicle->State() << std::endl;
-                        lck.unlock();
-                        ResetVehicleDestination(vehicle, true);
                         continue;
                     } else {
                         std::unique_lock<std::mutex> lck(mtx_);
@@ -154,7 +147,7 @@ void VehicleManager::Drive() {
 }
 
 void VehicleManager::SimpleVehicleFailure(std::shared_ptr<Vehicle> vehicle) {
-    // Note: This should only be called when vehicle has not yet requested a passenger
+    // Note: This should only be called when vehicle has not yet picked up a passenger
     // Check if enough failures to delete
     bool remove = vehicle->MovementFailure();
     if (remove) {
@@ -192,7 +185,9 @@ void VehicleManager::AssignPassenger(int id, Coordinate position) {
     if (vehicle->Path().empty()) {
         // Notify ride matcher of failure
         ride_matcher_->VehicleCannotReachPassenger(id);
-        // TODO: Add to vehicle failures? Need to notify ride matcher if deleted
+        // Add to vehicle failures
+        // Note that ride matcher is only notified if deletion occurs
+        SimpleVehicleFailure(vehicle);
     } else {
         // Update state when done processing
         vehicle->SetState(VehicleState::passenger_queued);
