@@ -168,9 +168,6 @@ void VehicleManager::RequestPassenger(std::shared_ptr<Vehicle> vehicle) {
     if (ride_matcher_ != nullptr) {
         ride_matcher_->VehicleRequestsPassenger(vehicle->Id());
     }
-    // Output notice to console
-    std::lock_guard<std::mutex> lck(mtx_);
-    std::cout << "Vehicle ID#" << vehicle->Id() << " has requested to be matched with a passenger." << std::endl;
 }
 
 void VehicleManager::AssignPassenger(int id, Coordinate position) {
