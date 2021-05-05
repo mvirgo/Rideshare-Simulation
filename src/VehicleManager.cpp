@@ -200,8 +200,9 @@ void VehicleManager::ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle) {
 void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger) {
     auto vehicle = vehicles_.at(id);
     // Output notice to console
-    std::lock_guard<std::mutex> lck(mtx_);
+    std::unique_lock<std::mutex> lck(mtx_);
     std::cout << "Vehicle ID#" << vehicle->Id() << " has picked up Passenger ID#" << passenger->Id() << "." << std::endl;
+    lck.unlock();
     // Set passenger into vehicle
     vehicle->SetPassenger(passenger); // Vehicle handles setting new destination with passenger
     ResetVehicleDestination(vehicle, false); // Aligns to route node
