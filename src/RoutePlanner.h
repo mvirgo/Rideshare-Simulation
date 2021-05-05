@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 #include "RouteModel.h"
-#include "Vehicle.h"
+#include "MapObject.h"
 
 
 class RoutePlanner {
@@ -17,7 +17,7 @@ class RoutePlanner {
     // Getters / Setters
 
     // Primary functionality
-    void AStarSearch(std::shared_ptr<Vehicle> vehicle);
+    void AStarSearch(std::shared_ptr<MapObject> map_obj);
 
   private:
     // Route model-related variables

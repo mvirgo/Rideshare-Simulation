@@ -8,7 +8,7 @@
 #include <mutex>
 
 #include "RouteModel.h"
-#include "Vehicle.h"
+#include "MapObject.h"
 
 // Calculate H Value (in this case, distance) for A* Search
 float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
@@ -71,12 +71,12 @@ std::vector<Model::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *curr
 
 // A* Search Algorithm
 // TODO: Handle if route not found?
-void RoutePlanner::AStarSearch(std::shared_ptr<Vehicle> vehicle) {
+void RoutePlanner::AStarSearch(std::shared_ptr<MapObject> map_obj) {
     RouteModel::Node *current_node = nullptr;
 
-    // Get vehicle starting and destination positions
-    auto start_pos = vehicle->GetPosition();
-    auto dest_pos = vehicle->GetDestination();
+    // Get map_obj starting and destination positions
+    auto start_pos = map_obj->GetPosition();
+    auto dest_pos = map_obj->GetDestination();
 
     // Lock down the route planner until this returns
     std::lock_guard<std::mutex> lck(mtx_);
@@ -96,7 +96,7 @@ void RoutePlanner::AStarSearch(std::shared_ptr<Vehicle> vehicle) {
         current_node = NextNode();
         // Check if at the goal state, and if so, construct the final path
         if (current_node->x == end_node_->x && current_node->y == end_node_->y) {
-            vehicle->SetPath(ConstructFinalPath(current_node));
+            map_obj->SetPath(ConstructFinalPath(current_node));
             break; // Can stop searching
         }
         // Add all neighbors for current node
