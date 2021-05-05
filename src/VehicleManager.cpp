@@ -137,6 +137,8 @@ void VehicleManager::Drive() {
         // Remove any vehicles that had issues on the map
         if (to_remove_.size() > 0) {
             for (int id : to_remove_) {
+                // Notify ride matcher (doesn't matter for no request state or driving, but does for others)
+                ride_matcher_->VehicleIsIneligible(id);
                 // Erase the vehicle
                 vehicles_.erase(id);
             }

@@ -49,6 +49,22 @@ void RideMatcher::PassengerToVehicle(std::shared_ptr<Passenger> passenger) {
     vehicle_to_passenger_match_.erase(v_id);
 }
 
+void RideMatcher::VehicleIsIneligible(int v_id) {
+    // Remove vehicle
+    vehicle_ids_.erase(v_id);
+    // Check for any associated match
+    if (vehicle_to_passenger_match_.count(v_id) == 1) {
+        // Found a match, remove both sides
+        int p_id = vehicle_to_passenger_match_.at(p_id);
+        vehicle_to_passenger_match_.erase(v_id);
+        passenger_to_vehicle_match_.erase(p_id);
+        // Add p_id back to queue for future matching
+        passenger_ids_.emplace(p_id, passenger_queue_->NewPassengers().at(p_id));
+        // TODO: Notify passenger of failure
+        // TODO: Output to console? Or just do on vehicle manager side?
+    }
+}
+
 void RideMatcher::Simulate() {
     // Launch MatchRides function in a thread
     threads_.emplace_back(std::thread(&RideMatcher::MatchRides, this));
