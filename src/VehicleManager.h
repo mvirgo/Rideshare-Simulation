@@ -6,13 +6,14 @@
 
 #include "ConcurrentObject.h"
 #include "Coordinate.h"
+#include "ObjectHolder.h"
 #include "Vehicle.h"
 
 // Avoid include cycle
 class Passenger;
 class RideMatcher;
 
-class VehicleManager : public ConcurrentObject, std::enable_shared_from_this<VehicleManager> {
+class VehicleManager : public ConcurrentObject, public ObjectHolder, std::enable_shared_from_this<VehicleManager> {
   public:
     // Constructor / Destructor
     VehicleManager() {};

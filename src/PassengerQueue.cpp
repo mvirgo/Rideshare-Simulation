@@ -7,7 +7,7 @@
 #include "RouteModel.h"
 #include "RoutePlanner.h"
 
-PassengerQueue::PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ConcurrentObject(model, route_planner) {
+PassengerQueue::PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ObjectHolder(model, route_planner) {
     // Start by creating half the max number of passengers
     // Note that the while loop avoids generating less if any invalid placements occur
     while (new_passengers_.size() < MAX_OBJECTS / 2) {

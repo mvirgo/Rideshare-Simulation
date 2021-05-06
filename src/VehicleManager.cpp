@@ -8,7 +8,7 @@
 #include "RideMatcher.h"
 #include "Vehicle.h"
 
-VehicleManager::VehicleManager(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ConcurrentObject(model, route_planner) {
+VehicleManager::VehicleManager(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ObjectHolder(model, route_planner) {
     // Generate max number of vehicles at the start
     for (int i = 0; i < MAX_OBJECTS; ++i) {
         GenerateNew();

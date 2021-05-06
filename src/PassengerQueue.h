@@ -5,13 +5,14 @@
 #include <vector>
 #include "ConcurrentObject.h"
 
+#include "ObjectHolder.h"
 #include "Passenger.h"
 #include "RouteModel.h"
 #include "RoutePlanner.h"
 
 class RideMatcher;
 
-class PassengerQueue : public ConcurrentObject, std::enable_shared_from_this<PassengerQueue> {
+class PassengerQueue : public ConcurrentObject, public ObjectHolder, std::enable_shared_from_this<PassengerQueue> {
   public:
     // Constructor / Destructor
     PassengerQueue() {};
