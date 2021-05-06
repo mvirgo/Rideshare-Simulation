@@ -19,11 +19,12 @@ void RideMatcher::VehicleCannotReachPassenger(int v_id) {
     vehicle_to_passenger_match_.erase(v_id);
     passenger_to_vehicle_match_.erase(p_id);
     // TODO: Somehow track to make sure don't re-assign this pair
+    // Output the un-match to console
+    std::unique_lock<std::mutex> lck(mtx_);
+    std::cout << "Vehicle #" << v_id << " un-matched from Passenger #" << p_id << ", unreachable." << std::endl;
+    lck.unlock();
     // Notify passenger of failure
     passenger_queue_->PassengerFailure(p_id);
-    // Output the un-match to console
-    std::lock_guard<std::mutex> lck(mtx_);
-    std::cout << "Vehicle #" << v_id << " un-matched from Passenger #" << p_id << ", unreachable." << std::endl;
 }
 
 void RideMatcher::VehicleHasArrived(int v_id) {
@@ -87,15 +88,16 @@ void RideMatcher::MatchRides() {
             int v_id = *vehicle_ids_.begin();
             vehicle_to_passenger_match_.insert({v_id, p_id});
             passenger_to_vehicle_match_.insert({p_id, v_id});
+            // Output the match to console
+            std::unique_lock<std::mutex> lck(mtx_);
+            std::cout << "Vehicle #" << v_id << " matched to Passenger #" << p_id << "." << std::endl;
+            lck.unlock();
             // Notify PassengerQueue and VehicleManager
             vehicle_manager_->AssignPassenger(v_id, passenger_info.second->GetPosition());
             passenger_queue_->RideOnWay(p_id);
             // Remove the ids from the vectors
             passenger_ids_.erase(p_id);
             vehicle_ids_.erase(v_id);
-            // Output the match to console
-            std::lock_guard<std::mutex> lck(mtx_);
-            std::cout << "Vehicle #" << v_id << " matched to Passenger #" << p_id << "." << std::endl;
         }
     }
 }
