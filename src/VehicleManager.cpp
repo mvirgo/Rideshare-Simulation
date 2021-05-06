@@ -181,8 +181,10 @@ void VehicleManager::AssignPassenger(int id, Coordinate position) {
     if (vehicle->Path().empty()) {
         // Notify ride matcher of failure
         ride_matcher_->VehicleCannotReachPassenger(id);
+        // Set state to nothing requested so it will make a new request
+        vehicle->SetState(VehicleState::no_passenger_requested);
         // Add to vehicle failures
-        // Note that ride matcher is only notified if deletion occurs
+        // Note that ride matcher notified in `Drive` if deletion occurs
         SimpleVehicleFailure(vehicle);
     } else {
         // Update state when done processing
