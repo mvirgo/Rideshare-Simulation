@@ -34,14 +34,16 @@ class RideMatcher : public ConcurrentObject, std::enable_shared_from_this<RideMa
     void VehicleIsIneligible(int v_id);
 
   private:
+    // Matching
+    void MatchRides();
+
+    // Member variables
     std::shared_ptr<PassengerQueue> passenger_queue_;
     std::shared_ptr<VehicleManager> vehicle_manager_;
     std::unordered_map<int, std::shared_ptr<Passenger>> passenger_ids_;
     std::set<int> vehicle_ids_;
     std::unordered_map<int, int> vehicle_to_passenger_match_;
     std::unordered_map<int, int> passenger_to_vehicle_match_;
-    std::vector<std::thread> threads_;
-    void MatchRides();
 };
 
 #endif

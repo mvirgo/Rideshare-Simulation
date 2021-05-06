@@ -51,7 +51,8 @@ void RideMatcher::PassengerIsIneligible(int p_id) {
         int v_id = passenger_to_vehicle_match_.at(p_id);
         vehicle_to_passenger_match_.erase(v_id);
         passenger_to_vehicle_match_.erase(p_id);
-        // TODO: Notify vehicle of failure
+        // Note: Currently do not need to notify vehicle of failure,
+        //  only way to get here is through vehicle issues first
     }
 }
 
@@ -71,7 +72,7 @@ void RideMatcher::VehicleIsIneligible(int v_id) {
 
 void RideMatcher::Simulate() {
     // Launch MatchRides function in a thread
-    threads_.emplace_back(std::thread(&RideMatcher::MatchRides, this));
+    threads.emplace_back(std::thread(&RideMatcher::MatchRides, this));
 }
 
 void RideMatcher::MatchRides() {
