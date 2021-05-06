@@ -1,5 +1,5 @@
-#ifndef CONCURRENT_OBJECT_H
-#define CONCURRENT_OBJECT_H
+#ifndef CONCURRENT_OBJECT_H_
+#define CONCURRENT_OBJECT_H_
 
 #include <iostream>
 #include <mutex>
@@ -25,4 +25,4 @@ class ConcurrentObject {
 
 }  // namespace rideshare
 
-#endif
+#endif  // CONCURRENT_OBJECT_H_

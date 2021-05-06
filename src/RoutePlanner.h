@@ -1,5 +1,5 @@
-#ifndef ROUTE_PLANNER_H
-#define ROUTE_PLANNER_H
+#ifndef ROUTE_PLANNER_H_
+#define ROUTE_PLANNER_H_
 
 #include <iostream>
 #include <mutex>
@@ -42,4 +42,4 @@ class RoutePlanner {
 
 }  // namespace rideshare
 
-#endif
+#endif  // ROUTE_PLANNER_H_

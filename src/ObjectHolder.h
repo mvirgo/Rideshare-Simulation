@@ -1,5 +1,5 @@
-#ifndef OBJECT_HOLDER_H
-#define OBJECT_HOLDER_H
+#ifndef OBJECT_HOLDER_H_
+#define OBJECT_HOLDER_H_
 
 #include "RouteModel.h"
 #include "RoutePlanner.h"
@@ -22,4 +22,4 @@ class ObjectHolder {
 
 }  // namespace rideshare
 
-#endif
+#endif  // OBJECT_HOLDER_H_

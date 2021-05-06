@@ -1,5 +1,5 @@
-#ifndef MAPOBJECT_H
-#define MAPOBJECT_H
+#ifndef MAP_OBJECT_H_
+#define MAP_OBJECT_H_
 
 #include <cstdlib>
 #include <vector>
@@ -66,4 +66,4 @@ class MapObject {
 
 }  // namespace rideshare
 
-#endif
+#endif  // MAP_OBJECT_H_

@@ -1,5 +1,5 @@
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef MODEL_H_
+#define MODEL_H_
 
 /*
   The below has been adapted from https://github.com/udacity/CppND-Route-Planning-Project from Udacity
@@ -62,4 +62,4 @@ class Model {
 
 }  // namespace rideshare
 
-#endif
+#endif  // MODEL_H_

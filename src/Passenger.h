@@ -1,5 +1,5 @@
-#ifndef PASSENGER_H
-#define PASSENGER_H
+#ifndef PASSENGER_H_
+#define PASSENGER_H_
 
 #include "MapObject.h"
 
@@ -23,4 +23,4 @@ class Passenger: public MapObject {
 
 }  // namespace rideshare
 
-#endif
+#endif  // PASSENGER_H_

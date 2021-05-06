@@ -1,5 +1,5 @@
-#ifndef COORDINATE_H
-#define COORDINATE_H
+#ifndef COORDINATE_H_
+#define COORDINATE_H_
 
 namespace rideshare {
 
@@ -14,4 +14,4 @@ struct Coordinate {
 
 }  // namespace rideshare
 
-#endif
+#endif  // COORDINATE_H_

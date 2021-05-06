@@ -1,5 +1,5 @@
-#ifndef VEHICLEMANAGER_H
-#define VEHICLEMANAGER_H
+#ifndef VEHICLE_MANAGER_H_
+#define VEHICLE_MANAGER_H_
 
 #include <unordered_map>
 #include <vector>
@@ -62,4 +62,4 @@ class VehicleManager : public ConcurrentObject, public ObjectHolder, std::enable
 
 }  // namespace rideshare
 
-#endif
+#endif // VEHICLE_MANAGER_H_

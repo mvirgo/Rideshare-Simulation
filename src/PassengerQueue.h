@@ -1,5 +1,5 @@
-#ifndef PASSENGER_QUEUE_H
-#define PASSENGER_QUEUE_H
+#ifndef PASSENGER_QUEUE_H_
+#define PASSENGER_QUEUE_H_
 
 #include <unordered_map>
 #include <vector>
@@ -57,4 +57,4 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, std::enable
 
 }  // namespace rideshare
 
-#endif
+#endif  // PASSENGER_QUEUE_H_

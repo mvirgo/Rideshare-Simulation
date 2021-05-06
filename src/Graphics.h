@@ -1,5 +1,5 @@
-#ifndef BASICGRAPHICS_H
-#define BASICGRAPHICS_H
+#ifndef GRAPHICS_H_
+#define GRAPHICS_H_
 
 #include <string>
 #include <vector>
@@ -43,4 +43,4 @@ class Graphics {
 
 }  // namespace rideshare
 
-#endif
+#endif  // GRAPHICS_H_

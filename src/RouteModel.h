@@ -1,5 +1,5 @@
-#ifndef ROUTE_MODEL_H
-#define ROUTE_MODEL_H
+#ifndef ROUTE_MODEL_H_
+#define ROUTE_MODEL_H_
 
 #include <cmath>
 #include <limits>
@@ -51,4 +51,4 @@ class RouteModel : public Model {
 
 }  // namespace rideshare
 
-#endif
+#endif  // ROUTE_MODEL_H_

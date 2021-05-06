@@ -1,5 +1,5 @@
-#ifndef VEHICLE_H
-#define VEHICLE_H
+#ifndef VEHICLE_H_
+#define VEHICLE_H_
 
 #include <memory>
 #include <vector>
@@ -48,4 +48,4 @@ class Vehicle: public MapObject {
 
 }  // namespace rideshare
 
-#endif
+#endif  // VEHICLE_H_

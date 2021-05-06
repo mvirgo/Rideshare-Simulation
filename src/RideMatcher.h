@@ -1,5 +1,5 @@
-#ifndef RIDE_MATCHER_H
-#define RIDE_MATCHER_H
+#ifndef RIDE_MATCHER_H_
+#define RIDE_MATCHER_H_
 
 #include <unordered_map>
 #include <set>
@@ -49,4 +49,4 @@ class RideMatcher : public ConcurrentObject, std::enable_shared_from_this<RideMa
 
 }  // namespace rideshare
 
-#endif
+#endif  // RIDE_MATCHER_H_
