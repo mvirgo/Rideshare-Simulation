@@ -1,4 +1,4 @@
-#include "BasicGraphics.h"
+#include "Graphics.h"
 
 #include <chrono>
 #include <thread>
@@ -10,14 +10,14 @@
 
 namespace rideshare {
 
-BasicGraphics::BasicGraphics(float min_lat, float min_lon, float max_lat, float max_lon) {
+Graphics::Graphics(float min_lat, float min_lon, float max_lat, float max_lon) {
     min_lat_ = min_lat;
     min_lon_ = min_lon;
     max_lat_ = max_lat;
     max_lon_ = max_lon;
 }
 
-void BasicGraphics::Simulate() {
+void Graphics::Simulate() {
     this->LoadBackgroundImg();
     while (true) {
         // sleep at every iteration to reduce CPU usage
@@ -28,7 +28,7 @@ void BasicGraphics::Simulate() {
     }
 }
 
-void BasicGraphics::LoadBackgroundImg() {
+void Graphics::LoadBackgroundImg() {
     // create window
     windowName_ = "Rideshare Simulation";
     cv::namedWindow(windowName_, cv::WINDOW_NORMAL);
@@ -40,7 +40,7 @@ void BasicGraphics::LoadBackgroundImg() {
     images_.push_back(background.clone()); // third element will be the result image for display
 }
 
-void BasicGraphics::DrawSimulation() {
+void Graphics::DrawSimulation() {
     // reset images
     images_.at(1) = images_.at(0).clone();
     images_.at(2) = images_.at(0).clone();
@@ -57,7 +57,7 @@ void BasicGraphics::DrawSimulation() {
     cv::waitKey(33);
 }
 
-void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
+void Graphics::DrawPassengers(float img_rows, float img_cols) {
     // create overlay from passengers
     for (auto const& passenger_map : passenger_queue_->NewPassengers()) {
         DrawPassenger(img_rows, img_cols, 25, passenger_map.second); // Full size marker
@@ -67,7 +67,7 @@ void BasicGraphics::DrawPassengers(float img_rows, float img_cols) {
     cv::addWeighted(images_.at(1), opacity, images_.at(0), 1.0 - opacity, 0, images_.at(2));
 }
 
-void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_size, const std::shared_ptr<Passenger> &passenger) {
+void Graphics::DrawPassenger(float img_rows, float img_cols, int marker_size, const std::shared_ptr<Passenger> &passenger) {
         Coordinate curr_position = passenger->GetPosition();
         Coordinate dest_position = passenger->GetDestination();
 
@@ -83,7 +83,7 @@ void BasicGraphics::DrawPassenger(float img_rows, float img_cols, int marker_siz
         cv::drawMarker(images_.at(1), cv::Point2d((int)(dest_position.x * img_cols), (int)(dest_position.y * img_rows)), color, passenger->DestShape(), 25, 5);
 }
 
-void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
+void Graphics::DrawVehicles(float img_rows, float img_cols) {
     // create overlay from vehicles
     for (auto const & [id, vehicle] : vehicle_manager_->Vehicles()) {
         Coordinate position = vehicle->GetPosition();

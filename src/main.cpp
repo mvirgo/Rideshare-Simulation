@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 #include "RouteModel.h"
-#include "BasicGraphics.h"
+#include "Graphics.h"
 #include "PassengerQueue.h"
 #include "RideMatcher.h"
 #include "RoutePlanner.h"
@@ -71,7 +71,7 @@ int main() {
     passengers->Simulate();
 
     // Draw the map
-    rideshare::BasicGraphics *graphics = new rideshare::BasicGraphics(model.MinLat(), model.MinLon(), model.MaxLat(), model.MaxLon());
+    rideshare::Graphics *graphics = new rideshare::Graphics(model.MinLat(), model.MinLon(), model.MaxLat(), model.MaxLon());
     std::string background_img = "../data/" + location + ".png";
     graphics->SetBgFilename(background_img);
     graphics->SetPassengers(passengers);

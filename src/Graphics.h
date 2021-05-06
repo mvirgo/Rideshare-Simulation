@@ -11,10 +11,10 @@
 
 namespace rideshare {
 
-class BasicGraphics {
+class Graphics {
   public:
     // constructor / destructor
-    BasicGraphics(float min_lat, float min_lon, float max_lat, float max_lon);
+    Graphics(float min_lat, float min_lon, float max_lat, float max_lon);
 
     // getters / setters
     void SetBgFilename(std::string filename) { bgFilename_ = filename; }
