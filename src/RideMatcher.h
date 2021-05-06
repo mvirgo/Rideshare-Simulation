@@ -6,17 +6,16 @@
 #include <thread>
 #include <vector>
 
-// Avoid include cycle
-class Passenger;
-class PassengerQueue;
-class VehicleManager;
+#include "ConcurrentObject.h"
+#include "Passenger.h"
+#include "PassengerQueue.h"
+#include "VehicleManager.h"
 
-class RideMatcher : std::enable_shared_from_this<RideMatcher> {
+class RideMatcher : public ConcurrentObject, std::enable_shared_from_this<RideMatcher> {
   public:
     // Constructor / Destructor
     RideMatcher(std::shared_ptr<PassengerQueue> passenger_queue, std::shared_ptr<VehicleManager> vehicle_manager_) :
       passenger_queue_(passenger_queue), vehicle_manager_(vehicle_manager_) {};
-    ~RideMatcher();
 
     // Concurrent simulation
     void Simulate();

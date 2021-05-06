@@ -5,13 +5,6 @@
 #include "PassengerQueue.h"
 #include "VehicleManager.h"
 
-RideMatcher::~RideMatcher() {
-    // Set up thread barrier before this object is destroyed
-    std::for_each(threads_.begin(), threads_.end(), [](std::thread &t) {
-        t.join();
-    });
-}
-
 void RideMatcher::PassengerRequestsRide(std::shared_ptr<Passenger> passenger) {
     passenger_ids_.emplace(passenger->Id(), passenger);
 }
@@ -48,7 +41,6 @@ void RideMatcher::PassengerToVehicle(std::shared_ptr<Passenger> passenger) {
 }
 
 void RideMatcher::PassengerIsIneligible(int p_id) {
-    // TODO: Figure out bug with putting back in queue
     // Remove passenger
     passenger_ids_.erase(p_id);
     // Check for any associated match
