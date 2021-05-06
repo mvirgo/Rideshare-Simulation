@@ -85,7 +85,7 @@ void PassengerQueue::WaitForRide() {
 void PassengerQueue::RequestRide(std::shared_ptr<Passenger> passenger) {
     passenger->SetRideRequest(true);
     if (ride_matcher_ != nullptr) {
-        ride_matcher_->PassengerRequestsRide(passenger);
+        ride_matcher_->PassengerRequestsRide(passenger->Id());
     }
 }
 
@@ -95,7 +95,7 @@ void PassengerQueue::RideOnWay(int id) {
 
 void PassengerQueue::RideArrived(int id) {
     // Send the passenger to the vehicle
-    ride_matcher_->PassengerToVehicle(new_passengers_.at(id));
+    ride_matcher_->PassengerToVehicle(id);
     // Erase the passenger from the queue
     new_passengers_.erase(id);
 }

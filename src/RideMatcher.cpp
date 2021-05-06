@@ -5,8 +5,8 @@
 #include "PassengerQueue.h"
 #include "VehicleManager.h"
 
-void RideMatcher::PassengerRequestsRide(std::shared_ptr<Passenger> passenger) {
-    passenger_ids_.emplace(passenger->Id(), passenger);
+void RideMatcher::PassengerRequestsRide(int p_id) {
+    passenger_ids_.emplace(p_id);
 }
 
 void RideMatcher::VehicleRequestsPassenger(int v_id) {
@@ -33,12 +33,13 @@ void RideMatcher::VehicleHasArrived(int v_id) {
     passenger_queue_->RideArrived(p_id);
 }
 
-void RideMatcher::PassengerToVehicle(std::shared_ptr<Passenger> passenger) {
+void RideMatcher::PassengerToVehicle(int p_id) {
+    auto passenger = passenger_queue_->NewPassengers().at(p_id);
     // Add passenger to related vehicle
-    int v_id = passenger_to_vehicle_match_.at(passenger->Id());
+    int v_id = passenger_to_vehicle_match_.at(p_id);
     vehicle_manager_->PassengerIntoVehicle(v_id, passenger);
     // Remove both from match maps
-    passenger_to_vehicle_match_.erase(passenger->Id());
+    passenger_to_vehicle_match_.erase(p_id);
     vehicle_to_passenger_match_.erase(v_id);
 }
 
@@ -84,8 +85,7 @@ void RideMatcher::MatchRides() {
         if (passenger_ids_.size() > 0 && vehicle_ids_.size() > 0) {
             // TODO: Improve ride matching beyond just grabbing "first" of each
             // Match rides
-            auto passenger_info = *passenger_ids_.begin();
-            int p_id = passenger_info.first;
+            int p_id = *passenger_ids_.begin();
             int v_id = *vehicle_ids_.begin();
             vehicle_to_passenger_match_.insert({v_id, p_id});
             passenger_to_vehicle_match_.insert({p_id, v_id});
@@ -94,7 +94,7 @@ void RideMatcher::MatchRides() {
             std::cout << "Vehicle #" << v_id << " matched to Passenger #" << p_id << "." << std::endl;
             lck.unlock();
             // Notify PassengerQueue and VehicleManager
-            vehicle_manager_->AssignPassenger(v_id, passenger_info.second->GetPosition());
+            vehicle_manager_->AssignPassenger(v_id, passenger_queue_->NewPassengers().at(p_id)->GetPosition());
             passenger_queue_->RideOnWay(p_id);
             // Remove the ids from the vectors
             passenger_ids_.erase(p_id);

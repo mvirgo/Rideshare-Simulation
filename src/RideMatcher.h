@@ -21,13 +21,13 @@ class RideMatcher : public ConcurrentObject, std::enable_shared_from_this<RideMa
     void Simulate();
 
     // Pre-Matching
-    void PassengerRequestsRide(std::shared_ptr<Passenger> passenger);
+    void PassengerRequestsRide(int p_id);
     void VehicleRequestsPassenger(int v_id);
 
     // Post-Matching
     void VehicleCannotReachPassenger(int v_id);
     void VehicleHasArrived(int v_id);
-    void PassengerToVehicle(std::shared_ptr<Passenger> passenger);
+    void PassengerToVehicle(int p_id);
 
     // Removal
     void PassengerIsIneligible(int p_id);
@@ -40,7 +40,7 @@ class RideMatcher : public ConcurrentObject, std::enable_shared_from_this<RideMa
     // Member variables
     std::shared_ptr<PassengerQueue> passenger_queue_;
     std::shared_ptr<VehicleManager> vehicle_manager_;
-    std::unordered_map<int, std::shared_ptr<Passenger>> passenger_ids_;
+    std::set<int> passenger_ids_;
     std::set<int> vehicle_ids_;
     std::unordered_map<int, int> vehicle_to_passenger_match_;
     std::unordered_map<int, int> passenger_to_vehicle_match_;
