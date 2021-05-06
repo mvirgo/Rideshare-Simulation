@@ -21,14 +21,15 @@ void RideMatcher::VehicleCannotReachPassenger(int v_id) {
     // TODO: Somehow track to make sure don't re-assign this pair
     // Notify passenger of failure
     passenger_queue_->PassengerFailure(p_id);
-    // TODO: Output the un-match to console??
+    // Output the un-match to console
+    std::lock_guard<std::mutex> lck(mtx_);
+    std::cout << "Vehicle #" << v_id << " un-matched from Passenger #" << p_id << ", unreachable." << std::endl;
 }
 
 void RideMatcher::VehicleHasArrived(int v_id) {
     // Tell PassengerQueue to send passenger to vehicle
     int p_id = vehicle_to_passenger_match_.at(v_id);
     passenger_queue_->RideArrived(p_id);
-    // TODO: Output the arrival to console?
 }
 
 void RideMatcher::PassengerToVehicle(std::shared_ptr<Passenger> passenger) {
@@ -92,7 +93,9 @@ void RideMatcher::MatchRides() {
             // Remove the ids from the vectors
             passenger_ids_.erase(p_id);
             vehicle_ids_.erase(v_id);
-            // TODO: Output the match to console?
+            // Output the match to console
+            std::lock_guard<std::mutex> lck(mtx_);
+            std::cout << "Vehicle #" << v_id << " matched to Passenger #" << p_id << "." << std::endl;
         }
     }
 }
