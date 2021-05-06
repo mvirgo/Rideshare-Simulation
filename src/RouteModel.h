@@ -9,6 +9,8 @@
 #include "Coordinate.h"
 #include "Model.h"
 
+namespace rideshare {
+
 class RouteModel : public Model {
 
   public:
@@ -46,5 +48,7 @@ class RouteModel : public Model {
     std::vector<Node> clean_nodes_;
 
 };
+
+}  // namespace rideshare
 
 #endif

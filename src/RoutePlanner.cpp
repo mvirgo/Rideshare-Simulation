@@ -10,6 +10,8 @@
 #include "RouteModel.h"
 #include "MapObject.h"
 
+namespace rideshare {
+
 // Calculate H Value (in this case, distance) for A* Search
 float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
     return node->Distance(*end_node_);
@@ -106,3 +108,5 @@ void RoutePlanner::AStarSearch(std::shared_ptr<MapObject> map_obj) {
     open_list_.clear();
     model_.ResetNodes();
 }
+
+}  // namespace rideshare

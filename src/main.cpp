@@ -45,21 +45,21 @@ int main() {
         }
     }
 
-    RouteModel model{osm_data};
+    rideshare::RouteModel model{osm_data};
 
     srand((unsigned) time(NULL)); // Seed random number generator
 
     // Create a shared route planner
-    std::shared_ptr<RoutePlanner> route_planner = std::make_shared<RoutePlanner>(model);
+    std::shared_ptr<rideshare::RoutePlanner> route_planner = std::make_shared<rideshare::RoutePlanner>(model);
 
     // Create vehicles
-    std::shared_ptr<VehicleManager> vehicles = std::make_shared<VehicleManager>(&model, route_planner);
+    std::shared_ptr<rideshare::VehicleManager> vehicles = std::make_shared<rideshare::VehicleManager>(&model, route_planner);
 
     // Create passenger queue
-    std::shared_ptr<PassengerQueue> passengers = std::make_shared<PassengerQueue>(&model, route_planner);
+    std::shared_ptr<rideshare::PassengerQueue> passengers = std::make_shared<rideshare::PassengerQueue>(&model, route_planner);
 
     // Create the ride matcher
-    std::shared_ptr<RideMatcher> ride_matcher = std::make_shared<RideMatcher>(passengers, vehicles);
+    std::shared_ptr<rideshare::RideMatcher> ride_matcher = std::make_shared<rideshare::RideMatcher>(passengers, vehicles);
 
     // Attach ride matcher to the other two
     vehicles->SetRideMatcher(ride_matcher);
@@ -71,7 +71,7 @@ int main() {
     passengers->Simulate();
 
     // Draw the map
-    BasicGraphics *graphics = new BasicGraphics(model.MinLat(), model.MinLon(), model.MaxLat(), model.MaxLon());
+    rideshare::BasicGraphics *graphics = new rideshare::BasicGraphics(model.MinLat(), model.MinLon(), model.MaxLat(), model.MaxLon());
     std::string background_img = "../data/" + location + ".png";
     graphics->SetBgFilename(background_img);
     graphics->SetPassengers(passengers);

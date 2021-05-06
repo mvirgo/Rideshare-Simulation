@@ -7,6 +7,8 @@
 #include "Coordinate.h"
 #include "Model.h"
 
+namespace rideshare {
+
 enum DrawMarker {
     // Values for shapes for cv::drawMarker
     cross,
@@ -61,5 +63,7 @@ class MapObject {
         red_ = (int)(((float) rand() / RAND_MAX) * 255);
     }
 };
+
+}  // namespace rideshare
 
 #endif

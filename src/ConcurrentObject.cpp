@@ -1,6 +1,8 @@
 #include "ConcurrentObject.h"
 #include <algorithm>
 
+namespace rideshare {
+
 // init static variable
 std::mutex ConcurrentObject::mtx_;
 
@@ -10,3 +12,5 @@ ConcurrentObject::~ConcurrentObject() {
         t.join();
     });
 }
+
+}  // namespace rideshare

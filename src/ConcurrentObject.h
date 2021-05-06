@@ -9,6 +9,8 @@
 #include "RouteModel.h"
 #include "RoutePlanner.h"
 
+namespace rideshare {
+
 class ConcurrentObject {
   public:
     // Constructor / Destructor
@@ -20,5 +22,7 @@ class ConcurrentObject {
     std::vector<std::thread> threads; // Holds all threads that have been launched within this object
     static std::mutex mtx_;           // Mutex shared by all concurrent objects for protecting cout
 };
+
+}  // namespace rideshare
 
 #endif

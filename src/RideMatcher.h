@@ -4,12 +4,13 @@
 #include <unordered_map>
 #include <set>
 #include <thread>
-#include <vector>
 
 #include "ConcurrentObject.h"
 #include "Passenger.h"
 #include "PassengerQueue.h"
 #include "VehicleManager.h"
+
+namespace rideshare {
 
 class RideMatcher : public ConcurrentObject, std::enable_shared_from_this<RideMatcher> {
   public:
@@ -45,5 +46,7 @@ class RideMatcher : public ConcurrentObject, std::enable_shared_from_this<RideMa
     std::unordered_map<int, int> vehicle_to_passenger_match_;
     std::unordered_map<int, int> passenger_to_vehicle_match_;
 };
+
+}  // namespace rideshare
 
 #endif

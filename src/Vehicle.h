@@ -6,9 +6,10 @@
 
 #include "Coordinate.h"
 #include "MapObject.h"
+#include "Passenger.h"
 #include "RouteModel.h"
 
-class Passenger;
+namespace rideshare {
 
 enum VehicleState {
     no_passenger_requested,
@@ -44,5 +45,7 @@ class Vehicle: public MapObject {
     int state_ = VehicleState::no_passenger_requested;
     int path_index_ = 0;
 };
+
+}  // namespace rideshare
 
 #endif

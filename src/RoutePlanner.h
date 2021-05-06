@@ -8,6 +8,7 @@
 #include "RouteModel.h"
 #include "MapObject.h"
 
+namespace rideshare {
 
 class RoutePlanner {
   public:
@@ -38,5 +39,7 @@ class RoutePlanner {
     std::vector<Model::Node> ConstructFinalPath(RouteModel::Node *);
     RouteModel::Node *NextNode();
 };
+
+}  // namespace rideshare
 
 #endif

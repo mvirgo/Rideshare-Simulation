@@ -4,6 +4,8 @@
 #include "RouteModel.h"
 #include "RoutePlanner.h"
 
+namespace rideshare {
+
 class ObjectHolder {
   public:
     // Constructor / Destructor
@@ -17,5 +19,7 @@ class ObjectHolder {
     int idCnt_ = 0; // Count object ids
     std::shared_ptr<RoutePlanner> route_planner_; // Route planner to use throughout the sim
 };
+
+}  // namespace rideshare
 
 #endif

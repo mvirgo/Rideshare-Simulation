@@ -4,8 +4,12 @@
 #include <string>
 #include <vector>
 #include <opencv2/core.hpp>
+
+#include "Passenger.h"
 #include "PassengerQueue.h"
 #include "VehicleManager.h"
+
+namespace rideshare {
 
 class BasicGraphics {
   public:
@@ -36,5 +40,7 @@ class BasicGraphics {
     std::string windowName_;
     std::vector<cv::Mat> images_;
 };
+
+}  // namespace rideshare
 
 #endif

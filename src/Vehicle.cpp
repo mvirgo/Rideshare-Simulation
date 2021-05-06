@@ -3,6 +3,8 @@
 #include "Coordinate.h"
 #include "Passenger.h"
 
+namespace rideshare {
+
 void Vehicle::SetPassenger(std::shared_ptr<Passenger> passenger) {
     passenger_ = passenger;
     // Set passenger's destination as the vehicle's destination
@@ -35,3 +37,5 @@ void Vehicle::ResetPathAndIndex() {
     path_.clear();
     path_index_ = 0;
 }
+
+}  // namespace rideshare

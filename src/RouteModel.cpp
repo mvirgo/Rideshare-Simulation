@@ -5,6 +5,8 @@
 #include "RouteModel.h"
 #include <iostream>
 
+namespace rideshare {
+
 RouteModel::RouteModel(const std::vector<std::byte> &xml) : Model(xml) {
     // Create RouteModel nodes.
     int counter = 0;
@@ -76,3 +78,5 @@ RouteModel::Node &RouteModel::FindClosestNode(const Coordinate &coordinate) {
 
     return SNodes()[closest_idx];
 }
+
+}  // namespace rideshare

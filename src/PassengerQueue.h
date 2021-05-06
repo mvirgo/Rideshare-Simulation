@@ -3,14 +3,19 @@
 
 #include <unordered_map>
 #include <vector>
-#include "ConcurrentObject.h"
 
+#include "ConcurrentObject.h"
 #include "ObjectHolder.h"
 #include "Passenger.h"
 #include "RouteModel.h"
 #include "RoutePlanner.h"
 
-class RideMatcher;
+// Avoid circular includes
+namespace rideshare {
+    class RideMatcher;
+}
+
+namespace rideshare {
 
 class PassengerQueue : public ConcurrentObject, public ObjectHolder, std::enable_shared_from_this<PassengerQueue> {
   public:
@@ -49,5 +54,7 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, std::enable
     std::unordered_map<int, std::shared_ptr<Passenger>> new_passengers_;
     std::shared_ptr<RideMatcher> ride_matcher_;
 };
+
+}  // namespace rideshare
 
 #endif

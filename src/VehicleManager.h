@@ -7,11 +7,17 @@
 #include "ConcurrentObject.h"
 #include "Coordinate.h"
 #include "ObjectHolder.h"
+#include "Passenger.h"
+#include "RouteModel.h"
+#include "RoutePlanner.h"
 #include "Vehicle.h"
 
-// Avoid include cycle
-class Passenger;
-class RideMatcher;
+// Avoid circular includes
+namespace rideshare {
+    class RideMatcher;
+}
+
+namespace rideshare {
 
 class VehicleManager : public ConcurrentObject, public ObjectHolder, std::enable_shared_from_this<VehicleManager> {
   public:
@@ -53,5 +59,7 @@ class VehicleManager : public ConcurrentObject, public ObjectHolder, std::enable
     double distance_per_cycle_;
     std::shared_ptr<RideMatcher> ride_matcher_;
 };
+
+}  // namespace rideshare
 
 #endif

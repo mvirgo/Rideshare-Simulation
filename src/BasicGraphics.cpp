@@ -1,12 +1,14 @@
+#include "BasicGraphics.h"
+
 #include <chrono>
-#include <iostream>
 #include <thread>
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
-#include "BasicGraphics.h"
 
 #include "Coordinate.h"
+
+namespace rideshare {
 
 BasicGraphics::BasicGraphics(float min_lat, float min_lon, float max_lat, float max_lon) {
     min_lat_ = min_lat;
@@ -104,3 +106,5 @@ void BasicGraphics::DrawVehicles(float img_rows, float img_cols) {
     float opacity = 0.85;
     cv::addWeighted(images_.at(1), opacity, images_.at(0), 1.0 - opacity, 0, images_.at(2));
 }
+
+}  // namespace rideshare

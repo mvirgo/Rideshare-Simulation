@@ -8,6 +8,8 @@
 #include "RideMatcher.h"
 #include "Vehicle.h"
 
+namespace rideshare {
+
 VehicleManager::VehicleManager(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ObjectHolder(model, route_planner) {
     // Generate max number of vehicles at the start
     for (int i = 0; i < MAX_OBJECTS; ++i) {
@@ -224,3 +226,5 @@ void VehicleManager::DropOffPassenger(std::shared_ptr<Vehicle> vehicle) {
     // Transition back to no passenger requested state
     vehicle->SetState(VehicleState::no_passenger_requested);
 }
+
+}  // namespace rideshare

@@ -12,6 +12,8 @@
 
 #include "Coordinate.h"
 
+namespace rideshare {
+
 class Model {
   public:
     struct Node {
@@ -57,5 +59,7 @@ class Model {
     double max_lon_ = 0.;
     double metric_scale_ = 1.f;
 };
+
+}  // namespace rideshare
 
 #endif

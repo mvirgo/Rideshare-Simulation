@@ -7,6 +7,8 @@
 #include "RouteModel.h"
 #include "RoutePlanner.h"
 
+namespace rideshare {
+
 PassengerQueue::PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ObjectHolder(model, route_planner) {
     // Start by creating half the max number of passengers
     // Note that the while loop avoids generating less if any invalid placements occur
@@ -117,3 +119,5 @@ void PassengerQueue::PassengerFailure(int id) {
         passenger->SetRideRequest(false);
     }
 }
+
+}  // namespace rideshare

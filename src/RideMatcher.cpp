@@ -1,9 +1,12 @@
 #include "RideMatcher.h"
+
 #include <algorithm>
 
 #include "Passenger.h"
 #include "PassengerQueue.h"
 #include "VehicleManager.h"
+
+namespace rideshare {
 
 void RideMatcher::PassengerRequestsRide(int p_id) {
     passenger_ids_.emplace(p_id);
@@ -96,9 +99,11 @@ void RideMatcher::MatchRides() {
             // Notify PassengerQueue and VehicleManager
             vehicle_manager_->AssignPassenger(v_id, passenger_queue_->NewPassengers().at(p_id)->GetPosition());
             passenger_queue_->RideOnWay(p_id);
-            // Remove the ids from the vectors
+            // Remove the ids from the sets
             passenger_ids_.erase(p_id);
             vehicle_ids_.erase(v_id);
         }
     }
 }
+
+}  // namespace rideshare

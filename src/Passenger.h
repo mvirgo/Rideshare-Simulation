@@ -3,6 +3,8 @@
 
 #include "MapObject.h"
 
+namespace rideshare {
+
 class Passenger: public MapObject {
   public:
     // constructor / destructor
@@ -18,5 +20,7 @@ class Passenger: public MapObject {
     int dest_shape_ = DrawMarker::tilted_cross;
     bool ride_requested_ = false;
 };
+
+}  // namespace rideshare
 
 #endif

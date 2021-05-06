@@ -1,6 +1,8 @@
 #ifndef COORDINATE_H
 #define COORDINATE_H
 
+namespace rideshare {
+
 struct Coordinate {
     double x;
     double y;
@@ -9,5 +11,7 @@ struct Coordinate {
         return x == other_coord.x && y == other_coord.y;
     }
 };
+
+}  // namespace rideshare
 
 #endif

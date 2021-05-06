@@ -13,6 +13,8 @@
 
 #include "Coordinate.h"
 
+namespace rideshare {
+
 // Only need road types (and no footways)
 static Model::Road::Type String2RoadType(std::string_view type) {
     if( type == "motorway" )        return Model::Road::Motorway;
@@ -96,3 +98,5 @@ void Model::LoadData(const std::vector<std::byte> &xml) {
         }
     }
 }
+
+}  // namespace rideshare
