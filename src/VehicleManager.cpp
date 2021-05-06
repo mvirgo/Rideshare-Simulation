@@ -50,9 +50,17 @@ void VehicleManager::ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, b
 
 // Make for smooth, incremental driving between path nodes
 void VehicleManager::IncrementalMove(std::shared_ptr<Vehicle> vehicle) {
+    // Try to get the next_pos; an error here may happen due to a race condition
+    //   where the path has been reset mid-stream
+    Model::Node next_pos;
+    try {
+        next_pos = vehicle->Path().at(vehicle->PathIndex());
+    } catch (...) {
+        // Don't increment and instead return; it will be given a new path soon
+        return;
+    }
     // Check distance to next position vs. distance can go b/w timesteps
     auto pos = vehicle->GetPosition();
-    auto next_pos = vehicle->Path().at(vehicle->PathIndex());
     auto distance = std::sqrt(std::pow(next_pos.x - pos.x, 2) + std::pow(next_pos.y - pos.y, 2));
 
     if (distance <= distance_per_cycle_) {
@@ -82,17 +90,10 @@ void VehicleManager::Drive() {
             // Get a route if none yet given
             if (vehicle->Path().empty()) {
                 route_planner_->AStarSearch(vehicle);
-                // TODO: Replace/remove below when handling impossible routes (i.e. stuck)
-                // TODO: Handle below if holding a passenger
                 if (vehicle->Path().empty()) {
                     if (vehicle->State() == VehicleState::no_passenger_requested || vehicle->State() == VehicleState::no_passenger_queued) {
                         SimpleVehicleFailure(vehicle);
                         continue;
-                    } else {
-                        std::unique_lock<std::mutex> lck(mtx_);
-                        std::cout << "Vehicle #" << vehicle->Id() <<" could not find path, crash may be imminent." << std::endl;
-                        std::cout << "Vehicle state is: " << vehicle->State() << std::endl;
-                        lck.unlock();
                     }
                 }
             }
@@ -111,7 +112,6 @@ void VehicleManager::Drive() {
             }
 
             // Check if at destination
-            // TODO: Ensure position and destination ensured to actually match?
             if (vehicle->GetPosition() == vehicle->GetDestination()) {
                 if (vehicle->State() == VehicleState::no_passenger_queued) {
                     // Find a new random destination
