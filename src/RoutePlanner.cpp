@@ -70,7 +70,6 @@ std::vector<Model::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *curr
 }
 
 // A* Search Algorithm
-// TODO: Handle if route not found?
 void RoutePlanner::AStarSearch(std::shared_ptr<MapObject> map_obj) {
     RouteModel::Node *current_node = nullptr;
 
