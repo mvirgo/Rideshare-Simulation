@@ -39,7 +39,7 @@ void PassengerQueue::GenerateNew() {
     new_passengers_.emplace(passenger->Id(), passenger);
     // Output id and location of passenger requesting ride
     std::lock_guard<std::mutex> lck(mtx_);
-    std::cout << "Passenger ID#" << idCnt_ - 1 << " requesting ride from: " << start.y << ", " << start.x << "." << std::endl;
+    std::cout << "Passenger #" << idCnt_ - 1 << " requesting ride from: " << start.y << ", " << start.x << "." << std::endl;
 }
 
 void PassengerQueue::Simulate() {

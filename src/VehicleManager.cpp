@@ -35,7 +35,7 @@ void VehicleManager::GenerateNew() {
     vehicles_.emplace(vehicle->Id(), vehicle);
     // Output id and location of vehicle looking to give rides
     std::lock_guard<std::mutex> lck(mtx_);
-    std::cout << "Vehicle ID#" << idCnt_ - 1 << " now driving from: " << nearest_start.y << ", " << nearest_start.x << "." << std::endl;
+    std::cout << "Vehicle #" << idCnt_ - 1 << " now driving from: " << nearest_start.y << ", " << nearest_start.x << "." << std::endl;
 }
 
 void VehicleManager::ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, bool random) {
@@ -156,7 +156,7 @@ void VehicleManager::SimpleVehicleFailure(std::shared_ptr<Vehicle> vehicle) {
         to_remove_.emplace_back(vehicle->Id());
         // Note to console
         std::lock_guard<std::mutex> lck(mtx_);
-        std::cout << "Vehicle #" << vehicle->Id() <<" was stuck, leaving map." << std::endl;
+        std::cout << "Vehicle #" << vehicle->Id() <<" is stuck, leaving map." << std::endl;
     } else {
         // Try a new route
         ResetVehicleDestination(vehicle, true);
@@ -205,7 +205,7 @@ void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> pas
     auto vehicle = vehicles_.at(id);
     // Output notice to console
     std::unique_lock<std::mutex> lck(mtx_);
-    std::cout << "Vehicle ID#" << vehicle->Id() << " has picked up Passenger ID#" << passenger->Id() << "." << std::endl;
+    std::cout << "Vehicle #" << vehicle->Id() << " picked up Passenger #" << passenger->Id() << "." << std::endl;
     lck.unlock();
     // Set passenger into vehicle
     vehicle->SetPassenger(passenger); // Vehicle handles setting new destination with passenger
@@ -217,7 +217,7 @@ void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> pas
 void VehicleManager::DropOffPassenger(std::shared_ptr<Vehicle> vehicle) {
     // Output notice to console
     std::unique_lock<std::mutex> lck(mtx_);
-    std::cout << "Vehicle ID#" << vehicle->Id() << " has dropped off Passenger ID#" << vehicle->GetPassenger()->Id() << "." << std::endl;
+    std::cout << "Vehicle #" << vehicle->Id() << " dropped off Passenger #" << vehicle->GetPassenger()->Id() << "." << std::endl;
     lck.unlock();
     // Drop off the passenger
     vehicle->DropOffPassenger();
