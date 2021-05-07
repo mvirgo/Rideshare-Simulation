@@ -5,12 +5,12 @@
 #include <vector>
 
 #include "ConcurrentObject.h"
-#include "Coordinate.h"
 #include "ObjectHolder.h"
-#include "Passenger.h"
-#include "RouteModel.h"
-#include "RoutePlanner.h"
-#include "Vehicle.h"
+#include "mapping/Coordinate.h"
+#include "mapping/RouteModel.h"
+#include "map_object/Passenger.h"
+#include "map_object/Vehicle.h"
+#include "routing/RoutePlanner.h"
 
 // Avoid circular includes
 namespace rideshare {

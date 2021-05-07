@@ -5,9 +5,9 @@
 #include <vector>
 #include <opencv2/core.hpp>
 
-#include "Passenger.h"
-#include "PassengerQueue.h"
-#include "VehicleManager.h"
+#include "concurrent/PassengerQueue.h"
+#include "concurrent/VehicleManager.h"
+#include "map_object/Passenger.h"
 
 namespace rideshare {
 

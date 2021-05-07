@@ -1,6 +1,6 @@
 #include "Vehicle.h"
 
-#include "Coordinate.h"
+#include "mapping/Coordinate.h"
 #include "Passenger.h"
 
 namespace rideshare {

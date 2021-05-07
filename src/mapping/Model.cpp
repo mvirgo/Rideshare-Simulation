@@ -3,13 +3,15 @@
 */
 
 #include "Model.h"
-#include "pugixml.hpp"
+
 #include <iostream>
 #include <string_view>
 #include <cmath>
 #include <cstdlib>
 #include <algorithm>
 #include <assert.h>
+
+#include "pugixml.hpp"
 
 #include "Coordinate.h"
 

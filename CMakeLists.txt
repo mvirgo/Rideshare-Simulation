@@ -17,4 +17,10 @@ file(GLOB_RECURSE project_SRCS src/*.cpp src/*.h)
 
 # Add project executable
 add_executable(rideshare_simulation ${project_SRCS})
+
+# Include project directories
+target_include_directories(rideshare_simulation PUBLIC src)
+target_include_directories(rideshare_simulation PUBLIC src/*)
+
+# Link everything together
 target_link_libraries(rideshare_simulation pugixml ${OpenCV_LIBRARIES})

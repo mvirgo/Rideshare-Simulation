@@ -1,8 +1,8 @@
 #ifndef OBJECT_HOLDER_H_
 #define OBJECT_HOLDER_H_
 
-#include "RouteModel.h"
-#include "RoutePlanner.h"
+#include "mapping/RouteModel.h"
+#include "routing/RoutePlanner.h"
 
 namespace rideshare {
 

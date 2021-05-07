@@ -4,11 +4,12 @@
 */
 
 #include "RoutePlanner.h"
+
 #include <algorithm>
 #include <mutex>
 
-#include "RouteModel.h"
-#include "MapObject.h"
+#include "mapping/RouteModel.h"
+#include "map_object/MapObject.h"
 
 namespace rideshare {
 

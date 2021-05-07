@@ -6,9 +6,9 @@
 #include <thread>
 
 #include "ConcurrentObject.h"
-#include "Passenger.h"
 #include "PassengerQueue.h"
 #include "VehicleManager.h"
+#include "map_object/Passenger.h"
 
 namespace rideshare {
 

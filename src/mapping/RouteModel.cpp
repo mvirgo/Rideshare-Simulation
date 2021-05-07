@@ -3,6 +3,7 @@
 */
 
 #include "RouteModel.h"
+
 #include <iostream>
 
 namespace rideshare {

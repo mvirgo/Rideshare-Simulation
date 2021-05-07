@@ -6,9 +6,9 @@
 
 #include "ConcurrentObject.h"
 #include "ObjectHolder.h"
-#include "Passenger.h"
-#include "RouteModel.h"
-#include "RoutePlanner.h"
+#include "mapping/RouteModel.h"
+#include "map_object/Passenger.h"
+#include "routing/RoutePlanner.h"
 
 // Avoid circular includes
 namespace rideshare {

@@ -1,4 +1,5 @@
 #include "ConcurrentObject.h"
+
 #include <algorithm>
 
 namespace rideshare {

@@ -6,12 +6,13 @@
 #include <set>
 #include <string>
 #include <vector>
-#include "RouteModel.h"
-#include "Graphics.h"
-#include "PassengerQueue.h"
-#include "RideMatcher.h"
-#include "RoutePlanner.h"
-#include "VehicleManager.h"
+
+#include "concurrent/PassengerQueue.h"
+#include "concurrent/RideMatcher.h"
+#include "concurrent/VehicleManager.h"
+#include "mapping/RouteModel.h"
+#include "routing/RoutePlanner.h"
+#include "visual/Graphics.h"
 
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path) {   
     std::ifstream is{path, std::ios::binary | std::ios::ate};

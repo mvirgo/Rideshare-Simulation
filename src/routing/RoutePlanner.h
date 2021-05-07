@@ -5,8 +5,9 @@
 #include <mutex>
 #include <vector>
 #include <string>
-#include "RouteModel.h"
-#include "MapObject.h"
+
+#include "mapping/RouteModel.h"
+#include "map_object/MapObject.h"
 
 namespace rideshare {
 

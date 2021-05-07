@@ -1,12 +1,13 @@
 #include "VehicleManager.h"
+
 #include <cmath>
 
-#include "Coordinate.h"
-#include "Passenger.h"
-#include "RouteModel.h"
-#include "RoutePlanner.h"
 #include "RideMatcher.h"
-#include "Vehicle.h"
+#include "mapping/Coordinate.h"
+#include "mapping/RouteModel.h"
+#include "map_object/Passenger.h"
+#include "map_object/Vehicle.h"
+#include "routing/RoutePlanner.h"
 
 namespace rideshare {
 
