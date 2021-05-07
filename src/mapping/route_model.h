@@ -1,3 +1,11 @@
+/**
+ * @file route_model.h
+ * @brief Child of model.h used for processing and storing information needed for A* Search.
+ *
+ * @cite Adapted from https://github.com/udacity/CppND-Route-Planning-Project
+ *
+ */
+
 #ifndef ROUTE_MODEL_H_
 #define ROUTE_MODEL_H_
 

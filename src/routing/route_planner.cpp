@@ -1,7 +1,11 @@
-/*
-  The below has been adapted from https://github.com/udacity/CppND-Route-Planning-Project from Udacity,
-    along with my solution to that project.
-*/
+/**
+ * @file route_planner.cpp
+ * @brief Implementation of routing between two map points using A* Search.
+ *
+ * @cite Base function structure adapted from https://github.com/udacity/CppND-Route-Planning-Project
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
 
 #include "route_planner.h"
 

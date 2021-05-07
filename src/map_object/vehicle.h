@@ -1,3 +1,11 @@
+/**
+ * @file vehicle.h
+ * @brief Vehicle to request, pick up and drop off passengers; shown on the map.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #ifndef VEHICLE_H_
 #define VEHICLE_H_
 

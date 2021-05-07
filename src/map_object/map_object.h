@@ -1,3 +1,11 @@
+/**
+ * @file map_object.h
+ * @brief Parent for classes drawn onto the map.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #ifndef MAP_OBJECT_H_
 #define MAP_OBJECT_H_
 

@@ -1,3 +1,11 @@
+/**
+ * @file vehicle.cpp
+ * @brief Implementation of a vehicle, particularly handling position, path and passengers.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #include "vehicle.h"
 
 #include "mapping/coordinate.h"

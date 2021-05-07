@@ -1,3 +1,11 @@
+/**
+ * @file concurrent_object.cpp
+ * @brief Initialization of shared concurrent object cout mutex and destructor of threads.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #include "concurrent_object.h"
 
 #include <algorithm>

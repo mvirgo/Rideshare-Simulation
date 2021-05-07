@@ -1,9 +1,13 @@
+/**
+ * @file model.h
+ * @brief Process & store information from OpenStreetMap data, as well as getting a random map position.
+ *
+ * @cite Adapted from https://github.com/udacity/CppND-Route-Planning-Project
+ *
+ */
+
 #ifndef MODEL_H_
 #define MODEL_H_
-
-/*
-  The below has been adapted from https://github.com/udacity/CppND-Route-Planning-Project from Udacity
-*/
 
 #include <vector>
 #include <unordered_map>

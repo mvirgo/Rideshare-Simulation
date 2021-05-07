@@ -1,3 +1,11 @@
+/**
+ * @file route_planner.h
+ * @brief Plans a route between two map points using A* Search.
+ *
+ * @cite Adapted from https://github.com/udacity/CppND-Route-Planning-Project
+ *
+ */
+
 #ifndef ROUTE_PLANNER_H_
 #define ROUTE_PLANNER_H_
 

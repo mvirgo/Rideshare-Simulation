@@ -1,6 +1,10 @@
-/*
-  The below has been adapted from https://github.com/udacity/CppND-Route-Planning-Project from Udacity
-*/
+/**
+ * @file model.cpp
+ * @brief Implementation to read and store OpenStreetMap data, as well as getting a random map position.
+ *
+ * @cite Adapted from https://github.com/udacity/CppND-Route-Planning-Project
+ *
+ */
 
 #include "model.h"
 

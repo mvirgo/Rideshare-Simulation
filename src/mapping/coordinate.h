@@ -1,3 +1,11 @@
+/**
+ * @file coordinate.h
+ * @brief Store x & y coordinate information, along with comparing equality.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #ifndef COORDINATE_H_
 #define COORDINATE_H_
 

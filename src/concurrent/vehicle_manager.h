@@ -1,3 +1,11 @@
+/**
+ * @file vehicle_manager.h
+ * @brief Handles generation of and driving of vehicles around the map.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #ifndef VEHICLE_MANAGER_H_
 #define VEHICLE_MANAGER_H_
 

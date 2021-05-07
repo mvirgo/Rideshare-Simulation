@@ -1,3 +1,11 @@
+/**
+ * @file ride_matcher.h
+ * @brief Handles matching of passengers to vehicles.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #ifndef RIDE_MATCHER_H_
 #define RIDE_MATCHER_H_
 

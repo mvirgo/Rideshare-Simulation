@@ -1,3 +1,13 @@
+/**
+ * @file main.cpp
+ * @brief Read OpenStreetMap data and simulate ridesharing on the input map.
+ *
+ * @cite OSM reading code adapted from https://github.com/udacity/CppND-Route-Planning-Project
+ * @cite Simulation/drawing code adapted from https://github.com/udacity/CppND-Program-a-Concurrent-Traffic-Simulation
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #include <cstdlib>
 #include <ctime>
 #include <optional>

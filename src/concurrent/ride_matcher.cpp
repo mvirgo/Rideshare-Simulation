@@ -1,3 +1,11 @@
+/**
+ * @file ride_matcher.cpp
+ * @brief Implementation of matching (or un-matching) of passengers to vehicles.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #include "ride_matcher.h"
 
 #include <algorithm>

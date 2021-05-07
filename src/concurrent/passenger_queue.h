@@ -1,3 +1,11 @@
+/**
+ * @file passenger_queue.h
+ * @brief Handles generation of passengers and their behavior prior to pick-up by vehicles.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #ifndef PASSENGER_QUEUE_H_
 #define PASSENGER_QUEUE_H_
 

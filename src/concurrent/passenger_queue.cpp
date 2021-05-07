@@ -1,3 +1,11 @@
+/**
+ * @file passenger_queue.cpp
+ * @brief Implementation of queue for passengers pre-pickup by vehicles.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #include "passenger_queue.h"
 
 #include <chrono>

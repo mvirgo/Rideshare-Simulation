@@ -1,3 +1,11 @@
+/**
+ * @file object_holder.h
+ * @brief Parent for classes generating, holding and routing about vehicles/passengers.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #ifndef OBJECT_HOLDER_H_
 #define OBJECT_HOLDER_H_
 

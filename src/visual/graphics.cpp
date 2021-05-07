@@ -1,3 +1,12 @@
+/**
+ * @file graphics.cpp
+ * @brief Implementation of drawing vehicles and passengers on a map image.
+ *
+ * @cite Adapted from https://github.com/udacity/CppND-Program-a-Concurrent-Traffic-Simulation
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #include "graphics.h"
 
 #include <chrono>

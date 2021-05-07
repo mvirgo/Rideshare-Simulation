@@ -1,3 +1,11 @@
+/**
+ * @file vehicle_manager.cpp
+ * @brief Implementation of generating vehicles and driving them around the map.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #include "vehicle_manager.h"
 
 #include <cmath>

@@ -1,3 +1,11 @@
+/**
+ * @file concurrent_object.h
+ * @brief Parent for concurrent simulation classes using threads.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #ifndef CONCURRENT_OBJECT_H_
 #define CONCURRENT_OBJECT_H_
 

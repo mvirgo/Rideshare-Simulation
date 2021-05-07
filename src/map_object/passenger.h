@@ -1,3 +1,11 @@
+/**
+ * @file passenger.h
+ * @brief Passengers to request and take rides; shown on the map.
+ *
+ * @copyright Copyright (c) 2021, Michael Virgo, released under the MIT License.
+ *
+ */
+
 #ifndef PASSENGER_H_
 #define PASSENGER_H_
 
