@@ -100,6 +100,9 @@ void RideMatcher::MatchRides() {
             int v_id = *vehicle_ids_.begin();
             vehicle_to_passenger_match_.insert({v_id, p_id});
             passenger_to_vehicle_match_.insert({p_id, v_id});
+            // Remove the ids from the sets
+            passenger_ids_.erase(p_id);
+            vehicle_ids_.erase(v_id);
             // Output the match to console
             std::unique_lock<std::mutex> lck(mtx_);
             std::cout << "Vehicle #" << v_id << " matched to Passenger #" << p_id << "." << std::endl;
@@ -107,9 +110,6 @@ void RideMatcher::MatchRides() {
             // Notify PassengerQueue and VehicleManager
             vehicle_manager_->AssignPassenger(v_id, passenger_queue_->NewPassengers().at(p_id)->GetPosition());
             passenger_queue_->RideOnWay(p_id);
-            // Remove the ids from the sets
-            passenger_ids_.erase(p_id);
-            vehicle_ids_.erase(v_id);
         }
     }
 }
