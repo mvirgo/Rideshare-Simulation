@@ -1,12 +1,12 @@
-#include "PassengerQueue.h"
+#include "passenger_queue.h"
 
 #include <chrono>
 #include <mutex>
 
-#include "RideMatcher.h"
-#include "mapping/RouteModel.h"
-#include "map_object/Passenger.h"
-#include "routing/RoutePlanner.h"
+#include "ride_matcher.h"
+#include "mapping/route_model.h"
+#include "map_object/passenger.h"
+#include "routing/route_planner.h"
 
 namespace rideshare {
 

@@ -2,7 +2,7 @@
   The below has been adapted from https://github.com/udacity/CppND-Route-Planning-Project from Udacity
 */
 
-#include "RouteModel.h"
+#include "route_model.h"
 
 #include <iostream>
 

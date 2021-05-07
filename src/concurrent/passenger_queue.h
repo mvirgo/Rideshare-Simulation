@@ -4,11 +4,11 @@
 #include <unordered_map>
 #include <vector>
 
-#include "ConcurrentObject.h"
-#include "ObjectHolder.h"
-#include "mapping/RouteModel.h"
-#include "map_object/Passenger.h"
-#include "routing/RoutePlanner.h"
+#include "concurrent_object.h"
+#include "object_holder.h"
+#include "mapping/route_model.h"
+#include "map_object/passenger.h"
+#include "routing/route_planner.h"
 
 // Avoid circular includes
 namespace rideshare {

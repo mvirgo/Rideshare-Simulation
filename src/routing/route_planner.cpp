@@ -3,13 +3,13 @@
     along with my solution to that project.
 */
 
-#include "RoutePlanner.h"
+#include "route_planner.h"
 
 #include <algorithm>
 #include <mutex>
 
-#include "mapping/RouteModel.h"
-#include "map_object/MapObject.h"
+#include "mapping/route_model.h"
+#include "map_object/map_object.h"
 
 namespace rideshare {
 

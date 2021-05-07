@@ -6,8 +6,8 @@
 #include <vector>
 #include <string>
 
-#include "mapping/RouteModel.h"
-#include "map_object/MapObject.h"
+#include "mapping/route_model.h"
+#include "map_object/map_object.h"
 
 namespace rideshare {
 

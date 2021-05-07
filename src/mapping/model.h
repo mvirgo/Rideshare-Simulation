@@ -10,7 +10,7 @@
 #include <string>
 #include <cstddef>
 
-#include "Coordinate.h"
+#include "coordinate.h"
 
 namespace rideshare {
 

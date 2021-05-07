@@ -4,8 +4,8 @@
 #include <cstdlib>
 #include <vector>
 
-#include "mapping/Coordinate.h"
-#include "mapping/Model.h"
+#include "mapping/coordinate.h"
+#include "mapping/model.h"
 
 namespace rideshare {
 

@@ -7,12 +7,12 @@
 #include <string>
 #include <vector>
 
-#include "concurrent/PassengerQueue.h"
-#include "concurrent/RideMatcher.h"
-#include "concurrent/VehicleManager.h"
-#include "mapping/RouteModel.h"
-#include "routing/RoutePlanner.h"
-#include "visual/Graphics.h"
+#include "concurrent/passenger_queue.h"
+#include "concurrent/ride_matcher.h"
+#include "concurrent/vehicle_manager.h"
+#include "mapping/route_model.h"
+#include "routing/route_planner.h"
+#include "visual/graphics.h"
 
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path) {   
     std::ifstream is{path, std::ios::binary | std::ios::ate};

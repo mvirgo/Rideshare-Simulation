@@ -5,10 +5,10 @@
 #include <set>
 #include <thread>
 
-#include "ConcurrentObject.h"
-#include "PassengerQueue.h"
-#include "VehicleManager.h"
-#include "map_object/Passenger.h"
+#include "concurrent_object.h"
+#include "passenger_queue.h"
+#include "vehicle_manager.h"
+#include "map_object/passenger.h"
 
 namespace rideshare {
 

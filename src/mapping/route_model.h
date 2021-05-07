@@ -6,8 +6,8 @@
 #include <iostream>
 #include <unordered_map>
 
-#include "Coordinate.h"
-#include "Model.h"
+#include "coordinate.h"
+#include "model.h"
 
 namespace rideshare {
 

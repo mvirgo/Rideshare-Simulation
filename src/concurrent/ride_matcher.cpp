@@ -1,10 +1,10 @@
-#include "RideMatcher.h"
+#include "ride_matcher.h"
 
 #include <algorithm>
 
-#include "PassengerQueue.h"
-#include "VehicleManager.h"
-#include "map_object/Passenger.h"
+#include "passenger_queue.h"
+#include "vehicle_manager.h"
+#include "map_object/passenger.h"
 
 namespace rideshare {
 

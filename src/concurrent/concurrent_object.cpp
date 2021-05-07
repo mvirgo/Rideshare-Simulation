@@ -1,4 +1,4 @@
-#include "ConcurrentObject.h"
+#include "concurrent_object.h"
 
 #include <algorithm>
 

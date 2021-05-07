@@ -1,7 +1,7 @@
 #ifndef PASSENGER_H_
 #define PASSENGER_H_
 
-#include "MapObject.h"
+#include "map_object.h"
 
 namespace rideshare {
 

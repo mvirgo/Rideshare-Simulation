@@ -2,7 +2,7 @@
   The below has been adapted from https://github.com/udacity/CppND-Route-Planning-Project from Udacity
 */
 
-#include "Model.h"
+#include "model.h"
 
 #include <iostream>
 #include <string_view>
@@ -13,7 +13,7 @@
 
 #include "pugixml.hpp"
 
-#include "Coordinate.h"
+#include "coordinate.h"
 
 namespace rideshare {
 

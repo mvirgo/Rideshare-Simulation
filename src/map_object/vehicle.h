@@ -4,10 +4,10 @@
 #include <memory>
 #include <vector>
 
-#include "MapObject.h"
-#include "mapping/Coordinate.h"
-#include "mapping/RouteModel.h"
-#include "map_object/Passenger.h"
+#include "map_object.h"
+#include "mapping/coordinate.h"
+#include "mapping/route_model.h"
+#include "map_object/passenger.h"
 
 namespace rideshare {
 

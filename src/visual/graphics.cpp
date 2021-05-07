@@ -1,4 +1,4 @@
-#include "Graphics.h"
+#include "graphics.h"
 
 #include <chrono>
 #include <thread>
@@ -6,7 +6,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-#include "mapping/Coordinate.h"
+#include "mapping/coordinate.h"
 
 namespace rideshare {
 
