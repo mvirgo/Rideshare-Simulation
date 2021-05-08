@@ -34,6 +34,7 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     enum MsgCodes {
         ride_on_way,
         ride_arrived,
+        passenger_picked_up,
         passenger_failure,
     };
 
@@ -63,6 +64,7 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     void RequestRide(std::shared_ptr<Passenger> passenger);
     void RideOnWay(int id);
     void RideArrived(int id);
+    void PassengerPickedUp(int id);
 
     // Message reading
     void ReadMessages();

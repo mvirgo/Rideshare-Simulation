@@ -146,7 +146,7 @@ void VehicleManager::Drive() {
         if (to_remove_.size() > 0) {
             for (int id : to_remove_) {
                 // Notify ride matcher (doesn't matter for no request state or driving, but does for others)
-                ride_matcher_->VehicleIsIneligible(id);
+                ride_matcher_->Message({ .message_code=RideMatcher::vehicle_is_ineligible, .id=id });
                 // Erase the vehicle
                 vehicles_.erase(id);
             }
@@ -182,7 +182,7 @@ void VehicleManager::RequestPassenger(std::shared_ptr<Vehicle> vehicle) {
     vehicle->SetState(VehicleState::no_passenger_queued);
     // Request the passenger from the ride matcher
     if (ride_matcher_ != nullptr) {
-        ride_matcher_->VehicleRequestsPassenger(vehicle->Id());
+        ride_matcher_->Message({ .message_code=RideMatcher::vehicle_requests_passenger, .id=vehicle->Id() });
     }
 }
 
@@ -197,7 +197,7 @@ void VehicleManager::AssignPassenger(int id, Coordinate position) {
     // Make sure path is not empty (unreachable), then update the state
     if (vehicle->Path().empty()) {
         // Notify ride matcher of failure
-        ride_matcher_->VehicleCannotReachPassenger(id);
+        ride_matcher_->Message({ .message_code=RideMatcher::vehicle_cannot_reach_passenger, .id=id });
         // Set state to nothing requested so it will make a new request
         vehicle->SetState(VehicleState::no_passenger_requested);
         // Add to vehicle failures
@@ -213,7 +213,7 @@ void VehicleManager::ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle) {
     // Transition to waiting
     vehicle->SetState(VehicleState::waiting);
     // Notify ride matcher
-    ride_matcher_->VehicleHasArrived(vehicle->Id());
+    ride_matcher_->Message({ .message_code=RideMatcher::vehicle_has_arrived, .id=vehicle->Id() });
 }
 
 void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger) {

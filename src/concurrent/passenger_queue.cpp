@@ -12,6 +12,7 @@
 #include <mutex>
 
 #include "ride_matcher.h"
+#include "simple_message.h"
 #include "mapping/route_model.h"
 #include "map_object/passenger.h"
 #include "routing/route_planner.h"
@@ -110,6 +111,8 @@ void PassengerQueue::ReadMessages() {
             RideOnWay(message.id);
         } else if (message.message_code == MsgCodes::ride_arrived) {
             RideArrived(message.id);
+        } else if (message.message_code == MsgCodes::passenger_picked_up) {
+            PassengerPickedUp(message.id);
         } else if (message.message_code == MsgCodes::passenger_failure) {
             PassengerFailure(message.id);
         }
@@ -121,7 +124,7 @@ void PassengerQueue::ReadMessages() {
 void PassengerQueue::RequestRide(std::shared_ptr<Passenger> passenger) {
     passenger->SetRideRequest(true);
     if (ride_matcher_ != nullptr) {
-        ride_matcher_->PassengerRequestsRide(passenger->Id());
+        ride_matcher_->Message({ .message_code=RideMatcher::passenger_requests_ride, .id=passenger->Id() });
     }
 }
 
@@ -131,7 +134,10 @@ void PassengerQueue::RideOnWay(int id) {
 
 void PassengerQueue::RideArrived(int id) {
     // Send the passenger to the vehicle
-    ride_matcher_->PassengerToVehicle(id);
+    ride_matcher_->Message({ .message_code=RideMatcher::passenger_to_vehicle, .id=id });
+}
+
+void PassengerQueue::PassengerPickedUp(int id) {
     // Erase the passenger from the queue
     new_passengers_.erase(id);
 }
@@ -142,7 +148,7 @@ void PassengerQueue::PassengerFailure(int id) {
     bool remove = passenger->MovementFailure();
     if (remove) {
         // Notify the ride matcher
-        ride_matcher_->PassengerIsIneligible(id);
+        ride_matcher_->Message({ .message_code=RideMatcher::passenger_is_ineligible, .id=id });
         // Erase the passenger
         new_passengers_.erase(id);
         // Note to console

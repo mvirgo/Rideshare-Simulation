@@ -36,13 +36,13 @@ void RideMatcher::VehicleCannotReachPassenger(int v_id) {
     std::cout << "Vehicle #" << v_id << " un-matched from Passenger #" << p_id << ", unreachable." << std::endl;
     lck.unlock();
     // Notify passenger of failure
-    passenger_queue_->Message(SimpleMessage{ .message_code = PassengerQueue::MsgCodes::passenger_failure, .id = p_id });
+    passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::passenger_failure, .id = p_id });
 }
 
 void RideMatcher::VehicleHasArrived(int v_id) {
     // Tell PassengerQueue to send passenger to vehicle
     int p_id = vehicle_to_passenger_match_.at(v_id);
-    passenger_queue_->Message(SimpleMessage{ .message_code = PassengerQueue::MsgCodes::ride_arrived, .id = p_id });
+    passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::ride_arrived, .id = p_id });
 }
 
 void RideMatcher::PassengerToVehicle(int p_id) {
@@ -53,6 +53,8 @@ void RideMatcher::PassengerToVehicle(int p_id) {
     // Remove both from match maps
     passenger_to_vehicle_match_.erase(p_id);
     vehicle_to_passenger_match_.erase(v_id);
+    // Let passenger queue know passenger was picked up
+    passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::passenger_picked_up, .id = p_id });
 }
 
 void RideMatcher::PassengerIsIneligible(int p_id) {
@@ -79,7 +81,7 @@ void RideMatcher::VehicleIsIneligible(int v_id) {
         vehicle_to_passenger_match_.erase(v_id);
         passenger_to_vehicle_match_.erase(p_id);
         // Notify passenger of failure
-        passenger_queue_->Message(SimpleMessage{ .message_code = PassengerQueue::MsgCodes::passenger_failure, .id = p_id });
+        passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::passenger_failure, .id = p_id });
     }
 }
 
@@ -92,6 +94,9 @@ void RideMatcher::MatchRides() {
     while (true) {
         // Sleep at every iteration to reduce CPU usage
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        // Read and act on any messages
+        ReadMessages();
 
         // Match rides if more than one in each related queue
         if (passenger_ids_.size() > 0 && vehicle_ids_.size() > 0) {
@@ -110,9 +115,50 @@ void RideMatcher::MatchRides() {
             lck.unlock();
             // Notify PassengerQueue and VehicleManager
             vehicle_manager_->AssignPassenger(v_id, passenger_queue_->NewPassengers().at(p_id)->GetPosition());
-            passenger_queue_->Message(SimpleMessage{ .message_code = PassengerQueue::MsgCodes::ride_on_way, .id = p_id });
+            passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::ride_on_way, .id = p_id });
         }
     }
+}
+
+void RideMatcher::Message(SimpleMessage simple_message) {
+    std::lock_guard<std::mutex> lck(messages_mutex_);
+    // Add the message for later reading
+    messages_.emplace_back(simple_message);
+}
+
+void RideMatcher::ReadMessages() {
+    std::lock_guard<std::mutex> lck(messages_mutex_);
+    // Take action based on each message code
+    for (auto message : messages_) {
+        switch (message.message_code) {
+            case MsgCodes::passenger_requests_ride:
+                PassengerRequestsRide(message.id);
+                break;
+            case MsgCodes::vehicle_requests_passenger:
+                VehicleRequestsPassenger(message.id);
+                break;
+            case MsgCodes::vehicle_cannot_reach_passenger:
+                VehicleCannotReachPassenger(message.id);
+                break;
+            case MsgCodes::vehicle_has_arrived:
+                VehicleHasArrived(message.id);
+                break;
+            case MsgCodes::passenger_to_vehicle:
+                PassengerToVehicle(message.id);
+                break;
+            case MsgCodes::passenger_is_ineligible:
+                PassengerIsIneligible(message.id);
+                break;
+            case MsgCodes::vehicle_is_ineligible:
+                VehicleIsIneligible(message.id);
+                break;
+            default:
+                // Invalid message, ignore
+                continue;
+        }
+    }
+    // Clear out the messages
+    messages_.clear();
 }
 
 }  // namespace rideshare
