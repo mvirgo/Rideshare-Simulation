@@ -61,18 +61,11 @@ void VehicleManager::ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, b
 
 // Make for smooth, incremental driving between path nodes
 void VehicleManager::IncrementalMove(std::shared_ptr<Vehicle> vehicle) {
-    // Try to get the next_pos; an error here may happen due to a race condition
-    //   where the path has been reset mid-stream
-    Model::Node next_pos;
-    try {
-        next_pos = vehicle->Path().at(vehicle->PathIndex());
-    } catch (...) {
-        // Don't increment and instead return; it will be given a new path soon
-        return;
-    }
+    // Get the next position on the path
+    Model::Node next_pos = vehicle->Path().at(vehicle->PathIndex());
     // Check distance to next position vs. distance can go b/w timesteps
-    auto pos = vehicle->GetPosition();
-    auto distance = std::sqrt(std::pow(next_pos.x - pos.x, 2) + std::pow(next_pos.y - pos.y, 2));
+    Coordinate pos = vehicle->GetPosition();
+    double distance = std::sqrt(std::pow(next_pos.x - pos.x, 2) + std::pow(next_pos.y - pos.y, 2));
 
     if (distance <= distance_per_cycle_) {
         // Don't need to calculate intermediate point, just set position as next_pos
