@@ -9,6 +9,7 @@
 #ifndef VEHICLE_MANAGER_H_
 #define VEHICLE_MANAGER_H_
 
+#include <mutex>
 #include <unordered_map>
 #include <vector>
 
@@ -59,13 +60,16 @@ class VehicleManager : public ConcurrentObject, public ObjectHolder, std::enable
     // Passenger-related handling
     void RequestPassenger(std::shared_ptr<Vehicle> vehicle);
     void ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle);
+    void PickUpPassengers();
     void DropOffPassenger(std::shared_ptr<Vehicle> vehicle);
 
     // Variables
     std::unordered_map<int, std::shared_ptr<Vehicle>> vehicles_;
+    std::unordered_map<int, std::shared_ptr<Passenger>> passenger_pickups_;
     std::vector<int> to_remove_;
     double distance_per_cycle_;
     std::shared_ptr<RideMatcher> ride_matcher_;
+    std::mutex passenger_pickups_mutex;
 };
 
 }  // namespace rideshare

@@ -10,6 +10,7 @@
 #define VEHICLE_H_
 
 #include <memory>
+#include <mutex>
 #include <vector>
 
 #include "map_object.h"
@@ -44,6 +45,8 @@ class Vehicle: public MapObject {
     // Other functionality
     void DropOffPassenger();
     void IncrementPathIndex() { ++path_index_; }
+
+    std::mutex vehicle_mtx; // Mutex to avoid vehicle access issues
 
   private:
     void ResetPathAndIndex();

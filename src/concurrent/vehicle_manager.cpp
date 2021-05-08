@@ -97,7 +97,12 @@ void VehicleManager::Drive() {
         // Sleep at every iteration to reduce CPU usage
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
+        // Pick up any available passengers first
+        PickUpPassengers();
+
+        // Drive the vehicles
         for (auto & [id, vehicle] : vehicles_) {
+            std::lock_guard<std::mutex> vehicle_lock(vehicle->vehicle_mtx);
             // Get a route if none yet given
             if (vehicle->Path().empty()) {
                 route_planner_->AStarSearch(vehicle);
@@ -183,6 +188,7 @@ void VehicleManager::RequestPassenger(std::shared_ptr<Vehicle> vehicle) {
 
 void VehicleManager::AssignPassenger(int id, Coordinate position) {
     auto vehicle = vehicles_.at(id);
+    std::lock_guard<std::mutex> vehicle_lock(vehicle->vehicle_mtx);
     // Set new vehicle destination and update its state
     vehicle->SetDestination(position);
     ResetVehicleDestination(vehicle, false); // Aligns to route node
@@ -211,16 +217,29 @@ void VehicleManager::ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle) {
 }
 
 void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger) {
-    auto vehicle = vehicles_.at(id);
-    // Output notice to console
-    std::unique_lock<std::mutex> lck(mtx_);
-    std::cout << "Vehicle #" << vehicle->Id() << " picked up Passenger #" << passenger->Id() << "." << std::endl;
-    lck.unlock();
-    // Set passenger into vehicle
-    vehicle->SetPassenger(passenger); // Vehicle handles setting new destination with passenger
-    ResetVehicleDestination(vehicle, false); // Aligns to route node
-    // Update state when done processing
-    vehicle->SetState(VehicleState::driving_passenger);
+    std::lock_guard<std::mutex> pickups_lock(passenger_pickups_mutex);
+    // Add to passenger pickups map
+    passenger_pickups_.emplace(id, passenger);
+}
+
+void VehicleManager::PickUpPassengers() {
+    std::lock_guard<std::mutex> pickups_lock(passenger_pickups_mutex);
+    // Loop through all ready passenger pickups
+    for (auto [id, passenger] : passenger_pickups_) {
+        auto vehicle = vehicles_.at(id);
+        std::lock_guard<std::mutex> vehicle_lock(vehicle->vehicle_mtx);
+        // Output notice to console
+        std::unique_lock<std::mutex> lck(mtx_);
+        std::cout << "Vehicle #" << vehicle->Id() << " picked up Passenger #" << passenger->Id() << "." << std::endl;
+        lck.unlock();
+        // Set passenger into vehicle
+        vehicle->SetPassenger(passenger); // Vehicle handles setting new destination with passenger
+        ResetVehicleDestination(vehicle, false); // Aligns to route node
+        // Update state when done processing
+        vehicle->SetState(VehicleState::driving_passenger);
+    }
+    // Clear the pickups queue
+    passenger_pickups_.clear();
 }
 
 void VehicleManager::DropOffPassenger(std::shared_ptr<Vehicle> vehicle) {
