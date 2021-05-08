@@ -11,6 +11,7 @@
 #include <algorithm>
 
 #include "passenger_queue.h"
+#include "simple_message.h"
 #include "vehicle_manager.h"
 #include "map_object/passenger.h"
 
@@ -35,13 +36,13 @@ void RideMatcher::VehicleCannotReachPassenger(int v_id) {
     std::cout << "Vehicle #" << v_id << " un-matched from Passenger #" << p_id << ", unreachable." << std::endl;
     lck.unlock();
     // Notify passenger of failure
-    passenger_queue_->PassengerFailure(p_id);
+    passenger_queue_->Message(SimpleMessage{ .message_code = PassengerQueue::MsgCodes::passenger_failure, .id = p_id });
 }
 
 void RideMatcher::VehicleHasArrived(int v_id) {
     // Tell PassengerQueue to send passenger to vehicle
     int p_id = vehicle_to_passenger_match_.at(v_id);
-    passenger_queue_->RideArrived(p_id);
+    passenger_queue_->Message(SimpleMessage{ .message_code = PassengerQueue::MsgCodes::ride_arrived, .id = p_id });
 }
 
 void RideMatcher::PassengerToVehicle(int p_id) {
@@ -78,7 +79,7 @@ void RideMatcher::VehicleIsIneligible(int v_id) {
         vehicle_to_passenger_match_.erase(v_id);
         passenger_to_vehicle_match_.erase(p_id);
         // Notify passenger of failure
-        passenger_queue_->PassengerFailure(p_id);
+        passenger_queue_->Message(SimpleMessage{ .message_code = PassengerQueue::MsgCodes::passenger_failure, .id = p_id });
     }
 }
 
@@ -109,7 +110,7 @@ void RideMatcher::MatchRides() {
             lck.unlock();
             // Notify PassengerQueue and VehicleManager
             vehicle_manager_->AssignPassenger(v_id, passenger_queue_->NewPassengers().at(p_id)->GetPosition());
-            passenger_queue_->RideOnWay(p_id);
+            passenger_queue_->Message(SimpleMessage{ .message_code = PassengerQueue::MsgCodes::ride_on_way, .id = p_id });
         }
     }
 }

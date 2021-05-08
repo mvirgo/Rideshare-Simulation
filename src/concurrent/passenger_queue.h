@@ -9,11 +9,13 @@
 #ifndef PASSENGER_QUEUE_H_
 #define PASSENGER_QUEUE_H_
 
+#include <mutex>
 #include <unordered_map>
 #include <vector>
 
 #include "concurrent_object.h"
 #include "object_holder.h"
+#include "simple_message.h"
 #include "mapping/route_model.h"
 #include "map_object/passenger.h"
 #include "routing/route_planner.h"
@@ -27,6 +29,13 @@ namespace rideshare {
 
 class PassengerQueue : public ConcurrentObject, public ObjectHolder, std::enable_shared_from_this<PassengerQueue> {
   public:
+    // Messages are sent with below enum code and passenger id
+    enum MsgCodes {
+        ride_on_way,
+        ride_arrived,
+        passenger_failure,
+    };
+
     // Constructor / Destructor
     PassengerQueue() {};
     PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner);
@@ -38,12 +47,8 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, std::enable
     // Concurrency
     void Simulate();
 
-    // Ride match handling
-    void RideOnWay(int id);
-    void RideArrived(int id);
-
-    // Failure handling
-    void PassengerFailure(int id);
+    // Message receiving
+    void Message(SimpleMessage simple_message);
 
     // Miscellaneous
     std::shared_ptr<PassengerQueue> GetSharedThis() { return shared_from_this(); }
@@ -55,12 +60,22 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, std::enable
 
     // Ride match handling
     void RequestRide(std::shared_ptr<Passenger> passenger);
+    void RideOnWay(int id);
+    void RideArrived(int id);
+
+    // Message reading
+    void ReadMessages();
+
+    // Failure handling
+    void PassengerFailure(int id);
 
     // Variables
     int MIN_WAIT_TIME_ = 3; // seconds to wait between generation attempts
     int RANGE_WAIT_TIME_ = 2; // range in seconds to wait between generation attempts
     std::unordered_map<int, std::shared_ptr<Passenger>> new_passengers_;
     std::shared_ptr<RideMatcher> ride_matcher_;
+    std::vector<SimpleMessage> messages_;
+    std::mutex messages_mutex_;
 };
 
 }  // namespace rideshare

@@ -84,6 +84,9 @@ void PassengerQueue::WaitForRide() {
             lastUpdate = std::chrono::system_clock::now();
         }
 
+        // Read and act on any messages
+        ReadMessages();
+
         // Request rides for passengers in queue, if not yet requested
         for (auto passenger_pair : new_passengers_) {
             if (!(passenger_pair.second->RideRequested())) {
@@ -91,6 +94,28 @@ void PassengerQueue::WaitForRide() {
             }
         }
     }
+}
+
+void PassengerQueue::Message(SimpleMessage simple_message) {
+    std::lock_guard<std::mutex> lck(messages_mutex_);
+    // Add the message for later reading
+    messages_.emplace_back(simple_message);
+}
+
+void PassengerQueue::ReadMessages() {
+    std::lock_guard<std::mutex> lck(messages_mutex_);
+    // Take action based on each message code
+    for (auto message : messages_) {
+        if (message.message_code == MsgCodes::ride_on_way) {
+            RideOnWay(message.id);
+        } else if (message.message_code == MsgCodes::ride_arrived) {
+            RideArrived(message.id);
+        } else if (message.message_code == MsgCodes::passenger_failure) {
+            PassengerFailure(message.id);
+        }
+    }
+    // Clear out the messages
+    messages_.clear();
 }
 
 void PassengerQueue::RequestRide(std::shared_ptr<Passenger> passenger) {
