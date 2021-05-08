@@ -99,6 +99,8 @@ void VehicleManager::Drive() {
 
         // Pick up any available passengers first
         PickUpPassengers();
+        // Assign any new matches
+        NewPassengerAssignments();
 
         // Drive the vehicles
         for (auto & [id, vehicle] : vehicles_) {
@@ -187,26 +189,38 @@ void VehicleManager::RequestPassenger(std::shared_ptr<Vehicle> vehicle) {
 }
 
 void VehicleManager::AssignPassenger(int id, Coordinate position) {
-    auto vehicle = vehicles_.at(id);
-    std::lock_guard<std::mutex> vehicle_lock(vehicle->vehicle_mtx);
-    // Set new vehicle destination and update its state
-    vehicle->SetDestination(position);
-    ResetVehicleDestination(vehicle, false); // Aligns to route node
-    // Get the path to the passenger
-    route_planner_->AStarSearch(vehicle);
-    // Make sure path is not empty (unreachable), then update the state
-    if (vehicle->Path().empty()) {
-        // Notify ride matcher of failure
-        ride_matcher_->Message({ .message_code=RideMatcher::vehicle_cannot_reach_passenger, .id=id });
-        // Set state to nothing requested so it will make a new request
-        vehicle->SetState(VehicleState::no_passenger_requested);
-        // Add to vehicle failures
-        // Note that ride matcher notified in `Drive` if deletion occurs
-        SimpleVehicleFailure(vehicle);
-    } else {
-        // Update state when done processing
-        vehicle->SetState(VehicleState::passenger_queued);
+    std::lock_guard<std::mutex> lck(new_assignment_locations_mutex);
+    // Add the newly assigned passenger pickup position for later use
+    new_assignment_locations.emplace(id, position);
+}
+
+void VehicleManager::NewPassengerAssignments() {
+    std::lock_guard<std::mutex> lck(new_assignment_locations_mutex);
+    // Loop through an assign passenger pick up locations to related vehicles
+    for (auto [id, position] : new_assignment_locations) {
+        auto vehicle = vehicles_.at(id);
+        std::lock_guard<std::mutex> vehicle_lock(vehicle->vehicle_mtx);
+        // Set new vehicle destination and update its state
+        vehicle->SetDestination(position);
+        ResetVehicleDestination(vehicle, false); // Aligns to route node
+        // Get the path to the passenger
+        route_planner_->AStarSearch(vehicle);
+        // Make sure path is not empty (unreachable), then update the state
+        if (vehicle->Path().empty()) {
+            // Notify ride matcher of failure
+            ride_matcher_->Message({ .message_code=RideMatcher::vehicle_cannot_reach_passenger, .id=id });
+            // Set state to nothing requested so it will make a new request
+            vehicle->SetState(VehicleState::no_passenger_requested);
+            // Add to vehicle failures
+            // Note that ride matcher notified in `Drive` if deletion occurs
+            SimpleVehicleFailure(vehicle);
+        } else {
+            // Update state when done processing
+            vehicle->SetState(VehicleState::passenger_queued);
+        }
     }
+    // Clear out the new assignment locations
+    new_assignment_locations.clear();
 }
 
 void VehicleManager::ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle) {
