@@ -191,11 +191,19 @@ void VehicleManager::NewPassengerAssignments() {
     // Loop through an assign passenger pick up locations to related vehicles
     for (auto [id, position] : new_assignment_locations) {
         auto vehicle = vehicles_.at(id);
+        // Store current position
+        Coordinate curr_pos = vehicle->GetPosition();
+        // Set position for use with route to passenger as the next node on the path
+        // Avoids potential issue if current position is closest to an unreachable node
+        Model::Node next_node = vehicle->Path().at(vehicle->PathIndex());
+        vehicle->SetPosition({ .x = next_node.x, .y = next_node.y });
         // Set new vehicle destination and update its state
         vehicle->SetDestination(position);
         ResetVehicleDestination(vehicle, false); // Aligns to route node
         // Get the path to the passenger
         route_planner_->AStarSearch(vehicle);
+        // Set position back to original to keep smooth route
+        vehicle->SetPosition(curr_pos);
         // Make sure path is not empty (unreachable), then update the state
         if (vehicle->Path().empty()) {
             // Notify ride matcher of failure
