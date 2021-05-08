@@ -104,7 +104,6 @@ void VehicleManager::Drive() {
 
         // Drive the vehicles
         for (auto & [id, vehicle] : vehicles_) {
-            std::lock_guard<std::mutex> vehicle_lock(vehicle->vehicle_mtx);
             // Get a route if none yet given
             if (vehicle->Path().empty()) {
                 route_planner_->AStarSearch(vehicle);
@@ -199,7 +198,6 @@ void VehicleManager::NewPassengerAssignments() {
     // Loop through an assign passenger pick up locations to related vehicles
     for (auto [id, position] : new_assignment_locations) {
         auto vehicle = vehicles_.at(id);
-        std::lock_guard<std::mutex> vehicle_lock(vehicle->vehicle_mtx);
         // Set new vehicle destination and update its state
         vehicle->SetDestination(position);
         ResetVehicleDestination(vehicle, false); // Aligns to route node
@@ -241,7 +239,6 @@ void VehicleManager::PickUpPassengers() {
     // Loop through all ready passenger pickups
     for (auto [id, passenger] : passenger_pickups_) {
         auto vehicle = vehicles_.at(id);
-        std::lock_guard<std::mutex> vehicle_lock(vehicle->vehicle_mtx);
         // Output notice to console
         std::unique_lock<std::mutex> lck(mtx_);
         std::cout << "Vehicle #" << vehicle->Id() << " picked up Passenger #" << passenger->Id() << "." << std::endl;

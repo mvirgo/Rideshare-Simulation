@@ -46,8 +46,6 @@ class Vehicle: public MapObject {
     void DropOffPassenger();
     void IncrementPathIndex() { ++path_index_; }
 
-    std::mutex vehicle_mtx; // Mutex to avoid vehicle access issues
-
   private:
     void ResetPathAndIndex();
 
