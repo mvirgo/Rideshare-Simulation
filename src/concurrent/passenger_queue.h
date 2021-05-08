@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "concurrent_object.h"
+#include "message_handler.h"
 #include "object_holder.h"
 #include "simple_message.h"
 #include "mapping/route_model.h"
@@ -27,7 +28,7 @@ namespace rideshare {
 
 namespace rideshare {
 
-class PassengerQueue : public ConcurrentObject, public ObjectHolder, std::enable_shared_from_this<PassengerQueue> {
+class PassengerQueue : public ConcurrentObject, public ObjectHolder, public MessageHandler, std::enable_shared_from_this<PassengerQueue> {
   public:
     // Messages are sent with below enum code and passenger id
     enum MsgCodes {
@@ -74,8 +75,6 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, std::enable
     int RANGE_WAIT_TIME_ = 2; // range in seconds to wait between generation attempts
     std::unordered_map<int, std::shared_ptr<Passenger>> new_passengers_;
     std::shared_ptr<RideMatcher> ride_matcher_;
-    std::vector<SimpleMessage> messages_;
-    std::mutex messages_mutex_;
 };
 
 }  // namespace rideshare
