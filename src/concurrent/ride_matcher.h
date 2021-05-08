@@ -22,7 +22,7 @@
 
 namespace rideshare {
 
-class RideMatcher : public ConcurrentObject, public MessageHandler, std::enable_shared_from_this<RideMatcher> {
+class RideMatcher : public ConcurrentObject, public MessageHandler {
   public:
     // Messages are received with below enum code and either vehicle or passenger id
     enum MsgCodes {

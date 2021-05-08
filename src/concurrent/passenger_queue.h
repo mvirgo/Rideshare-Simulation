@@ -28,7 +28,7 @@ namespace rideshare {
 
 namespace rideshare {
 
-class PassengerQueue : public ConcurrentObject, public ObjectHolder, public MessageHandler, std::enable_shared_from_this<PassengerQueue> {
+class PassengerQueue : public ConcurrentObject, public ObjectHolder, public MessageHandler {
   public:
     // Messages are sent with below enum code and passenger id
     enum MsgCodes {
@@ -51,9 +51,6 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
 
     // Message receiving
     void Message(SimpleMessage simple_message);
-
-    // Miscellaneous
-    std::shared_ptr<PassengerQueue> GetSharedThis() { return shared_from_this(); }
 
   private:
     // Creation

@@ -28,7 +28,7 @@ namespace rideshare {
 
 namespace rideshare {
 
-class VehicleManager : public ConcurrentObject, public ObjectHolder, std::enable_shared_from_this<VehicleManager> {
+class VehicleManager : public ConcurrentObject, public ObjectHolder {
   public:
     // Constructor / Destructor
     VehicleManager() {};
@@ -43,9 +43,6 @@ class VehicleManager : public ConcurrentObject, public ObjectHolder, std::enable
     // Passenger-related handling
     void AssignPassenger(int id, Coordinate position);
     void PassengerIntoVehicle(int id, std::shared_ptr<Passenger> passenger);
-
-    // Miscellaneous
-    std::shared_ptr<VehicleManager> GetSharedThis() { return shared_from_this(); }
 
   private:
     // Creation
