@@ -127,9 +127,15 @@ void RideMatcher::Message(SimpleMessage simple_message) {
 }
 
 void RideMatcher::ReadMessages() {
-    std::lock_guard<std::mutex> lck(messages_mutex_);
+    // Lock and copy over the messages so can release the mutex faster
+    std::unique_lock<std::mutex> lck(messages_mutex_);
+    std::vector<SimpleMessage> copied_messages(messages_);
+    // Clear out the original messages and unlock
+    messages_.clear();
+    lck.unlock();
+
     // Take action based on each message code
-    for (auto message : messages_) {
+    for (auto message : copied_messages) {
         switch (message.message_code) {
             case MsgCodes::passenger_requests_ride:
                 PassengerRequestsRide(message.id);
@@ -157,8 +163,6 @@ void RideMatcher::ReadMessages() {
                 continue;
         }
     }
-    // Clear out the messages
-    messages_.clear();
 }
 
 }  // namespace rideshare

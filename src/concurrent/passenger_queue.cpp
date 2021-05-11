@@ -104,9 +104,15 @@ void PassengerQueue::Message(SimpleMessage simple_message) {
 }
 
 void PassengerQueue::ReadMessages() {
-    std::lock_guard<std::mutex> lck(messages_mutex_);
+    // Lock and copy over the messages so can release the mutex faster
+    std::unique_lock<std::mutex> lck(messages_mutex_);
+    std::vector<SimpleMessage> copied_messages(messages_);
+    // Clear out the original messages and unlock
+    messages_.clear();
+    lck.unlock();
+
     // Take action based on each message code
-    for (auto message : messages_) {
+    for (auto message : copied_messages) {
         if (message.message_code == MsgCodes::ride_on_way) {
             RideOnWay(message.id);
         } else if (message.message_code == MsgCodes::ride_arrived) {
@@ -117,8 +123,6 @@ void PassengerQueue::ReadMessages() {
             PassengerFailure(message.id);
         }
     }
-    // Clear out the messages
-    messages_.clear();
 }
 
 void PassengerQueue::RequestRide(std::shared_ptr<Passenger> passenger) {
