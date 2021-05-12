@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <set>
 #include <thread>
+#include <utility>
 
 #include "concurrent_object.h"
 #include "message_handler.h"
@@ -53,6 +54,7 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
     // Matching
     void MatchRides();
     void SimpleMatch();
+    bool MatchIsValid(int p_id, int v_id);
 
     // Post-Matching
     void VehicleCannotReachPassenger(int v_id);
@@ -66,6 +68,9 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
     // Message reading
     void ReadMessages();
 
+    // Utility
+    void ClearInvalids(int p_id);
+
     // Member variables
     std::shared_ptr<PassengerQueue> passenger_queue_;
     std::shared_ptr<VehicleManager> vehicle_manager_;
@@ -73,6 +78,7 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
     std::set<int> vehicle_ids_;
     std::unordered_map<int, int> vehicle_to_passenger_match_;
     std::unordered_map<int, int> passenger_to_vehicle_match_;
+    std::set<std::pair<int, int>> invalid_matches_; // p_id, v_id
 };
 
 }  // namespace rideshare
