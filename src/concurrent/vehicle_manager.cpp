@@ -208,6 +208,10 @@ void VehicleManager::NewPassengerAssignments() {
         Coordinate curr_pos = vehicle->GetPosition();
         // Set position for use with route to passenger as the next node on the path
         // Avoids potential issue if current position is closest to an unreachable node
+        if (vehicle->Path().empty()) {
+            // Empty path likely a result of failure, so don't progress with assignment
+            AssignmentFailure(vehicle);
+        }
         Model::Node next_node = vehicle->Path().at(vehicle->PathIndex());
         vehicle->SetPosition({ .x = next_node.x, .y = next_node.y });
         // Set new vehicle destination and update its state
@@ -219,18 +223,22 @@ void VehicleManager::NewPassengerAssignments() {
         vehicle->SetPosition(curr_pos);
         // Make sure path is not empty (unreachable), then update the state
         if (vehicle->Path().empty()) {
-            // Notify ride matcher of failure
-            ride_matcher_->Message({ .message_code=RideMatcher::vehicle_cannot_reach_passenger, .id=id });
-            // Set state to nothing requested so it will make a new request
-            vehicle->SetState(VehicleState::no_passenger_requested);
-            // Add to vehicle failures
-            // Note that ride matcher notified in `Drive` if deletion occurs
-            SimpleVehicleFailure(vehicle);
+            AssignmentFailure(vehicle);
         } else {
             // Update state when done processing
             vehicle->SetState(VehicleState::passenger_queued);
         }
     }
+}
+
+void VehicleManager::AssignmentFailure(std::shared_ptr<Vehicle> vehicle) {
+    // Notify ride matcher of failure
+    ride_matcher_->Message({ .message_code=RideMatcher::vehicle_cannot_reach_passenger, .id=vehicle->Id() });
+    // Set state to nothing requested so it will make a new request
+    vehicle->SetState(VehicleState::no_passenger_requested);
+    // Add to vehicle failures
+    // Note that ride matcher notified in `Drive` if deletion occurs
+    SimpleVehicleFailure(vehicle);
 }
 
 void VehicleManager::ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle) {

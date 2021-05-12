@@ -57,6 +57,7 @@ class VehicleManager : public ConcurrentObject, public ObjectHolder {
     // Passenger-related handling
     void RequestPassenger(std::shared_ptr<Vehicle> vehicle);
     void NewPassengerAssignments();
+    void AssignmentFailure(std::shared_ptr<Vehicle> vehicle);
     void ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle);
     void PickUpPassengers();
     void DropOffPassenger(std::shared_ptr<Vehicle> vehicle);
