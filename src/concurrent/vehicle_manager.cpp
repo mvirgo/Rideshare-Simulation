@@ -194,9 +194,15 @@ void VehicleManager::AssignPassenger(int id, Coordinate position) {
 }
 
 void VehicleManager::NewPassengerAssignments() {
-    std::lock_guard<std::mutex> lck(new_assignment_locations_mutex);
+    // Lock and copy over the new assignments so can release the mutex faster
+    std::unique_lock<std::mutex> lck(new_assignment_locations_mutex);
+    std::unordered_map<int, Coordinate> copied_assignments(new_assignment_locations);
+    // Clear out the new assignment locations and unlock
+    new_assignment_locations.clear();
+    lck.unlock();
+
     // Loop through an assign passenger pick up locations to related vehicles
-    for (auto [id, position] : new_assignment_locations) {
+    for (auto [id, position] : copied_assignments) {
         auto vehicle = vehicles_.at(id);
         // Store current position
         Coordinate curr_pos = vehicle->GetPosition();
@@ -225,8 +231,6 @@ void VehicleManager::NewPassengerAssignments() {
             vehicle->SetState(VehicleState::passenger_queued);
         }
     }
-    // Clear out the new assignment locations
-    new_assignment_locations.clear();
 }
 
 void VehicleManager::ArrivedAtPassenger(std::shared_ptr<Vehicle> vehicle) {
@@ -243,9 +247,15 @@ void VehicleManager::PassengerIntoVehicle(int id, std::shared_ptr<Passenger> pas
 }
 
 void VehicleManager::PickUpPassengers() {
-    std::lock_guard<std::mutex> pickups_lock(passenger_pickups_mutex);
+    // Lock and copy over the passenger pickups so can release the mutex faster
+    std::unique_lock<std::mutex> pickups_lock(passenger_pickups_mutex);
+    std::unordered_map<int, std::shared_ptr<Passenger>> copied_pickups(passenger_pickups_);
+    // Clear out the passenger pickups and unlock
+    passenger_pickups_.clear();
+    pickups_lock.unlock();
+
     // Loop through all ready passenger pickups
-    for (auto [id, passenger] : passenger_pickups_) {
+    for (auto [id, passenger] : copied_pickups) {
         auto vehicle = vehicles_.at(id);
         // Output notice to console
         std::unique_lock<std::mutex> lck(mtx_);
@@ -257,8 +267,6 @@ void VehicleManager::PickUpPassengers() {
         // Update state when done processing
         vehicle->SetState(VehicleState::driving_passenger);
     }
-    // Clear the pickups queue
-    passenger_pickups_.clear();
 }
 
 void VehicleManager::DropOffPassenger(std::shared_ptr<Vehicle> vehicle) {
