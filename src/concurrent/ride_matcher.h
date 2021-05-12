@@ -52,6 +52,7 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
 
     // Matching
     void MatchRides();
+    void SimpleMatch();
 
     // Post-Matching
     void VehicleCannotReachPassenger(int v_id);
