@@ -211,6 +211,7 @@ void VehicleManager::NewPassengerAssignments() {
         if (vehicle->Path().empty()) {
             // Empty path likely a result of failure, so don't progress with assignment
             AssignmentFailure(vehicle);
+            return;
         }
         Model::Node next_node = vehicle->Path().at(vehicle->PathIndex());
         vehicle->SetPosition({ .x = next_node.x, .y = next_node.y });
