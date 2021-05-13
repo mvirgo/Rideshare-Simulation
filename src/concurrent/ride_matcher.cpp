@@ -121,18 +121,7 @@ void RideMatcher::SimpleMatch() {
         int v_id = *vehicle_iterator;
         if (MatchIsValid(p_id, v_id)) {
             // Make the match
-            vehicle_to_passenger_match_.insert({v_id, p_id});
-            passenger_to_vehicle_match_.insert({p_id, v_id});
-            // Remove the ids from the sets
-            passenger_ids_.erase(p_id);
-            vehicle_ids_.erase(v_id);
-            // Output the match to console
-            std::unique_lock<std::mutex> lck(mtx_);
-            std::cout << "Vehicle #" << v_id << " matched to Passenger #" << p_id << "." << std::endl;
-            lck.unlock();
-            // Notify PassengerQueue and VehicleManager
-            vehicle_manager_->AssignPassenger(v_id, passenger_queue_->NewPassengers().at(p_id)->GetPosition());
-            passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::ride_on_way, .id = p_id });
+            ProcessSingleMatch(p_id, v_id);
             break; // end the loop
         } else { // invalid match
             // Try to check any other vehicles
@@ -147,6 +136,22 @@ void RideMatcher::SimpleMatch() {
             }
         }
     }
+}
+
+void RideMatcher::ProcessSingleMatch(int p_id, int v_id) {
+    // Make the match
+    vehicle_to_passenger_match_.insert({v_id, p_id});
+    passenger_to_vehicle_match_.insert({p_id, v_id});
+    // Remove the ids from the sets
+    passenger_ids_.erase(p_id);
+    vehicle_ids_.erase(v_id);
+    // Output the match to console
+    std::unique_lock<std::mutex> lck(mtx_);
+    std::cout << "Vehicle #" << v_id << " matched to Passenger #" << p_id << "." << std::endl;
+    lck.unlock();
+    // Notify PassengerQueue and VehicleManager
+    vehicle_manager_->AssignPassenger(v_id, passenger_queue_->NewPassengers().at(p_id)->GetPosition());
+    passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::ride_on_way, .id = p_id });
 }
 
 bool RideMatcher::MatchIsValid(int p_id, int v_id) {
