@@ -37,8 +37,9 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
     };
 
     // Constructor / Destructor
-    RideMatcher(std::shared_ptr<PassengerQueue> passenger_queue, std::shared_ptr<VehicleManager> vehicle_manager_) :
-      passenger_queue_(passenger_queue), vehicle_manager_(vehicle_manager_) {};
+    RideMatcher(std::shared_ptr<PassengerQueue> passenger_queue, std::shared_ptr<VehicleManager> vehicle_manager_, double map_dim) :
+      passenger_queue_(passenger_queue), vehicle_manager_(vehicle_manager_),
+      CLOSE_ENOUGH_(map_dim * MAP_FRACTION) {};
 
     // Concurrent simulation
     void Simulate();
@@ -53,9 +54,11 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
 
     // Matching
     void MatchRides();
+    void ClosestMatch();
     void SimpleMatch();
     bool MatchIsValid(int p_id, int v_id);
     void ProcessSingleMatch(int p_id, int v_id);
+    void NoPossibleMatch(int p_id);
 
     // Post-Matching
     void VehicleCannotReachPassenger(int v_id);
@@ -71,6 +74,7 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
 
     // Utility
     void ClearInvalids(int p_id);
+    double Distance(Coordinate p_loc, Coordinate v_loc);
 
     // Member variables
     std::shared_ptr<PassengerQueue> passenger_queue_;
@@ -80,6 +84,8 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
     std::unordered_map<int, int> vehicle_to_passenger_match_;
     std::unordered_map<int, int> passenger_to_vehicle_match_;
     std::set<std::pair<int, int>> invalid_matches_; // p_id, v_id
+    const double MAP_FRACTION = 0.15; // Fraction of map to be "close enough"
+    const double CLOSE_ENOUGH_;
 };
 
 }  // namespace rideshare

@@ -8,7 +8,8 @@
 
 #include "ride_matcher.h"
 
-#include <algorithm>
+#include <map>
+#include <cmath>
 
 #include "passenger_queue.h"
 #include "simple_message.h"
@@ -105,8 +106,51 @@ void RideMatcher::MatchRides() {
 
         // Match rides if more than one in each related queue
         if (passenger_ids_.size() > 0 && vehicle_ids_.size() > 0) {
-            // TODO: Improve ride matching beyond just grabbing "first" of each
-            SimpleMatch();
+            // TODO: Allow for switching between simple / closest match
+            ClosestMatch();
+        }
+    }
+}
+
+void RideMatcher::ClosestMatch() {
+    // Get first passenger and their location
+    int p_id = *passenger_ids_.begin();
+    Coordinate p_loc = passenger_queue_->NewPassengers().at(p_id)->GetPosition();
+    // Set up needed vehicle data + structures
+    std::map<double, int> vehicle_distances; // ordered map of distance and v_id
+    Coordinate v_loc;
+    auto vehicle_iterator = vehicle_ids_.begin();
+
+    // Find a vehicle that is "close enough" or closest to first passenger
+    while (true) {
+        int v_id = *vehicle_iterator;
+        v_loc = vehicle_manager_->Vehicles().at(v_id)->GetPosition();
+        double distance = Distance(p_loc, v_loc);
+        bool valid = MatchIsValid(p_id, v_id);
+        if ((distance <= CLOSE_ENOUGH_) && valid) {
+            // Make the match
+            ProcessSingleMatch(p_id, v_id);
+            break; // end the loop
+        } else {
+            // Add to vehicle_distances if valid
+            if (valid) {
+                vehicle_distances.emplace(distance, v_id);
+            }
+            // Try to check any other vehicles
+            vehicle_iterator++;
+            if (vehicle_iterator != vehicle_ids_.end()) {
+                continue;
+            } else {
+                // Try to use the closest (valid) vehicle
+                if (!vehicle_distances.empty()) {
+                    // Make the match
+                    ProcessSingleMatch(p_id, (*vehicle_distances.begin()).second);
+                } else {
+                    // No currently possible matches
+                    NoPossibleMatch(p_id);
+                }
+                break; // end the loop
+            }
         }
     }
 }
@@ -125,13 +169,12 @@ void RideMatcher::SimpleMatch() {
             break; // end the loop
         } else { // invalid match
             // Try to check any other vehicles
+            vehicle_iterator++;
             if (vehicle_iterator != vehicle_ids_.end()) {
-                vehicle_iterator++;
+                continue;
             } else {
                 // No currently possible matches
-                // Notify passenger of failure (sort of double counts, but avoids keeping them if fewer vehicles than needed failures)
-                passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::passenger_failure, .id = p_id });
-                // Note that vehicle notification is unnecessary, as a stuck vehicle will eventually fail on its own at finding viable paths
+                NoPossibleMatch(p_id);
                 break; // end the loop
             }
         }
@@ -154,6 +197,13 @@ void RideMatcher::ProcessSingleMatch(int p_id, int v_id) {
     passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::ride_on_way, .id = p_id });
 }
 
+void RideMatcher::NoPossibleMatch(int p_id) {
+    // No currently possible matches
+    // Notify passenger of failure (sort of double counts, but avoids keeping them if fewer vehicles than needed failures)
+    passenger_queue_->Message({ .message_code = PassengerQueue::MsgCodes::passenger_failure, .id = p_id });
+    // Note that vehicle notification is unnecessary, as a stuck vehicle will eventually fail on its own at finding viable paths
+}
+
 bool RideMatcher::MatchIsValid(int p_id, int v_id) {
     // If not found in invalid_matches_, match is valid
     return invalid_matches_.find({p_id, v_id}) == invalid_matches_.end();
@@ -171,6 +221,11 @@ void RideMatcher::ClearInvalids(int p_id) {
     for (const auto& invalid : to_clear) {
         invalid_matches_.erase(invalid);
     }
+}
+
+double RideMatcher::Distance(Coordinate p_loc, Coordinate v_loc) {
+    // Calculate (euclidean) distance
+    return sqrt(pow(p_loc.x - v_loc.x, 2.0) + pow(p_loc.y - v_loc.y, 2.0));
 }
 
 void RideMatcher::Message(SimpleMessage simple_message) {

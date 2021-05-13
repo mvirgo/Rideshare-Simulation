@@ -13,6 +13,7 @@
 #include <optional>
 #include <fstream>
 #include <iostream>
+#include <cmath>
 #include <set>
 #include <string>
 #include <vector>
@@ -69,8 +70,11 @@ int main() {
     // Create passenger queue
     std::shared_ptr<rideshare::PassengerQueue> passengers = std::make_shared<rideshare::PassengerQueue>(&model, route_planner);
 
+    // Calculate the average map dimension used by the ride matcher
+    const double MAP_DIM = (std::abs(model.MaxLat() - model.MinLat()) + std::abs(model.MaxLon() - model.MinLon())) / 2.0;
+
     // Create the ride matcher
-    std::shared_ptr<rideshare::RideMatcher> ride_matcher = std::make_shared<rideshare::RideMatcher>(passengers, vehicles);
+    std::shared_ptr<rideshare::RideMatcher> ride_matcher = std::make_shared<rideshare::RideMatcher>(passengers, vehicles, MAP_DIM);
 
     // Attach ride matcher to the other two
     vehicles->SetRideMatcher(ride_matcher);
