@@ -10,11 +10,17 @@ The above amounts were somewhat arbitrarily chosen to make the simulation easier
 
 ## Future Improvement Areas
 
-1. The current matching mechanism just matches the earliest vehicle and passenger that requested the ride matcher to get them a match. This can be improved to instead match the nearest empty vehicle to the passenger.
-2. Passengers currently "teleport" to the vehicle when the vehicle reaches the closest node on the road to the passenger location, and also teleport out when similarly reaching the closest road node to the final destination. This can be improved to show the passenger "walk" to and from the vehicle instead.
-3. Vehicles currently ignore the directions of streets. "Fixing" this may cause more situations where a vehicle or passenger is "stuck".
+1. Passengers currently "teleport" to the vehicle when the vehicle reaches the closest node on the road to the passenger location, and also teleport out when similarly reaching the closest road node to the final destination. This can be improved to show the passenger "walk" to and from the vehicle instead.
+2. Vehicles currently ignore the directions of streets. "Fixing" this may cause more situations where a vehicle or passenger is "stuck".
+3. Certain routing is a bit finicky near intersections, causing a slight backtracking. The route planner likely needs some further improvement to guarantee nodes are always "forward" near an intersection.
+4. Make vehicle/passenger generation more dynamic around potential supply/demand. This could result in a vehicle/passenger leaving the map if they have to wait to long for a match, or also where more vehicles would appear if passengers are waiting longer, or vice versa.
+5. User input could be given to switch between closest and simple (sort of like FIFO) matching.
+6. User input could be given of coordinates on which to center a map, and thereby call the OSM API to download the related data and image.
 
 ## Dependencies for Running Locally
+
+This project is written with C++17.
+
 * cmake >= 3.11
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
 * make >= 4.1 (Linux, Mac), 3.81 (Windows)
@@ -34,7 +40,3 @@ The above amounts were somewhat arbitrarily chosen to make the simulation easier
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./rideshare_simulation`
-
-## Known Issues
- - In some instances, a vehicle un-matching from a passenger appears to cause the vehicle to sometimes get "stuck" and soon removed from the map due to being unable to find a new (in this case, random) path.
- - In some rare (but eventual) instances, the app will crash when a vehicle tries to increment an empty path. While the IncrementalDrive function should be unreachable with an empty path, this may be caused by a race condition somewhere allowing the path to be emptied in the middle of a loop, and may necessitate adding a mutex to lock down a given vehicle while it is being updated.
