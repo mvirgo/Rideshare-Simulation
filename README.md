@@ -8,6 +8,20 @@ The simulator currently defaults to always having 10 vehicles, as well as maxing
 
 The above amounts were somewhat arbitrarily chosen to make the simulation easier to follow visually, but the program is capable of using much higher amounts of each with a shorter passenger generation time.
 
+## Examples
+
+Below, you can see an example of the simulation running on the Downtown KC map with 10 vehicles and up to 10 passengers waiting at any given time. (You can click to watch a video.)
+
+[![KC Map 10](https://img.youtube.com/vi/KivuGvkSRUI/sddefault.jpg)](https://www.youtube.com/watch?v=KivuGvkSRUI)
+
+The next example below is to show that the simulator can generalize to other maps, in this case the area near the Arc de Triomphe in Paris.
+
+[![Paris Map 10](https://img.youtube.com/vi/IibIyyhbfHs/sddefault.jpg)](https://www.youtube.com/watch?v=IibIyyhbfHs)
+
+This final example is to show the simulation can scale up fairly well - 100 vehicles, up to 100 passengers waiting for pick-up, with generation of a new waiting passenger happening every 0-1 second.
+
+[![KC Map 100](https://img.youtube.com/vi/0u3_8vQH2Xo/sddefault.jpg)](https://www.youtube.com/watch?v=0u3_8vQH2Xo)
+
 ## Future Improvement Areas
 
 1. Passengers currently "teleport" to the vehicle when the vehicle reaches the closest node on the road to the passenger location, and also teleport out when similarly reaching the closest road node to the final destination. This can be improved to show the passenger "walk" to and from the vehicle instead.
