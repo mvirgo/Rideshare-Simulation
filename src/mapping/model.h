@@ -36,8 +36,10 @@ class Model {
         Type type;
     };  
     
+    // Constructor
     Model( const std::vector<std::byte> &xml );
     
+    // Getters
     auto MetricScale() const noexcept { return metric_scale_; }    
     
     auto &Nodes() const noexcept { return nodes_; }
@@ -48,9 +50,11 @@ class Model {
     auto &MinLon() const noexcept { return min_lon_; }
     auto &MaxLon() const noexcept { return max_lon_; }
 
+    // Return a random position from within the map coordinates
     Coordinate GetRandomMapPosition() const noexcept;
     
   private:
+    // Load OSM XML data file
     void LoadData(const std::vector<std::byte> &xml);
     
     std::vector<Node> nodes_;

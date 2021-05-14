@@ -42,10 +42,15 @@ class RoutePlanner {
     RouteModel &model_;
 
     // Functions
+    // Sort two nodes by h+g value (used by A*)
     static bool Compare(RouteModel::Node* node1, RouteModel::Node* node2);
+    // Add all neighbors to a given node
     void AddNeighbors(RouteModel::Node *current_node);
+    // Calculate the h-value for a node (distance)
     float CalculateHValue(RouteModel::Node const *node);
+    // Construct in reverse the A* Search path, giving start -> finish
     std::vector<Model::Node> ConstructFinalPath(RouteModel::Node *);
+    // Get the next node along a given A* Search path
     RouteModel::Node *NextNode();
 };
 

@@ -46,7 +46,7 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     const std::unordered_map<int, std::shared_ptr<Passenger>>& NewPassengers() { return new_passengers_; }
     void SetRideMatcher(std::shared_ptr<RideMatcher> ride_matcher) { ride_matcher_ = ride_matcher; }
 
-    // Concurrency
+    // Concurrent simulation
     void Simulate();
 
     // Message receiving
@@ -54,16 +54,22 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
 
   private:
     // Creation
+    // Regularly generate more passengers
     void GenerateNew();
+    // Handles loop cycle of generation, reading messages, requesting rides
     void WaitForRide();
 
     // Ride match handling
+    // Request a ride for a given passenger
     void RequestRide(std::shared_ptr<Passenger> passenger);
+    // Notification that ride is on the way for a passenger
     void RideOnWay(int id);
+    // Notification that ride has arrived for a passenger
     void RideArrived(int id);
+    // Notification that a passenger was picked up by vehicle, and can be removed locally
     void PassengerPickedUp(int id);
 
-    // Message reading
+    // Message reading - take action based on given message
     void ReadMessages();
 
     // Failure handling

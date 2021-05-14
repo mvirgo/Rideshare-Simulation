@@ -39,14 +39,19 @@ class Vehicle: public MapObject {
     std::shared_ptr<Passenger> GetPassenger() { return passenger_; }
     void SetState(VehicleState state) { state_ = state; }
     void SetPassenger(std::shared_ptr<Passenger> passenger);
-    void SetPosition(const Coordinate &position); // Override base class
-    void SetDestination(const Coordinate &destination); // Override base class
+    // Override base class - also set passenger position if there is one to match vehicle
+    void SetPosition(const Coordinate &position);
+    // Override base class - use ResetPathAndIndex within so will get a new path and increment properly
+    void SetDestination(const Coordinate &destination);
 
     // Other functionality
+    // "Drop off" the passenger - remove the passenger and reset any failures
     void DropOffPassenger();
+    // Increment path index by 1
     void IncrementPathIndex() { ++path_index_; }
 
   private:
+    // Clear the path and reset path index to zero so can increment along the path properly
     void ResetPathAndIndex();
 
     std::shared_ptr<Passenger> passenger_;

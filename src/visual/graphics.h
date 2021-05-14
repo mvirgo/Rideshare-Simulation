@@ -22,26 +22,30 @@ namespace rideshare {
 
 class Graphics {
   public:
-    // constructor / destructor
+    // Constructor
     Graphics(float min_lat, float min_lon, float max_lat, float max_lon);
 
-    // getters / setters
+    // Setters
     void SetBgFilename(std::string filename) { bgFilename_ = filename; }
     void SetVehicles(const std::shared_ptr<VehicleManager> &vehicle_manager) { vehicle_manager_ = vehicle_manager; }
     void SetPassengers(const std::shared_ptr<PassengerQueue> &passenger_queue) { passenger_queue_ = passenger_queue; }
 
-    // typical behaviour methods
+    // Concurrent drawing simulation
     void Simulate();
 
   private:
-    // typical behaviour methods
+    // Load the given OSM tile image
     void LoadBackgroundImg();
+    // Loop to draw desired objects on OSM tile
     void DrawSimulation();
+    // Draw waiting passengers onto the image
     void DrawPassengers(float img_rows, float img_cols);
+    // Draw a single passenger (position and destination) on the image
     void DrawPassenger(float img_rows, float img_cols, int marker_size, const std::shared_ptr<Passenger> &passenger);
+    // Draw all vehicles on the image
     void DrawVehicles(float img_rows, float img_cols);
 
-    // member variables
+    // Member variables
     float min_lat_, min_lon_, max_lat_, max_lon_;
     std::shared_ptr<VehicleManager> vehicle_manager_;
     std::shared_ptr<PassengerQueue> passenger_queue_;

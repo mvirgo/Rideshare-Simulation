@@ -30,26 +30,35 @@ class RouteModel : public Model {
         bool visited_ = false;
         std::vector<Node *> neighbors_;
 
+        // Find neighbors of nodes
         void FindNeighbors();
+        // Find distance between two nodes
         float Distance(Node other) const {
             return std::sqrt(std::pow((x - other.x), 2) + std::pow((y - other.y), 2));
         }
 
+        // Constructors
         Node(){}
         Node(int idx, RouteModel * search_model, Model::Node node) : Model::Node(node), parent_model(search_model), index_(idx) {}
 
       private:
         int index_;
+        // Find neighbor of given node
         Node * FindNeighbor(std::vector<int> node_indices);
         RouteModel * parent_model = nullptr;
     };
 
+    // Constructor
     RouteModel(const std::vector<std::byte> &xml);
-    Node &FindClosestNode(const Coordinate &coordinate);
+    // Getter
     auto &SNodes() { return nodes_; }
+    // Find closest road node to a coordinate
+    Node &FindClosestNode(const Coordinate &coordinate);
+    // Reset all nodes so can be re-used by route planner
     void ResetNodes() { nodes_ = clean_nodes_; }
     
   private:
+    // Map nodes to given roads on the map
     void CreateNodeToRoadHashmap();
     std::unordered_map<int, std::vector<const Model::Road *>> node_to_road_;
     std::vector<Node> nodes_;

@@ -57,15 +57,15 @@ class MapObject {
     // Member variables
     int id_;
     int failures_ = 0;
-    int MAX_FAILURES_ = 10;
+    int MAX_FAILURES_ = 10; // max failures before object will be removed (likely stuck)
     Coordinate position_;
     Coordinate destination_;
     int blue_, green_, red_; // Visualization colors
-    std::vector<Model::Node> path_;
+    std::vector<Model::Node> path_; // path made by route planner from start position to destination
   
   private:
+    // Set visualization colors out of 255
     void SetRandomColors() {
-        // Set visualization colors out of 255
         blue_ = (int)(((float) rand() / RAND_MAX) * 255);
         green_ = (int)(((float) rand() / RAND_MAX) * 255);
         red_ = (int)(((float) rand() / RAND_MAX) * 255);
