@@ -54,3 +54,29 @@ This project is written with C++17.
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./rideshare_simulation`
+
+## File / Class Structure
+
+The `src` directory contains the primary code files, along with the `thirdparty/pugixml` directory that helps to read the OpenStreetMap data files. Within the `src` directory, the structure is as follows:
+
+- `main.cpp` - reads map data, then starts simulating everything
+- `concurrent/` - classes that run concurrently or support such concurrency
+  - `concurrent_object.*` - parent class of concurrency (for vehicle manager, passenger queue, and ride matcher). Also holds a shared mutex for its children to use in protecting cout
+  - `message_handler.h` - parent class used by children that can make use of `simple_message` for activating different functions concurrently. Helps store messages for reading in the next cycle of a thread
+  - `object_holder.h` - parent class of those that will generate and hold map objects (vehicle manager and passenger queue). Sets the max of these to be on the map at any given point
+  - `passenger_queue.*`- handles all waiting passengers prior to pickup, such as requesting to be matched
+  - `ride_matcher.*` - makes matches between empty vehicles and waiting passengers, and communicates between each during arrival/pickup
+  - `simple_message.*` - simple struct for passing simple messages by classes that inherit from `message_handler`. The message code here is based on an enum that should be within the classes that can receive such messages
+  - `vehicle_manager.*` - handles generating vehicles, requesting to be matched to a passenger, transitioning them between states (including pick up of passengers), smoothly moving them across their map paths, and removing any stuck vehicles
+- `map_object/` - classes that are drawn on the output map (vehicles and passengers)
+  - `map_object.h` - parent class used for objects to be drawn and map, including adding random color to distinguish objects. Holds position, destination and path information, as well as failure information (used to potentially remove stuck objects)
+  - `passenger.h` - stores information on whether a ride has been requested, and shapes to be drawn on the map
+  - `vehicle.*` - handles state transitions (e.g. heading to passenger -> waiting -> driving passenger), pick up and drop off of a passenger, and incrementing along its determined route path, along with shapes to be drawn on the map
+- `mapping/` - classes for handling the OSM data and map positions
+  - `coordinate.h` - basic struct for storing x, y point and checking equality of two points
+  - `model.*` - originally from route planning project; handles reading OSM data and coming up with random map positions for vehicle/passenger generation
+  - `route_model.*` - child of `model` and also from route planning project; adds more functionality to help with A* Search, such as storing node information used by the `route_planner`
+- `routing/` - classes for planning routes between two points
+  - `route_planner.*` - uses A* Search to try to plan route between two points. Called by both vehicles and passengers to make sure their destinations are reachable (otherwise they may be removed from the sim)
+- `visual/` - classes that handle visualization of the simulation
+  - `graphics.*` - loops through drawing vehicles / passengers at each time step, including adjusting their positions onto the map image
