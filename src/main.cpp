@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>

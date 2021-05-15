@@ -10,6 +10,7 @@
 #define ROUTE_PLANNER_H_
 
 #include <iostream>
+#include <memory>
 #include <mutex>
 #include <vector>
 #include <string>

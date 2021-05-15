@@ -10,6 +10,7 @@
 #include "graphics.h"
 
 #include <chrono>
+#include <memory>
 #include <thread>
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>

@@ -9,6 +9,7 @@
 #ifndef RIDE_MATCHER_H_
 #define RIDE_MATCHER_H_
 
+#include <memory>
 #include <unordered_map>
 #include <set>
 #include <thread>

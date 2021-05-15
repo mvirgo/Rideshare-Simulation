@@ -9,6 +9,7 @@
 #include "passenger_queue.h"
 
 #include <chrono>
+#include <memory>
 #include <mutex>
 
 #include "ride_matcher.h"

@@ -10,6 +10,7 @@
 #include "route_planner.h"
 
 #include <algorithm>
+#include <memory>
 #include <mutex>
 
 #include "mapping/route_model.h"

@@ -9,6 +9,7 @@
 #ifndef PASSENGER_QUEUE_H_
 #define PASSENGER_QUEUE_H_
 
+#include <memory>
 #include <mutex>
 #include <unordered_map>
 #include <vector>

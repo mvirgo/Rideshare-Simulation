@@ -9,6 +9,7 @@
 #ifndef VEHICLE_MANAGER_H_
 #define VEHICLE_MANAGER_H_
 
+#include <memory>
 #include <mutex>
 #include <unordered_map>
 #include <vector>

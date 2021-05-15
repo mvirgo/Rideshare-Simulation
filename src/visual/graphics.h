@@ -10,6 +10,7 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
+#include <memory>
 #include <string>
 #include <vector>
 #include <opencv2/core.hpp>

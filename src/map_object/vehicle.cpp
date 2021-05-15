@@ -8,6 +8,8 @@
 
 #include "vehicle.h"
 
+#include <memory>
+
 #include "mapping/coordinate.h"
 #include "passenger.h"
 
