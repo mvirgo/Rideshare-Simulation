@@ -80,3 +80,7 @@ The `src` directory contains the primary code files, along with the `thirdparty/
   - `route_planner.*` - uses A* Search to try to plan route between two points. Called by both vehicles and passengers to make sure their destinations are reachable (otherwise they may be removed from the sim)
 - `visual/` - classes that handle visualization of the simulation
   - `graphics.*` - loops through drawing vehicles / passengers at each time step, including adjusting their positions onto the map image
+
+## Rubric Points
+
+The Capstone submission through Udacity required pointing out specific rubric items addressed (at least five) and where they were addressed at in the code, see [RUBRIC.md](RUBRIC.md) for details.
