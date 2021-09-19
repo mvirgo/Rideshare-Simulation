@@ -17,8 +17,10 @@
 #include <memory>
 #include <set>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
+#include "argparser/simple_parser.h"
 #include "concurrent/passenger_queue.h"
 #include "concurrent/ride_matcher.h"
 #include "concurrent/vehicle_manager.h"
@@ -42,10 +44,12 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path) {
     return std::move(contents);
 }
 
-int main() {
-    std::string location = "downtown-kc";
-    std::string osm_data_file = "../data/" + location + ".osm";
+int main(int argc, char *argv[]) {
+    // Parse any arguments
+    std::unordered_map<std::string, std::string> settings = rideshare::SimpleParser().ParseArgs(argc, argv);
 
+    // Get map data
+    const std::string osm_data_file = "../data/" + settings["map"] + ".osm";
     std::vector<std::byte> osm_data;
  
     if ( osm_data.empty() && !osm_data_file.empty() ) {
@@ -88,7 +92,7 @@ int main() {
 
     // Draw the map
     rideshare::Graphics *graphics = new rideshare::Graphics(model.MinLat(), model.MinLon(), model.MaxLat(), model.MaxLon());
-    std::string background_img = "../data/" + location + ".png";
+    std::string background_img = "../data/" + settings["map"] + ".png";
     graphics->SetBgFilename(background_img);
     graphics->SetPassengers(passengers);
     graphics->SetVehicles(vehicles);
