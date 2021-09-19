@@ -20,7 +20,9 @@
 
 namespace rideshare {
 
-VehicleManager::VehicleManager(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ObjectHolder(model, route_planner) {
+VehicleManager::VehicleManager(RouteModel *model,
+                               std::shared_ptr<RoutePlanner> route_planner,
+                               int max_objects) : ObjectHolder(model, route_planner, max_objects) {
     // Generate max number of vehicles at the start
     for (int i = 0; i < MAX_OBJECTS_; ++i) {
         GenerateNew();

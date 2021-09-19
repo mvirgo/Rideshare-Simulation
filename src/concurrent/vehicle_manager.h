@@ -32,7 +32,7 @@ namespace rideshare {
 class VehicleManager : public ConcurrentObject, public ObjectHolder {
   public:
     // Constructor / Destructor
-    VehicleManager(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner);
+    VehicleManager(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner, int max_objects);
     
     // Getters / Setters
     const std::unordered_map<int, std::shared_ptr<Vehicle>>& Vehicles() { return vehicles_; }

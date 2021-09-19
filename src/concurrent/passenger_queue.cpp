@@ -20,7 +20,9 @@
 
 namespace rideshare {
 
-PassengerQueue::PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ObjectHolder(model, route_planner) {
+PassengerQueue::PassengerQueue(RouteModel *model,
+                               std::shared_ptr<RoutePlanner> route_planner,
+                               int max_objects) : ObjectHolder(model, route_planner, max_objects) {
     // Start by creating half the max number of passengers
     // Note that the while loop avoids generating less if any invalid placements occur
     while (new_passengers_.size() < MAX_OBJECTS_ / 2) {

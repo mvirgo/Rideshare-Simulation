@@ -40,7 +40,7 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     };
 
     // Constructor / Destructor
-    PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner);
+    PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner, int max_objects);
     
     // Getters / Setters
     const std::unordered_map<int, std::shared_ptr<Passenger>>& NewPassengers() { return new_passengers_; }

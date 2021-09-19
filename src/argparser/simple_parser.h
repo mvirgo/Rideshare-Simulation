@@ -21,11 +21,14 @@ class SimpleParser {
   private:
     void MissingArgValue(std::string arg);
     std::string ParseMatchType(std::string input_match);
+    void ParseMaxObjects(std::string max_objects);
     void PrintHelper();
     std::unordered_map<std::string, std::string> SetDefaults();
 
     const std::string DEFAULT_MAP = "downtown-kc";
     const std::string DEFAULT_MATCH_TYPE = "closest";
+    const std::string DEFAULT_MAX_OBJECTS = "10"; // Vehicles & Passengers
+    const int ABSOLUTE_MAX_OBJECTS = 100; // Don't allow higher
 };
 
 }  // namespace rideshare
