@@ -28,12 +28,12 @@ std::unordered_map<std::string, std::string> SimpleParser::ParseArgs(int argc, c
         } else if (argv[i] == std::string("-m")) {
             settings["map"] = argv[i+1];
         } else if (argv[i] == std::string("-p")) {
-            ParseMaxObjects(argv[i+1]);
+            ParseNumericInputs(argv[i+1], "Passengers", ABSOLUTE_MIN_OBJECTS, ABSOLUTE_MAX_OBJECTS);
             settings["passengers"] = argv[i+1];
         } else if (argv[i] == std::string("-t")) {
             settings["match"] = ParseMatchType(argv[i+1]);
         } else if (argv[i] == std::string("-v")) {
-            ParseMaxObjects(argv[i+1]);
+            ParseNumericInputs(argv[i+1], "Vehicles", ABSOLUTE_MIN_OBJECTS, ABSOLUTE_MAX_OBJECTS);
             settings["vehicles"] = argv[i+1];
         }
     }
@@ -59,17 +59,17 @@ std::string SimpleParser::ParseMatchType(std::string input_match) {
     return input_match;
 }
 
-void SimpleParser::ParseMaxObjects(std::string max_objects) {
+void SimpleParser::ParseNumericInputs(std::string max_objects, std::string name, int min, int max) {
     // Check that it is a number
     try {
         int max_input = std::stoi(max_objects);
         // Check that not negative or too high
-        if (max_input < 0 || max_input > ABSOLUTE_MAX_OBJECTS) {
-            std::cout << "Max object input below min or above max, exiting." << std::endl;
+        if (max_input < min || max_input > max) {
+            std::cout << name << " input below min or above max, exiting." << std::endl;
             PrintHelper();
         }
     } catch (...) {
-        std::cout << "Non-number given for a max object input, exiting." << std::endl;
+        std::cout << "Non-number given for " << name << " input, exiting." << std::endl;
         PrintHelper();
     }
 }

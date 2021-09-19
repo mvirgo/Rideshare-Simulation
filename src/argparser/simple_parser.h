@@ -21,7 +21,7 @@ class SimpleParser {
   private:
     void MissingArgValue(std::string arg);
     std::string ParseMatchType(std::string input_match);
-    void ParseMaxObjects(std::string max_objects);
+    void ParseNumericInputs(std::string max_objects, std::string name, int min, int max);
     void PrintHelper();
     std::unordered_map<std::string, std::string> SetDefaults();
 
@@ -29,6 +29,7 @@ class SimpleParser {
     const std::string DEFAULT_MATCH_TYPE = "closest";
     const std::string DEFAULT_MAX_OBJECTS = "10"; // Vehicles & Passengers
     const int ABSOLUTE_MAX_OBJECTS = 100; // Don't allow higher
+    const int ABSOLUTE_MIN_OBJECTS = 0; // Don't allow lower
 };
 
 }  // namespace rideshare
