@@ -23,18 +23,12 @@ std::unordered_map<std::string, std::string> SimpleParser::ParseArgs(int argc, c
     for (int i = 0; i < argc; ++i) {
         if (argv[i] == std::string("-h")) {
             PrintHelper();
+        } else if (argv[i][0] == '-' && (i+1 >= argc)) {
+            MissingArgValue(argv[i]);
         } else if (argv[i] == std::string("-m")) {
-            if (i+1 < argc) {
-                settings["map"] = argv[i+1];
-            } else {
-                MissingArgValue(argv[i]);
-            }
+            settings["map"] = argv[i+1];
         } else if (argv[i] == std::string("-t")) {
-            if (i+1 < argc) {
-                settings["match"] = ParseMatchType(argv[i+1]);
-            } else {
-                MissingArgValue(argv[i]);
-            }
+            settings["match"] = ParseMatchType(argv[i+1]);
         }
     }
 
