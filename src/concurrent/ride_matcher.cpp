@@ -106,8 +106,11 @@ void RideMatcher::MatchRides() {
 
         // Match rides if more than one in each related queue
         if (passenger_ids_.size() > 0 && vehicle_ids_.size() > 0) {
-            // TODO: Allow for switching between simple / closest match
-            ClosestMatch();
+            if (MATCH_TYPE_ == "closest") {
+                ClosestMatch();
+            } else {
+                SimpleMatch();
+            }
         }
     }
 }

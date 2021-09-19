@@ -38,9 +38,11 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
     };
 
     // Constructor / Destructor
-    RideMatcher(std::shared_ptr<PassengerQueue> passenger_queue, std::shared_ptr<VehicleManager> vehicle_manager_, double map_dim) :
+    RideMatcher(std::shared_ptr<PassengerQueue> passenger_queue,
+                std::shared_ptr<VehicleManager> vehicle_manager_,
+                double map_dim, std::string match_type) :
       passenger_queue_(passenger_queue), vehicle_manager_(vehicle_manager_),
-      CLOSE_ENOUGH_(map_dim * MAP_FRACTION_) {};
+      CLOSE_ENOUGH_(map_dim * MAP_FRACTION_), MATCH_TYPE_(match_type) {};
 
     // Concurrent simulation
     void Simulate();
@@ -61,7 +63,6 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
     // Matches earliest passenger ID (close to FIFO) to a close or closest vehicle
     void ClosestMatch();
     // Matches earliest passenger ID to earliest available vehicle ID
-    // (currently un-used)
     void SimpleMatch();
     // Checks whether a given match was previously invalid due to being unreachable
     bool MatchIsValid(int p_id, int v_id);
@@ -103,6 +104,7 @@ class RideMatcher : public ConcurrentObject, public MessageHandler {
     std::set<std::pair<int, int>> invalid_matches_; // p_id, v_id
     const double MAP_FRACTION_ = 0.15; // Fraction of map to be "close enough"
     const double CLOSE_ENOUGH_; // Avg. map dimension * MAP_FRACTION_
+    const std::string MATCH_TYPE_; // "closest" or "simple" matching
 };
 
 }  // namespace rideshare

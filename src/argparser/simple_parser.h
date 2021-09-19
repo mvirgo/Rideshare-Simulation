@@ -20,10 +20,12 @@ class SimpleParser {
 
   private:
     void MissingArgValue(std::string arg);
+    std::string ParseMatchType(std::string input_match);
     void PrintHelper();
     std::unordered_map<std::string, std::string> SetDefaults();
 
     const std::string DEFAULT_MAP = "downtown-kc";
+    const std::string DEFAULT_MATCH_TYPE = "closest";
 };
 
 }  // namespace rideshare

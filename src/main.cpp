@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
     const double MAP_DIM = (std::abs(model.MaxLat() - model.MinLat()) + std::abs(model.MaxLon() - model.MinLon())) / 2.0;
 
     // Create the ride matcher
-    std::shared_ptr<rideshare::RideMatcher> ride_matcher = std::make_shared<rideshare::RideMatcher>(passengers, vehicles, MAP_DIM);
+    std::shared_ptr<rideshare::RideMatcher> ride_matcher = std::make_shared<rideshare::RideMatcher>(passengers, vehicles, MAP_DIM, settings["match"]);
 
     // Attach ride matcher to the other two
     vehicles->SetRideMatcher(ride_matcher);

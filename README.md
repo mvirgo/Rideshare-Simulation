@@ -28,8 +28,7 @@ This final example is to show the simulation can scale up fairly well - 100 vehi
 2. Vehicles currently ignore the directions of streets. "Fixing" this may cause more situations where a vehicle or passenger is "stuck".
 3. Certain routing is a bit finicky near intersections, causing a slight backtracking. The route planner likely needs some further improvement to guarantee nodes are always "forward" near an intersection.
 4. Make vehicle/passenger generation more dynamic around potential supply/demand. This could result in a vehicle/passenger leaving the map if they have to wait to long for a match, or also where more vehicles would appear if passengers are waiting longer, or vice versa.
-5. User input could be given to switch between closest and simple (sort of like FIFO) matching.
-6. User input could be given of coordinates on which to center a map, and thereby call the OSM API to download the related data and image.
+5. User input could be given of coordinates on which to center a map, and thereby call the OSM API to download the related data and image.
 
 ## Dependencies for Running Locally
 
