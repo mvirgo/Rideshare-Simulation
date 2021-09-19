@@ -19,7 +19,6 @@ namespace rideshare {
 class ObjectHolder {
   public:
     // Constructor / Destructor
-    ObjectHolder() {};
     ObjectHolder(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : model_(model), route_planner_(route_planner) {};
 
   protected:

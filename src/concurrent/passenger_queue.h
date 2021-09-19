@@ -40,7 +40,6 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     };
 
     // Constructor / Destructor
-    PassengerQueue() {};
     PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner);
     
     // Getters / Setters

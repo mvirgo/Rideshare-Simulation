@@ -32,7 +32,6 @@ namespace rideshare {
 class VehicleManager : public ConcurrentObject, public ObjectHolder {
   public:
     // Constructor / Destructor
-    VehicleManager() {};
     VehicleManager(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner);
     
     // Getters / Setters
