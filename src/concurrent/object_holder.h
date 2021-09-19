@@ -23,7 +23,7 @@ class ObjectHolder {
 
   protected:
     virtual void GenerateNew() {};
-    int MAX_OBJECTS = 10; // Set max number of objects to pause generation at
+    const int MAX_OBJECTS_ = 10; // Set max number of objects to pause generation at
     RouteModel *model_;
     int idCnt_ = 0; // Count object ids
     std::shared_ptr<RoutePlanner> route_planner_; // Route planner to use throughout the sim

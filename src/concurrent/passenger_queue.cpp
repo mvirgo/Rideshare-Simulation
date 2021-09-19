@@ -23,7 +23,7 @@ namespace rideshare {
 PassengerQueue::PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner) : ObjectHolder(model, route_planner) {
     // Start by creating half the max number of passengers
     // Note that the while loop avoids generating less if any invalid placements occur
-    while (new_passengers_.size() < MAX_OBJECTS / 2) {
+    while (new_passengers_.size() < MAX_OBJECTS_ / 2) {
         GenerateNew();
     }
 }
@@ -71,13 +71,13 @@ void PassengerQueue::WaitForRide() {
         long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - lastUpdate).count();
 
         // Check if cycleDuration passed and if less than max passengers before creating a new one
-        if ((timeSinceLastUpdate >= cycleDuration) && (new_passengers_.size() < MAX_OBJECTS)) {
+        if ((timeSinceLastUpdate >= cycleDuration) && (new_passengers_.size() < MAX_OBJECTS_)) {
             GenerateNew();
             // Get a new random time to wait before checking to add a new passenger
             cycleDuration = ((((float) rand() / RAND_MAX) * RANGE_WAIT_TIME_) + MIN_WAIT_TIME_) * 1000;
             // Reset stop watch
             lastUpdate = std::chrono::system_clock::now();
-        } else if ((timeSinceLastUpdate >= cycleDuration) && (new_passengers_.size() >= MAX_OBJECTS)) {
+        } else if ((timeSinceLastUpdate >= cycleDuration) && (new_passengers_.size() >= MAX_OBJECTS_)) {
             // Note queue is full
             std::unique_lock<std::mutex> lck(mtx_);
             std::cout << "Queue full, no new passenger generated." << std::endl;
