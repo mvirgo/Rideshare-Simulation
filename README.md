@@ -22,14 +22,26 @@ This final example is to show the simulation can scale up fairly well - 100 vehi
 
 [![KC Map 100](https://img.youtube.com/vi/0u3_8vQH2Xo/sddefault.jpg)](https://www.youtube.com/watch?v=0u3_8vQH2Xo)
 
+## Command Line Arguments
+
+While no arguments are required when running the program, there are a number of things you can change (use `-h` to see all):
+
+- `-m`: Change between map data files. This defaults to the `downtown-kc`, or can be `arc-paris`, or others you add into the `data` dir. This would need to be both the OSM data file and an image to draw onto.
+- `-p`: Max number of passengers to go in the queue; the map will start with half of these, and generate more over time up to this value.
+- `-r`: Range of time, on top of the minimum wait (see `-w` below), to wait to check if the next passenger can be generated.
+- `-t`: Match type, either `closest` (default) or `simple`. Closest match goes to the relatively closest vehicle, or simple matching is like FIFO, where the first passenger request and first open vehicle are matched.
+- `-v`: Max number of vehicles driving on the map.
+- `-w`: Minimum wait time to generate the next waiting passenger (plus the range from `-r`, although you don't have to give both). e.g. A min wait of 3 seconds, plus a range of 2 seconds, will cause passengers to be generated every 3-5 seconds, if below the max passengers allowed in the queue.
+
+Each of the above has a default value that will be used if the related argument is not given to the program at runtime. Certain arguments also have minimum and maximum values; for example, at the time of writing, passengers and vehicles max out at 100 and cannot be negative. If you really want to change those values further, you'd need to change them in the code (it can work with at least up to 1000 passengers and vehicles, but is sluggish at the start, while 100 keeps things fairly smooth).
+
 ## Future Improvement Areas
 
 1. Passengers currently "teleport" to the vehicle when the vehicle reaches the closest node on the road to the passenger location, and also teleport out when similarly reaching the closest road node to the final destination. This can be improved to show the passenger "walk" to and from the vehicle instead.
 2. Vehicles currently ignore the directions of streets. "Fixing" this may cause more situations where a vehicle or passenger is "stuck".
 3. Certain routing is a bit finicky near intersections, causing a slight backtracking. The route planner likely needs some further improvement to guarantee nodes are always "forward" near an intersection.
 4. Make vehicle/passenger generation more dynamic around potential supply/demand. This could result in a vehicle/passenger leaving the map if they have to wait to long for a match, or also where more vehicles would appear if passengers are waiting longer, or vice versa.
-5. User input could be given to switch between closest and simple (sort of like FIFO) matching.
-6. User input could be given of coordinates on which to center a map, and thereby call the OSM API to download the related data and image.
+5. User input could be given of coordinates on which to center a map, and thereby call the OSM API to download the related data and image.
 
 ## Dependencies for Running Locally
 
@@ -60,6 +72,8 @@ This project is written with C++17.
 The `src` directory contains the primary code files, along with the `thirdparty/pugixml` directory that helps to read the OpenStreetMap data files. Within the `src` directory, the structure is as follows:
 
 - `main.cpp` - reads map data, then starts simulating everything
+- `argparser` - classes handling parsing of command line arguments
+  - `simple_parser.*` - parsing of arguments, along with containing the defaults and any relevant min or max values
 - `concurrent/` - classes that run concurrently or support such concurrency
   - `concurrent_object.*` - parent class of concurrency (for vehicle manager, passenger queue, and ride matcher). Also holds a shared mutex for its children to use in protecting cout
   - `message_handler.h` - parent class used by children that can make use of `simple_message` for activating different functions concurrently. Helps store messages for reading in the next cycle of a thread
