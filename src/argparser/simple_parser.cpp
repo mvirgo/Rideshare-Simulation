@@ -30,11 +30,17 @@ std::unordered_map<std::string, std::string> SimpleParser::ParseArgs(int argc, c
         } else if (argv[i] == std::string("-p")) {
             ParseNumericInputs(argv[i+1], "Passengers", ABSOLUTE_MIN_OBJECTS, ABSOLUTE_MAX_OBJECTS);
             settings["passengers"] = argv[i+1];
+        } else if (argv[i] == std::string("-r")) {
+            ParseNumericInputs(argv[i+1], "Wait Range", ABSOLUTE_MIN_WAIT_RANGE, ABSOLUTE_MAX_OBJECTS);
+            settings["wait_range"] = argv[i+1];
         } else if (argv[i] == std::string("-t")) {
             settings["match"] = ParseMatchType(argv[i+1]);
         } else if (argv[i] == std::string("-v")) {
             ParseNumericInputs(argv[i+1], "Vehicles", ABSOLUTE_MIN_OBJECTS, ABSOLUTE_MAX_OBJECTS);
             settings["vehicles"] = argv[i+1];
+        } else if (argv[i] == std::string("-w")) {
+            ParseNumericInputs(argv[i+1], "Wait", ABSOLUTE_MIN_WAIT, ABSOLUTE_MAX_OBJECTS);
+            settings["wait"] = argv[i+1];
         }
     }
 
@@ -77,10 +83,18 @@ void SimpleParser::ParseNumericInputs(std::string max_objects, std::string name,
 void SimpleParser::PrintHelper() {
     std::cout << "Rideshare Simulation - Valid Arguments" << std::endl;
     std::cout << "-h : Display this helper text. Program will exit." << std::endl;
-    std::cout << "-m : Map data file and image name, in /data dir.  Default: downtown-kc" << std::endl;
-    std::cout << "-p : Max passengers in queue.  Min: 0  Max: " << ABSOLUTE_MAX_OBJECTS << "  Default: 10" << std::endl;
-    std::cout << "-t : Match type, either 'closest' or 'simple'.  Default: closest" << std::endl;
-    std::cout << "-v : Max vehicles driving.  Min: 0  Max: " << ABSOLUTE_MAX_OBJECTS << "  Default: 10" << std::endl;
+    std::cout << "-m : Map data file and image name, in /data dir.  Default: "
+      << DEFAULT_MAP << std::endl;
+    std::cout << "-p : Max passengers in queue.  Min: 0  Max: "
+      << ABSOLUTE_MAX_OBJECTS << "  Default: " << DEFAULT_MAX_OBJECTS << std::endl;
+    std::cout << "-r : Range, on top of min, to wait to generate passenger.  Min: "
+      << ABSOLUTE_MIN_WAIT_RANGE << "  Default: " << DEFAULT_WAIT_RANGE << std::endl;
+    std::cout << "-t : Match type, either 'closest' or 'simple'.  Default: "
+      << DEFAULT_MATCH_TYPE << std::endl;
+    std::cout << "-v : Max vehicles driving.  Min: 0  Max: "
+      << ABSOLUTE_MAX_OBJECTS << "  Default: " << DEFAULT_MAX_OBJECTS << std::endl;
+    std::cout << "-w : Minimum wait time to generate next waiting passenger.  Min: "
+      << ABSOLUTE_MIN_WAIT << "  Default: " << DEFAULT_MIN_WAIT << std::endl;
     // Do not continue the program
     exit(0);
 }
@@ -93,6 +107,8 @@ std::unordered_map<std::string, std::string> SimpleParser::SetDefaults() {
     settings.emplace("match", DEFAULT_MATCH_TYPE);
     settings.emplace("passengers", DEFAULT_MAX_OBJECTS);
     settings.emplace("vehicles", DEFAULT_MAX_OBJECTS);
+    settings.emplace("wait", DEFAULT_MIN_WAIT);
+    settings.emplace("wait_range", DEFAULT_WAIT_RANGE);
 
     return settings;
 }

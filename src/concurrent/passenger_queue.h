@@ -40,7 +40,8 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     };
 
     // Constructor / Destructor
-    PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner, int max_objects);
+    PassengerQueue(RouteModel *model, std::shared_ptr<RoutePlanner> route_planner,
+                   int max_objects, int min_wait_time, int range_wait_time);
     
     // Getters / Setters
     const std::unordered_map<int, std::shared_ptr<Passenger>>& NewPassengers() { return new_passengers_; }
@@ -76,8 +77,8 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     void PassengerFailure(int id);
 
     // Variables
-    int MIN_WAIT_TIME_ = 3; // seconds to wait between generation attempts
-    int RANGE_WAIT_TIME_ = 2; // range in seconds to wait between generation attempts
+    const int MIN_WAIT_TIME_; // seconds to wait between generation attempts
+    const int RANGE_WAIT_TIME_; // range in seconds to wait between generation attempts
     std::unordered_map<int, std::shared_ptr<Passenger>> new_passengers_;
     std::shared_ptr<RideMatcher> ride_matcher_;
 };

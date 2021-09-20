@@ -76,7 +76,8 @@ int main(int argc, char *argv[]) {
 
     // Create passenger queue
     std::shared_ptr<rideshare::PassengerQueue> passengers =
-      std::make_shared<rideshare::PassengerQueue>(&model, route_planner, std::stoi(settings["passengers"]));
+      std::make_shared<rideshare::PassengerQueue>(&model, route_planner, std::stoi(settings["passengers"]),
+                                                  std::stoi(settings["wait"]), std::stoi(settings["wait_range"]));
 
     // Calculate the average map dimension used by the ride matcher
     const double MAP_DIM = (std::abs(model.MaxLat() - model.MinLat()) + std::abs(model.MaxLon() - model.MinLon())) / 2.0;
