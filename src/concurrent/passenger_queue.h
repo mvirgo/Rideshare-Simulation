@@ -45,6 +45,7 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     
     // Getters / Setters
     const std::unordered_map<int, std::shared_ptr<Passenger>>& NewPassengers() { return new_passengers_; }
+    const std::unordered_map<int, std::shared_ptr<Passenger>>& WalkingPassengers() { return walking_passengers_; }
     void SetRideMatcher(std::shared_ptr<RideMatcher> ride_matcher) { ride_matcher_ = ride_matcher; }
 
     // Concurrent simulation
@@ -67,8 +68,13 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     void RideOnWay(int id);
     // Notification that ride has arrived for a passenger
     void RideArrived(int id);
+    // Passenger has walked to and arrived at the vehicle
+    void PassengerAtVehicle(int id);
     // Notification that a passenger was picked up by vehicle, and can be removed locally
     void PassengerPickedUp(int id);
+
+    // Passenger walking to vehicle functionality
+    void WalkPassengersToVehicles();
 
     // Message reading - take action based on given message
     void ReadMessages();
@@ -80,6 +86,7 @@ class PassengerQueue : public ConcurrentObject, public ObjectHolder, public Mess
     const int MIN_WAIT_TIME_; // seconds to wait between generation attempts
     const int RANGE_WAIT_TIME_; // range in seconds to wait between generation attempts
     std::unordered_map<int, std::shared_ptr<Passenger>> new_passengers_;
+    std::unordered_map<int, std::shared_ptr<Passenger>> walking_passengers_;
     std::shared_ptr<RideMatcher> ride_matcher_;
 };
 

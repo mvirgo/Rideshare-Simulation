@@ -17,16 +17,24 @@ class Passenger: public MapObject {
   public:
     // constructor / destructor
 
+    // enum for statuses
+    enum PassengerStatus {
+      no_ride_requested,
+      ride_requested,
+      walking,
+      at_ride,
+    };
+
     // getters / setters
     int PassShape() { return pass_shape_; }
     int DestShape() { return dest_shape_; }
-    bool RideRequested() { return ride_requested_; }
-    void SetRideRequest(bool requested) { ride_requested_ = requested; }
+    int GetStatus() { return status_; }
+    void SetStatus(int status) { status_ = status; }
   
   private:
     int pass_shape_ = DrawMarker::diamond;
     int dest_shape_ = DrawMarker::tilted_cross;
-    bool ride_requested_ = false;
+    int status_ = PassengerStatus::no_ride_requested;
 };
 
 }  // namespace rideshare

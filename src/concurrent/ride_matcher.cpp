@@ -48,7 +48,7 @@ void RideMatcher::VehicleHasArrived(int v_id) {
 }
 
 void RideMatcher::PassengerToVehicle(int p_id) {
-    auto passenger = passenger_queue_->NewPassengers().at(p_id);
+    auto passenger = passenger_queue_->WalkingPassengers().at(p_id);
     // Add passenger to related vehicle
     int v_id = passenger_to_vehicle_match_.at(p_id);
     vehicle_manager_->PassengerIntoVehicle(v_id, passenger);

@@ -70,7 +70,10 @@ void Graphics::DrawSimulation() {
 void Graphics::DrawPassengers(float img_rows, float img_cols) {
     // create overlay from passengers
     for (auto const& passenger_map : passenger_queue_->NewPassengers()) {
-        DrawPassenger(img_rows, img_cols, 25, passenger_map.second); // Full size marker
+        DrawPassenger(img_rows, img_cols, 25, passenger_map.second); // Full size marker when waiting
+    }
+    for (auto const& walking_passenger : passenger_queue_->WalkingPassengers()) {
+        DrawPassenger(img_rows, img_cols, 15, walking_passenger.second); // Smaller marker when walking
     }
 
     float opacity = 0.85;

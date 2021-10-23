@@ -93,9 +93,12 @@ void PassengerQueue::WaitForRide() {
         // Read and act on any messages
         ReadMessages();
 
+        // Walk toward vehicles for passengers who have an arrived ride
+        WalkPassengersToVehicles();
+
         // Request rides for passengers in queue, if not yet requested
         for (auto passenger_pair : new_passengers_) {
-            if (!(passenger_pair.second->RideRequested())) {
+            if (passenger_pair.second->GetStatus() == Passenger::PassengerStatus::no_ride_requested) {
                 RequestRide(passenger_pair.second);
             }
         }
@@ -131,7 +134,7 @@ void PassengerQueue::ReadMessages() {
 }
 
 void PassengerQueue::RequestRide(std::shared_ptr<Passenger> passenger) {
-    passenger->SetRideRequest(true);
+    passenger->SetStatus(Passenger::PassengerStatus::ride_requested);
     if (ride_matcher_ != nullptr) {
         ride_matcher_->Message({ .message_code=RideMatcher::passenger_requests_ride, .id=passenger->Id() });
     }
@@ -142,13 +145,21 @@ void PassengerQueue::RideOnWay(int id) {
 }
 
 void PassengerQueue::RideArrived(int id) {
+    auto passenger = new_passengers_.at(id);
+    // Set as a walking passenger
+    walking_passengers_.emplace(id, passenger);
+    passenger->SetStatus(Passenger::PassengerStatus::walking);
+    new_passengers_.erase(id);
+}
+
+void PassengerQueue::PassengerAtVehicle(int id) {
     // Send the passenger to the vehicle
     ride_matcher_->Message({ .message_code=RideMatcher::passenger_to_vehicle, .id=id });
 }
 
 void PassengerQueue::PassengerPickedUp(int id) {
     // Erase the passenger from the queue
-    new_passengers_.erase(id);
+    walking_passengers_.erase(id);
 }
 
 void PassengerQueue::PassengerFailure(int id) {
@@ -165,7 +176,19 @@ void PassengerQueue::PassengerFailure(int id) {
         std::cout << "Passenger #" << passenger->Id() <<" unreachable multiple times, leaving map." << std::endl;
     } else {
         // Make a new request by setting ride requested to false
-        passenger->SetRideRequest(false);
+        passenger->SetStatus(Passenger::PassengerStatus::no_ride_requested);
+    }
+}
+
+void PassengerQueue::WalkPassengersToVehicles() {
+    for (auto [id, passenger] : walking_passengers_) {
+        if (passenger->GetStatus() == Passenger::PassengerStatus::walking) {
+            // Vehicle will be at closest road node to passenger position
+            auto vehicle_location = model_->FindClosestNode(passenger->GetPosition());
+            // TODO: Movement toward vehicle, only call below once at the node
+            passenger->SetStatus(Passenger::PassengerStatus::at_ride); // Make sure this is only done once
+            PassengerAtVehicle(id);
+        }
     }
 }
 
