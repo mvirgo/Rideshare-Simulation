@@ -12,15 +12,15 @@ The above amounts were somewhat arbitrarily chosen to make the simulation easier
 
 Below, you can see an example of the simulation running on the Downtown KC map with 10 vehicles and up to 10 passengers waiting at any given time. (You can click to watch a video.)
 
-[![KC Map 10](https://img.youtube.com/vi/KivuGvkSRUI/sddefault.jpg)](https://www.youtube.com/watch?v=KivuGvkSRUI)
+[![KC Map 10](https://img.youtube.com/vi/\_kr48qo56CY/sddefault.jpg)](https://www.youtube.com/watch?v=\_kr48qo56CY)
 
 The next example below is to show that the simulator can generalize to other maps, in this case the area near the Arc de Triomphe in Paris.
 
-[![Paris Map 10](https://img.youtube.com/vi/IibIyyhbfHs/sddefault.jpg)](https://www.youtube.com/watch?v=IibIyyhbfHs)
+[![Paris Map 10](https://img.youtube.com/vi/FNv-oBnHNto/sddefault.jpg)](https://www.youtube.com/watch?v=FNv-oBnHNto)
 
 This final example is to show the simulation can scale up fairly well - 100 vehicles, up to 100 passengers waiting for pick-up, with generation of a new waiting passenger happening every 0-1 second.
 
-[![KC Map 100](https://img.youtube.com/vi/0u3_8vQH2Xo/sddefault.jpg)](https://www.youtube.com/watch?v=0u3_8vQH2Xo)
+[![KC Map 100](https://img.youtube.com/vi/r5-mBsroAJk/sddefault.jpg)](https://www.youtube.com/watch?v=r5-mBsroAJk)
 
 ## Command Line Arguments
 
@@ -37,7 +37,7 @@ Each of the above has a default value that will be used if the related argument 
 
 ## Future Improvement Areas
 
-1. Passengers currently "teleport" to the vehicle when the vehicle reaches the closest node on the road to the passenger location, and also teleport out when similarly reaching the closest road node to the final destination. This can be improved to show the passenger "walk" to and from the vehicle instead.
+1. Passengers now walk to the vehicle location when it arrives, but will disappear/teleport once at the closest rode node to their destination. To an extent, I feel this matches to an actual ridesharing app (i.e. you get dropped off near the "real" exact place you are going to at a building), but I could add an animation to make this more obvious.
 2. Vehicles currently ignore the directions of streets. "Fixing" this may cause more situations where a vehicle or passenger is "stuck".
 3. Certain routing is a bit finicky near intersections, causing a slight backtracking. The route planner likely needs some further improvement to guarantee nodes are always "forward" near an intersection.
 4. Make vehicle/passenger generation more dynamic around potential supply/demand. This could result in a vehicle/passenger leaving the map if they have to wait to long for a match, or also where more vehicles would appear if passengers are waiting longer, or vice versa.

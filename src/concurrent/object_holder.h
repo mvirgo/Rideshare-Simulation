@@ -27,6 +27,7 @@ class ObjectHolder {
     virtual void GenerateNew() {};
     const int MAX_OBJECTS_; // Set max number of objects to pause generation at
     RouteModel *model_;
+    double distance_per_cycle_; // max distance to move per cycle for smooth-looking movement
     int idCnt_ = 0; // Count object ids
     std::shared_ptr<RoutePlanner> route_planner_; // Route planner to use throughout the sim
 };

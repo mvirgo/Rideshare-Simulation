@@ -54,8 +54,6 @@ class VehicleManager : public ConcurrentObject, public ObjectHolder {
     // Movement
     // Handle loop cycle of movements and actions based on assignments / arrival at passengers
     void Drive();
-    // Make movement smooth between nodes on the map
-    void IncrementalMove(std::shared_ptr<Vehicle> vehicle);
     // Either gets a random map position, or uses the given destination, and aligns either to closest map node
     void ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, bool random);
     // Vehicle has encountered some type of issue reaching a given destination, without a passenger within
@@ -80,7 +78,6 @@ class VehicleManager : public ConcurrentObject, public ObjectHolder {
     std::unordered_map<int, std::shared_ptr<Passenger>> passenger_pickups_; // store passenger pickups for next cycle
     std::unordered_map<int, Coordinate> new_assignment_locations; // store new assignments for next cycle
     std::vector<int> to_remove_; // store vehicle ids of those to remove the next cycle (due to too many failures)
-    double distance_per_cycle_; // max distance to move per cycle for smooth-looking driving
     std::shared_ptr<RideMatcher> ride_matcher_;
     std::mutex passenger_pickups_mutex; // protect read/write access to passenger pickups between cycles
     std::mutex new_assignment_locations_mutex; // protect read/write access to new assignments between cycles
