@@ -31,14 +31,16 @@ class Passenger: public MapObject {
     int DestShape() { return dest_shape_; }
     int GetStatus() { return status_; }
     void SetStatus(int status) { status_ = status; }
+    void SetWalkToPos(Model::Node& walk_to_pos) { walk_to_pos_ = walk_to_pos; }
 
     // Movement
-    void IncrementalMove() {} // TODO: Implement
+    void IncrementalMove();
   
   private:
     int pass_shape_ = DrawMarker::diamond;
     int dest_shape_ = DrawMarker::tilted_cross;
     int status_ = PassengerStatus::no_ride_requested;
+    Model::Node walk_to_pos_;
 };
 
 }  // namespace rideshare

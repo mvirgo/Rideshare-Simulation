@@ -26,7 +26,7 @@ PassengerQueue::PassengerQueue(RouteModel *model,
                                ObjectHolder(model, route_planner, max_objects),
                                MIN_WAIT_TIME_(min_wait_time), RANGE_WAIT_TIME_(range_wait_time) {
     // Set distance per cycle based on model's latitudes
-    distance_per_cycle_ = std::abs(model_->MaxLat() - model->MinLat()) / 10000.0;
+    distance_per_cycle_ = std::abs(model_->MaxLat() - model->MinLat()) / 3000.0;
     // Start by creating half the max number of passengers
     // Note that the while loop avoids generating less if any invalid placements occur
     while (new_passengers_.size() < MAX_OBJECTS_ / 2) {
@@ -150,8 +150,11 @@ void PassengerQueue::RideArrived(int id) {
     auto passenger = new_passengers_.at(id);
     // Set as a walking passenger
     walking_passengers_.emplace(id, passenger);
-    passenger->SetStatus(Passenger::PassengerStatus::walking);
     new_passengers_.erase(id);
+    // Vehicle will be at closest road node to passenger position
+    auto vehicle_location = model_->FindClosestNode(passenger->GetPosition());
+    passenger->SetWalkToPos(vehicle_location);
+    passenger->SetStatus(Passenger::PassengerStatus::walking);
 }
 
 void PassengerQueue::PassengerAtVehicle(int id) {
@@ -185,11 +188,12 @@ void PassengerQueue::PassengerFailure(int id) {
 void PassengerQueue::WalkPassengersToVehicles() {
     for (auto [id, passenger] : walking_passengers_) {
         if (passenger->GetStatus() == Passenger::PassengerStatus::walking) {
-            // Vehicle will be at closest road node to passenger position
-            auto vehicle_location = model_->FindClosestNode(passenger->GetPosition());
-            // TODO: Movement toward vehicle, only call below once at the node
-            passenger->SetStatus(Passenger::PassengerStatus::at_ride); // Make sure this is only done once
-            PassengerAtVehicle(id);
+            passenger->IncrementalMove();
+            // If passenger now at ride after incremental move, send message
+            // Nesting this prevents any double-sending
+            if (passenger->GetStatus() == Passenger::PassengerStatus::at_ride) {
+                PassengerAtVehicle(id);
+            }
         }
     }
 }
