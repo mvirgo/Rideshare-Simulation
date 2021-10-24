@@ -8,7 +8,6 @@
 
 #include "vehicle_manager.h"
 
-#include <cmath>
 #include <memory>
 
 #include "ride_matcher.h"

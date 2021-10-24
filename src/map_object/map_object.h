@@ -9,6 +9,7 @@
 #ifndef MAP_OBJECT_H_
 #define MAP_OBJECT_H_
 
+#include <cmath>
 #include <cstdlib>
 #include <vector>
 
@@ -59,6 +60,14 @@ class MapObject {
     }
 
   protected:
+    // Get an intermediate position between current position and desired next position
+    Coordinate GetIntermediatePosition(double next_x, double next_y) {
+        double angle = std::atan2(next_y - position_.y, next_x - position_.x); // angle from x-axis
+        double new_pos_x = position_.x + (distance_per_cycle_ * std::cos(angle));
+        double new_pos_y = position_.y + (distance_per_cycle_ * std::sin(angle));
+        return (Coordinate){.x = new_pos_x, .y = new_pos_y};
+    }
+
     // Member variables
     int id_;
     int failures_ = 0;

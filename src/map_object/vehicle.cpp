@@ -55,10 +55,7 @@ void Vehicle::IncrementalMove() {
         IncrementPathIndex();
     } else {
         // Calculate an intermediate position
-        double angle = std::atan2(next_pos.y - position_.y, next_pos.x - position_.x); // angle from x-axis
-        double new_pos_x = position_.x + (distance_per_cycle_ * std::cos(angle));
-        double new_pos_y = position_.y + (distance_per_cycle_ * std::sin(angle));
-        SetPosition((Coordinate){.x = new_pos_x, .y = new_pos_y});
+        SetPosition(GetIntermediatePosition(next_pos.x, next_pos.y));
     }
 }
 
