@@ -25,6 +25,8 @@ PassengerQueue::PassengerQueue(RouteModel *model,
                                int max_objects, int min_wait_time, int range_wait_time) :
                                ObjectHolder(model, route_planner, max_objects),
                                MIN_WAIT_TIME_(min_wait_time), RANGE_WAIT_TIME_(range_wait_time) {
+    // Set distance per cycle based on model's latitudes
+    distance_per_cycle_ = std::abs(model_->MaxLat() - model->MinLat()) / 10000.0;
     // Start by creating half the max number of passengers
     // Note that the while loop avoids generating less if any invalid placements occur
     while (new_passengers_.size() < MAX_OBJECTS_ / 2) {
@@ -37,8 +39,7 @@ void PassengerQueue::GenerateNew() {
     auto start = model_->GetRandomMapPosition();
     auto dest = model_->GetRandomMapPosition();
     // Set those to passenger
-    // TODO: Set a real distance per cycle for passenger
-    std::shared_ptr<Passenger> passenger = std::make_shared<Passenger>(0.0);
+    std::shared_ptr<Passenger> passenger = std::make_shared<Passenger>(distance_per_cycle_);
     passenger->SetPosition(start);
     passenger->SetDestination(dest);
     // Set path with route planner, and verify the path between them is valid/reachable
