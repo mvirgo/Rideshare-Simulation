@@ -23,12 +23,12 @@ namespace rideshare {
 VehicleManager::VehicleManager(RouteModel *model,
                                std::shared_ptr<RoutePlanner> route_planner,
                                int max_objects) : ObjectHolder(model, route_planner, max_objects) {
+    // Set distance per cycle based on model's latitudes
+    distance_per_cycle_ = std::abs(model_->MaxLat() - model->MinLat()) / 1000.0;
     // Generate max number of vehicles at the start
     for (int i = 0; i < MAX_OBJECTS_; ++i) {
         GenerateNew();
     }
-    // Set distance per cycle based on model's latitudes
-    distance_per_cycle_ = std::abs(model_->MaxLat() - model->MinLat()) / 1000.0;
 }
 
 void VehicleManager::GenerateNew() {
@@ -40,7 +40,7 @@ void VehicleManager::GenerateNew() {
     auto nearest_start = model_->FindClosestNode(start);
     auto nearest_dest = model_->FindClosestNode(destination);
     // Set road position, destination and id of vehicle
-    std::shared_ptr<Vehicle> vehicle = std::make_shared<Vehicle>();
+    std::shared_ptr<Vehicle> vehicle = std::make_shared<Vehicle>(distance_per_cycle_);
     vehicle->SetPosition((Coordinate){.x = nearest_start.x, .y = nearest_start.y});
     vehicle->SetDestination((Coordinate){.x = nearest_dest.x, .y = nearest_dest.y});
     vehicle->SetId(idCnt_++);
@@ -60,34 +60,6 @@ void VehicleManager::ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, b
     }
     auto nearest_dest = model_->FindClosestNode(destination);
     vehicle->SetDestination((Coordinate){.x = nearest_dest.x, .y = nearest_dest.y});
-}
-
-// Make for smooth, incremental driving between path nodes
-void VehicleManager::IncrementalMove(std::shared_ptr<Vehicle> vehicle) {
-    // Try to get the next_pos; an error here may happen due to a race condition
-    //   where the path has been reset mid-stream
-    Model::Node next_pos;
-    try {
-        next_pos = vehicle->Path().at(vehicle->PathIndex());
-    } catch (...) {
-        // Don't increment and instead return; it will be given a new path soon
-        return;
-    }
-    // Check distance to next position vs. distance can go b/w timesteps
-    Coordinate pos = vehicle->GetPosition();
-    double distance = std::sqrt(std::pow(next_pos.x - pos.x, 2) + std::pow(next_pos.y - pos.y, 2));
-
-    if (distance <= distance_per_cycle_) {
-        // Don't need to calculate intermediate point, just set position as next_pos
-        vehicle->SetPosition((Coordinate){.x = next_pos.x, .y = next_pos.y});
-        vehicle->IncrementPathIndex();
-    } else {
-        // Calculate an intermediate position
-        double angle = std::atan2(next_pos.y - pos.y, next_pos.x - pos.x); // angle from x-axis
-        double new_pos_x = pos.x + (distance_per_cycle_ * std::cos(angle));
-        double new_pos_y = pos.y + (distance_per_cycle_ * std::sin(angle));
-        vehicle->SetPosition((Coordinate){.x = new_pos_x, .y = new_pos_y});
-    }
 }
 
 void VehicleManager::Simulate() {
@@ -128,7 +100,7 @@ void VehicleManager::Drive() {
                 continue;
             } else {
                 // Drive to current destination
-                IncrementalMove(vehicle);
+                vehicle->IncrementalMove();
             }
 
             // Check if at destination

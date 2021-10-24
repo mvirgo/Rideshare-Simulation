@@ -31,6 +31,7 @@ enum VehicleState {
 class Vehicle: public MapObject {
   public:
     // Constructor / Destructor
+    Vehicle(double distance_per_cycle) : MapObject(distance_per_cycle) {}
 
     // Getters / Setters
     int Shape() { return shape_; }
@@ -47,6 +48,8 @@ class Vehicle: public MapObject {
     // Other functionality
     // "Drop off" the passenger - remove the passenger and reset any failures
     void DropOffPassenger();
+    // Movement
+    void IncrementalMove();
     // Increment path index by 1
     void IncrementPathIndex() { ++path_index_; }
 

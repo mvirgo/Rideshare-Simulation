@@ -37,7 +37,8 @@ void PassengerQueue::GenerateNew() {
     auto start = model_->GetRandomMapPosition();
     auto dest = model_->GetRandomMapPosition();
     // Set those to passenger
-    std::shared_ptr<Passenger> passenger = std::make_shared<Passenger>();
+    // TODO: Set a real distance per cycle for passenger
+    std::shared_ptr<Passenger> passenger = std::make_shared<Passenger>(0.0);
     passenger->SetPosition(start);
     passenger->SetDestination(dest);
     // Set path with route planner, and verify the path between them is valid/reachable

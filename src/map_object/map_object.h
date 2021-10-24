@@ -31,7 +31,9 @@ enum DrawMarker {
 class MapObject {
   public:
     // Constructor / Destructor
-    MapObject() { SetRandomColors(); }
+    MapObject(double distance_per_cycle) : distance_per_cycle_(distance_per_cycle) {
+      SetRandomColors();
+    }
 
     // Getters / Setters
     void SetPosition(const Coordinate &position) { position_ = position; }
@@ -47,6 +49,9 @@ class MapObject {
     int Id() { return id_; }
     std::vector<Model::Node> Path() { return path_; }
 
+    // Movement
+    virtual void IncrementalMove() {};
+
     // Handling of failures (such as destination can't be reached from position)
     bool MovementFailure() {
         ++failures_;
@@ -57,6 +62,7 @@ class MapObject {
     // Member variables
     int id_;
     int failures_ = 0;
+    const double distance_per_cycle_; // max distance to move per cycle for smooth-looking movement
     int MAX_FAILURES_ = 10; // max failures before object will be removed (likely stuck)
     Coordinate position_;
     Coordinate destination_;

@@ -15,9 +15,10 @@ namespace rideshare {
 
 class Passenger: public MapObject {
   public:
-    // constructor / destructor
+    // Constructor / Destructor
+    Passenger(double distance_per_cycle) : MapObject(distance_per_cycle) {}
 
-    // enum for statuses
+    // Enum for statuses
     enum PassengerStatus {
       no_ride_requested,
       ride_requested,
@@ -25,11 +26,14 @@ class Passenger: public MapObject {
       at_ride,
     };
 
-    // getters / setters
+    // Getters / Setters
     int PassShape() { return pass_shape_; }
     int DestShape() { return dest_shape_; }
     int GetStatus() { return status_; }
     void SetStatus(int status) { status_ = status; }
+
+    // Movement
+    void IncrementalMove() {} // TODO: Implement
   
   private:
     int pass_shape_ = DrawMarker::diamond;

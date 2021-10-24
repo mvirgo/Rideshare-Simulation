@@ -54,8 +54,6 @@ class VehicleManager : public ConcurrentObject, public ObjectHolder {
     // Movement
     // Handle loop cycle of movements and actions based on assignments / arrival at passengers
     void Drive();
-    // Make movement smooth between nodes on the map
-    void IncrementalMove(std::shared_ptr<Vehicle> vehicle);
     // Either gets a random map position, or uses the given destination, and aligns either to closest map node
     void ResetVehicleDestination(std::shared_ptr<Vehicle> vehicle, bool random);
     // Vehicle has encountered some type of issue reaching a given destination, without a passenger within
